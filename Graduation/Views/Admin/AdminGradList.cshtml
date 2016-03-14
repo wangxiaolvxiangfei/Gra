@@ -16,7 +16,64 @@
     <title>生源信息列表</title>
     <meta name="description" content="">
     <meta name="author" content="templatemo">
-    <script type="text/javascript">
+    @if (ViewBag.type == "2")
+    {
+        <script type="text/javascript">
+        $(function () {
+            GetAca();
+            $("#Depart").empty();
+            $("#Major").empty();
+            $("#Aca").change(function () {
+                GetDepart();
+            });
+            $("#Depart").change(function () {
+                GetMajor();
+            });
+        });
+        //获取院
+        function GetAca() {
+            $("#Aca").empty();
+            $.getJSON(
+            "/Admin/GetAcalist",
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Aca"));
+
+                })
+            });
+        }
+
+        //获取系
+        function GetDepart() {
+            $("#Depart").empty();
+            $.getJSON(
+            "/Admin/GetDepartList",
+            { pid: $("#Aca").val() },
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Depart"));
+
+                })
+            });
+        }
+        //获取专业
+        function GetMajor() {
+            $("#Major").empty();
+            $.getJSON(
+            "/Admin/GetMajorList",
+            { pid: $("#Depart").val() },
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Major"));
+
+                })
+            });
+        }
+    </script> 
+    }
+    else
+    {
+        <script type="text/javascript">
         $(function () {
             GetDepartM();
             //GetDepart();
@@ -56,34 +113,9 @@
                 })
             });
         }
-
-        //只选择院的时候table显示的值
-        function GetAcaM() {
-            $("#table").empty();
-            $("#table").append("<thead><tr><th>专业ID</th><th>专业名称</th><th>专业代码</th><th>学院名称</th><th>系名称</th><th>学历</th><th>删除</th><th>选择</th></tr></thead>");
-            $.getJSON(
-            "/Admin/GetMajorTbByAc",
-            { pid: $("#Aca").val() },
-            function (data) {
-                $.each(data, function (i, item) {
-                    $("#table").append("<tr><td>" + item["Id"] + "</td><td>" + item["Name"] + "</td><td>" + item["Code"] + "</td><td>" + item["AcademyName"] + "</td><td>" + item["DepartmentName"] + "</td><td>" + item["Edu"] + "</td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + ">选择</a></td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + "?type=1>删除</a></td>");
-                })
-            });
-        }
-        //选择系的时候，显示该系下面的专业
-        function GetDepartM() {
-            $("#table").empty();
-            $("#table").append("<thead><tr><th>专业ID</th><th>专业名称</th><th>专业代码</th><th>学院名称</th><th>系名称</th><th>学历</th><th>删除</th><th>选择</th></tr></thead>");
-            $.getJSON(
-            "/Admin/GetMajorTbBydDe",
-            { pid: $("#Depart").val() },
-            function (data) {
-                $.each(data, function (i, item) {
-                    $("#table").append("<tr><td>" + item["Id"] + "</td><td>" + item["Name"] + "</td><td>" + item["Code"] + "</td><td>" + item["AcademyName"] + "</td><td>" + item["DepartmentName"] + "</td><td>" + item["Edu"] + "</td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + ">选择</a></td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + "?type=1>删除</a></td>");
-                })
-            });
-        }
-    </script>
+        </script>    
+    }
+    
 </head>
 <body>
     <!-- Left column -->
