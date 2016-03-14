@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="templatemo">
+    <title>华北电力大学求职与就业信息管理系统</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/Scripts/jquery")
+</head>
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div class="templatemo-sidebar">
+            <header class="templatemo-site-header">
+                <h1>华北电力大学</h1>
+            </header>
+            <div class="profile-photo-container">
+                <img src="../../images/profile-photo.jpg" alt="Profile Photo" class="img-responsive">
+                <div class="profile-photo-overlay"></div>
+            </div>
+            <div class="mobile-menu-icon">
+                <i class="fa fa-bars"></i>
+            </div>
+            <nav class="templatemo-left-nav">
+                <ul class="ly-ul-parent">
+                    <li style=@ViewBag.type>
+                        <a href="#">
+                            <i class="fa fa-home fa-fw"></i>
+                            系统设置
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li>
+                                <a href="#">
+                                    院系及专业名称管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="/Admin/AdminAcademy">学院名称管理</a></li>
+                                    <li><a href="/Admin/AdminDepartmet">系名称管理</a></li>
+                                    <li><a href="/Admin/AdminMajor">专业名称管理</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="/Admin/AdminTime">登录时间控制</a></li>
+                        </ul>
+                    </li>
+                    <li style=@ViewBag.type>
+                        <a href="/Admin/AdminUser">
+                            <i class="fa fa-bar-chart fa-fw"></i>
+                            系统用户管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Admin/ReSetPwd">
+                            <i class="fa fa-database fa-fw"></i>
+                            重置密码
+                        </a>
+                    </li>
+                    <li style=@ViewBag.type>
+                        <a href="#">
+                            <i class="fa fa-map-marker fa-fw"></i>
+                            通知管理
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="/Admin/AnnouncePost">发布通知</a></li>
+                            <li><a href="/Admin/Announce">通告公告</a></li>
+                        </ul>
+                    </li>
+                    <li style=@ViewBag.type>
+                        <a href="#">
+                            <i class="fa fa-users fa-fw"></i>
+                            生源库导入导出
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="/Admin/Upload">毕业生信息导入</a></li>
+                            <li><a href="/Admin/AdminGradList">毕业生信息导出</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-sliders fa-fw"></i>
+                            毕业生
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="/Admin/Sign">签约登记表</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-eject fa-fw"></i>
+                            统计管理
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            @if (@ViewBag.type == "display:none")
+                            {
+                                <li><a href="/Admin/jiyeYX">就业统计</a></li>}
+                            else
+                            {
+                                <li><a href="/Admin/jiuyetongji">就业统计</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-user-md fa-fw"></i>
+                            本专科生/研究生
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li>
+                                <a href="#">
+                                    基本信息管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="/Admin/AdminGradList">毕业生列表</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    求职信息管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="/Admin/ApplExam">审核管理</a></li>
+                                    <li><a href="/Admin/ApplExam">显示设置</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    就业信息管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="/Admin/EmplExam">就业信息审核</a></li>
+                                    <li><a href="/Admin/EmplExpot">就业信息导出</a></li>
+                                    <li><a href="/Admin/jiuyetongji">就业统计</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="login.html">
+                            安全退出
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Main content -->
+            @RenderBody()
+    </div>
+</body>
+</html>

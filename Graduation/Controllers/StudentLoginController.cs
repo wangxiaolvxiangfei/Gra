@@ -40,7 +40,7 @@ namespace Graduation.Controllers
                     if (temp.StudentType == "0")
                     {
                         //2为本科生登陆时间
-                        var time = db.TimeTb.Where(m => m.Type == "2").LastOrDefault();
+                        var time = db.TimeTb.Where(m => m.Type == "2").FirstOrDefault();
                         if (DateTime.Now > time.BeginTime && DateTime.Now < time.EndTime)
                         {
                             Session["number"] = student.StudentNumber;

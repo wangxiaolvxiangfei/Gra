@@ -1,333 +1,175 @@
 ﻿@model Graduation.Models.ESchoolInfoViewModel
+@{
+    Layout = "~/Views/Shared/Guide.cshtml";
+}
+@if (ViewBag.type == "1")
+{
+    ViewBag.type = "display:none";
+}
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>审核</title>
-    <meta name="description" content="">
-    <meta name="author" content="templatemo">
-
-    <!-- <link href='http://fonts.useso.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css'> -->
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/templatemo-style.css" rel="stylesheet">
-    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
-    <script type="text/javascript" src="js/ly.js"></script>
-
-
-</head>
-<body>
-    <!-- Left column -->
-    <div class="templatemo-flex-row">
-        <div class="templatemo-sidebar">
-            <header class="templatemo-site-header">
-                <h1>华北电力大学</h1>
-            </header>
-            <div class="profile-photo-container">
-                <img src="images/profile-photo.jpg" alt="Profile Photo" class="img-responsive">
-                <div class="profile-photo-overlay"></div>
-            </div>
-            <div class="mobile-menu-icon">
-                <i class="fa fa-bars"></i>
-            </div>
-            <nav class="templatemo-left-nav">
-                <ul class="ly-ul-parent">
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-home fa-fw"></i>
-                            系统设置
-                            <i class="fa fa-angle-down fa-fw right"></i>
-                        </a>
-                        <ul class="ly-ul" style="display:none">
-                            <li>
-                                <a href="#">
-                                    院系及专业名称管理
-                                    <i class="fa fa-angle-right fa-fw right"></i>
-                                </a>
-                                <ul class="ly-ul-child" style="display:none">
-                                    <li><a href="index.html">学院名称管理</a></li>
-                                    <li><a href="departmentName.html">系名称管理</a></li>
-                                    <li><a href="professionalName.html">专业名称管理</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="loginTimeControl.html">登录时间控制</a></li>
-                            <li><a href="schoolChange.html">学籍变动管理</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="user.html">
-                            <i class="fa fa-bar-chart fa-fw"></i>
-                            系统用户管理
-                        </a>
-                    </li>
-                    <li>
-                        <a href="resertPassword.html">
-                            <i class="fa fa-database fa-fw"></i>
-                            重置密码
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-map-marker fa-fw"></i>
-                            通知管理
-                            <i class="fa fa-angle-down fa-fw right"></i>
-                        </a>
-                        <ul class="ly-ul" style="display:none">
-                            <li><a href="new.html">发布通知</a></li>
-                            <li><a href="newdetail.html">通告公告</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-users fa-fw"></i>
-                            生源库导入导出
-                            <i class="fa fa-angle-down fa-fw right"></i>
-                        </a>
-                        <ul class="ly-ul" style="display:none">
-                            <li><a href="graduateMess.html">毕业生信息导入</a></li>
-                            <li><a href="graduateOut.html">毕业生信息导出</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-sliders fa-fw"></i>
-                            毕业生
-                            <i class="fa fa-angle-down fa-fw right"></i>
-                        </a>
-                        <ul class="ly-ul" style="display:none">
-                            <li><a href="graduateWork.html">签约登记表</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-eject fa-fw"></i>
-                            统计管理
-                            <i class="fa fa-angle-down fa-fw right"></i>
-                        </a>
-                        <ul class="ly-ul" style="display:none">
-                            <li><a href="employ.html">就业统计</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="active">
-                            <i class="fa fa-user-md fa-fw"></i>
-                            本专科生/研究生
-                            <i class="fa fa-angle-down fa-fw right"></i>
-                        </a>
-                        <ul class="ly-ul" style="display:none">
-                            <li>
-                                <a href="#">
-                                    基本信息管理
-                                    <i class="fa fa-angle-right fa-fw right"></i>
-                                </a>
-                                <ul class="ly-ul-child" style="display:none">
-                                    <li><a href="undergraduateList.html">毕业生列表</a></li>
-                                    <li><a href="addUndergraduate.html">院系预增加的生源</a></li>
-                                    <li><a href="deleteUndergradute.html">院系预删除的生源</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    求职信息管理
-                                    <i class="fa fa-angle-right fa-fw right"></i>
-                                </a>
-                                <ul class="ly-ul-child" style="display:none">
-                                    <li><a href="jobSearchInformationManagement3.html">审核管理</a></li>
-                                    <li><a href="jobSearchInformationManagement.html">显示设置</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    就业信息管理
-                                    <i class="fa fa-angle-right fa-fw right"></i>
-                                </a>
-                                <ul class="ly-ul-child" style="display:none">
-                                    <li><a href="employmentInformationAudit.html">就业信息审核</a></li>
-                                    <li><a href="exportEmploymentInformation.html">就业信息导出</a></li>
-                                    <li><a href="count.html">就业统计</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="login.html">
-                            安全退出
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <!-- Main content -->
-        <div class="templatemo-content col-1 light-gray-bg">
-            <div class="templatemo-top-nav-container">
-                <h2>求职与就业信息管理系统</h2>
-                <div class="right">
-                    <span>欢迎&nbsp;&nbsp;</span><span class="admin">就业中心管理员：</span><span class="admin">Admin</span><span>&nbsp;&nbsp;登录本系统</span>
-                </div>
-            </div>
-            <div class="templatemo-content-container now-position ly-tab">
-                <!--  <span>当前位置：</span><span>管理员登录>></span><span>本科转生求职与就业管理>></span><span><a href="StudentJobInformation.html">就业签约管理>></a></span><span>无协议书就业</span> -->
-                <div class="content">
-                    <p><b class="warn">1.就业形势：(必选)</b></p>
-                    @using (@Html.BeginForm())
-                    {
-                        @Html.HiddenFor(model => model.eSchoolInfo.StudentNumber)
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(true)
-                        <p class="a">
-
-
-                            <a href="/Admin/EmplESchoolExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "有协议就业/合同就业") 有协议就业/合同就业</a>
-                            <a href="/Admin/EmplArmyExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "其他形式就业", new { @checked = true }) 其他形式就业</a>
-                            <a href="/Admin/EmplNotJobExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "暂未就业") 暂未就业</a>
-
-
-                        </p>
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th colspan="4" style="text-align:center">个人信息</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><span>学号：</span><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
-                                    <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
-                                    <td><span>性别：</span><span>@Html.ValueFor(model => model.upload.Sex)</span></td>
-                                    <td><span>出生年月：</span><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span>政治面貌：</span><span>@ViewBag.P</span></td>
-                                    <td><span>专业：</span><span>@Html.ValueFor(model => model.upload.Major)</span></td>
-                                    <td><span>培养方式：</span><span>@Html.ValueFor(model => model.upload.TrainType)</span></td>
-                                    <td><span>学历：</span><span>@Html.ValueFor(model => model.upload.Education)</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span>学制：</span><span>@Html.ValueFor(model => model.upload.LengthOfSch)</span>
-                                    </td>
-                                    <td>
-                                        <span>毕业时间：</span><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
-                                    </td>
-                                    <td>
-                                        <span>生源地区：</span><span>@ViewBag.L</span>
-                                    </td>
-                                    <td>
-                                        <span>身份证号：</span><span>@Html.ValueFor(model => model.upload.IDNumber)</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span>健康状况：</span><span>@ViewBag.H</span>
-                                    </td>
-                                    <td>
-                                        <span>手机号码：</span><span>@ViewBag.T</span>
-                                    </td>
-                                    <td>
-                                        <span>邮政编码：</span><span>@ViewBag.C</span>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <span>通信地址：</span><span>@ViewBag.ADDR</span>
-                                    </td>
-                                    <td colspan="2">
-                                        <span>家庭所在地</span><span>@ViewBag.FL</span>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="table table1">
-                            <tr>
-                                <td colspan="4" style="text-align:center"><span><b>毕业去向</b></span></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">
-                                    <span>就业形式：</span>
-
-
-                                    <a href="/Admin/EmplArmyExam"> @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "46应征入伍") 应征入伍</a>
-                                    <a href="/Admin/EmplSelfExam/">  @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "75自主创业", new { @checked = true }) 自主创业</a>
-                                    <a href="/Admin/EmplFlexibleExam">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "76灵活就业") 灵活就业</a>
-                                    <a href="/Admin/EmplUpSchExam">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "80升学") 升学</a>
-                                    <a href="/Admin/EmplAbroadExam">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "85出国") 出国</a>
-                                    <a href="/Admin/EmplCountry">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "90国家基层项目") 国家基层项目</a>
-                                    <a href="/Admin/EmplScience">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "91科研助理") 科研助理</a>
-                                    <a href="/Admin/EmplPlace">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "92地方基层项目") 地方基层项目</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><span>单位名称：</span>@Html.TextBoxFor(model => model.eSchoolInfo.CompanyName)</td>
-                                <td colspan="2">
-                                    <p>单位所在地：</p>
-                                    <select class="province"></select>
-                                    <select class="city"></select>
-                                    <select class="country"></select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    <span>单位行业分类：</span>
-                                    @Html.DropDownListFor(model => model.eSchoolInfo.ComIndustry, ViewBag.hangyefenlei as List<SelectListItem>)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">
-                                    <p>备注：</p>
-                                    @Html.TextAreaFor(model => model.eSchoolInfo.Note)
-                                </td>
-                            </tr>
-                            
-                            <table class="table table5">
-                                <tr>
-                                    <td>是否通过审核</td>
-                                    <td colspan="3">
-                                        <input type="radio" name="type2">是
-                                        <input type="radio" name="type2">否
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>是否锁定</td>
-                                    <td colspan="3">
-                                        <input type="radio" name="type3">是
-                                        <input type="radio" name="type3">否
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>就业状态</td>
-                                    <td colspan="3">
-                                        <input type="radio" name="type4">是
-                                        <input type="radio" name="type4">否
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>是否对外显示</td>
-                                    <td colspan="3">
-                                        <input type="radio" name="type5">是
-                                        <input type="radio" name="type5">否
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <input type="submit" value="提交" class="btn btn-info" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </table>
-                    }
-                </div>
-
-
-                <footer class="text-right"></footer>
-            </div>
+<div class="templatemo-content col-1 light-gray-bg">
+    <div class="templatemo-top-nav-container">
+        <h2>求职与就业信息管理系统</h2>
+        <div class="right">
+            <span>欢迎&nbsp;&nbsp;</span><span class="admin">就业中心管理员：</span><span class="admin">Admin</span><span>&nbsp;&nbsp;登录本系统</span>
         </div>
     </div>
-</body>
-</html>
+    <div class="templatemo-content-container now-position ly-tab">
+        <!--  <span>当前位置：</span><span>管理员登录>></span><span>本科转生求职与就业管理>></span><span><a href="StudentJobInformation.html">就业签约管理>></a></span><span>无协议书就业</span> -->
+        <div class="content">
+            <p><b class="warn">1.就业形势：(必选)</b></p>
+            @using (@Html.BeginForm())
+            {
+                @Html.HiddenFor(model => model.eSchoolInfo.StudentNumber)
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <p class="a">
+
+
+                    <a href="/Admin/EmplESchoolExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "有协议就业/合同就业") 有协议就业/合同就业</a>
+                    <a href="/Admin/EmplArmyExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "其他形式就业", new { @checked = true }) 其他形式就业</a>
+                    <a href="/Admin/EmplNotJobExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "暂未就业") 暂未就业</a>
+
+
+                </p>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th colspan="4" style="text-align:center">个人信息</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span>学号：</span><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
+                            <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                            <td><span>性别：</span><span>@Html.ValueFor(model => model.upload.Sex)</span></td>
+                            <td><span>出生年月：</span><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>政治面貌：</span><span>@ViewBag.P</span></td>
+                            <td><span>专业：</span><span>@Html.ValueFor(model => model.upload.Major)</span></td>
+                            <td><span>培养方式：</span><span>@Html.ValueFor(model => model.upload.TrainType)</span></td>
+                            <td><span>学历：</span><span>@Html.ValueFor(model => model.upload.Education)</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>学制：</span><span>@Html.ValueFor(model => model.upload.LengthOfSch)</span>
+                            </td>
+                            <td>
+                                <span>毕业时间：</span><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
+                            </td>
+                            <td>
+                                <span>生源地区：</span><span>@ViewBag.L</span>
+                            </td>
+                            <td>
+                                <span>身份证号：</span><span>@Html.ValueFor(model => model.upload.IDNumber)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>健康状况：</span><span>@ViewBag.H</span>
+                            </td>
+                            <td>
+                                <span>手机号码：</span><span>@ViewBag.T</span>
+                            </td>
+                            <td>
+                                <span>邮政编码：</span><span>@ViewBag.C</span>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <span>通信地址：</span><span>@ViewBag.ADDR</span>
+                            </td>
+                            <td colspan="2">
+                                <span>家庭所在地</span><span>@ViewBag.FL</span>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table1">
+                    <tr>
+                        <td colspan="4" style="text-align:center"><span><b>毕业去向</b></span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <span>就业形式：</span>
+
+
+                            <a href="/Admin/EmplArmyExam"> @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "46应征入伍") 应征入伍</a>
+                            <a href="/Admin/EmplSelfExam/">  @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "75自主创业", new { @checked = true }) 自主创业</a>
+                            <a href="/Admin/EmplFlexibleExam">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "76灵活就业") 灵活就业</a>
+                            <a href="/Admin/EmplUpSchExam">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "80升学") 升学</a>
+                            <a href="/Admin/EmplAbroadExam">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "85出国") 出国</a>
+                            <a href="/Admin/EmplCountry">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "90国家基层项目") 国家基层项目</a>
+                            <a href="/Admin/EmplScience">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "91科研助理") 科研助理</a>
+                            <a href="/Admin/EmplPlace">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "92地方基层项目") 地方基层项目</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><span>单位名称：</span>@Html.TextBoxFor(model => model.eSchoolInfo.CompanyName)</td>
+                        <td colspan="2">
+                            <p>单位所在地：</p>
+                            <select class="province"></select>
+                            <select class="city"></select>
+                            <select class="country"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <span>单位行业分类：</span>
+                            @Html.DropDownListFor(model => model.eSchoolInfo.ComIndustry, ViewBag.hangyefenlei as List<SelectListItem>)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <p>备注：</p>
+                            @Html.TextAreaFor(model => model.eSchoolInfo.Note)
+                        </td>
+                    </tr>
+
+                    <table class="table table5">
+                        <tr>
+                            <td>是否通过审核</td>
+                            <td colspan="3">
+                                <input type="radio" name="type2">是
+                                <input type="radio" name="type2">否
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>是否锁定</td>
+                            <td colspan="3">
+                                <input type="radio" name="type3">是
+                                <input type="radio" name="type3">否
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>就业状态</td>
+                            <td colspan="3">
+                                <input type="radio" name="type4">是
+                                <input type="radio" name="type4">否
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>是否对外显示</td>
+                            <td colspan="3">
+                                <input type="radio" name="type5">是
+                                <input type="radio" name="type5">否
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <input type="submit" value="提交" class="btn btn-info" />
+                            </td>
+                        </tr>
+                    </table>
+                </table>
+            }
+        </div>
+
+
+        <footer class="text-right"></footer>
+    </div>
+</div>
