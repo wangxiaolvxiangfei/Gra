@@ -1,15 +1,4 @@
-﻿// TEST
-// TEST 123
-
-//by xiangfei
-
-//bu xiangfei2
-
-//byxiangfei3
-
-//wangxiao
-/////wangxiao
-using Graduation.Models;
+﻿using Graduation.Models;
 using NPOI.HSSF.UserModel;
 using System;
 using System.Collections.Generic;
@@ -211,6 +200,7 @@ namespace Graduation.Controllers
         {
             List<AcademyModel> acaList = new List<AcademyModel>();
             var list = db.AcademyTb.ToList();
+            acaList.Add(new AcademyModel() { Id = 0, Name = "===请选择===" });
             foreach (var item in list)
             {
                 acaList.Add(new AcademyModel() { Id = item.Id, Name = item.Name });
@@ -225,6 +215,7 @@ namespace Graduation.Controllers
         {
             List<DepartmentModel> departList = new List<DepartmentModel>();
             var list = db.DepartmentTb.Where(m => m.BelongId == pid).ToList();
+            departList.Add(new DepartmentModel() { Id = 0, BelongId = 0, Name = "===请选择===" });
             foreach (var item in list)
                 departList.Add(new DepartmentModel() { Id = item.Id, BelongId = item.BelongId, Name = item.Name });
             return Json(departList, JsonRequestBehavior.AllowGet);
@@ -239,6 +230,7 @@ namespace Graduation.Controllers
             List<MajorModel> majorList = new List<MajorModel>();
             string stringId = pid.ToString();
             var list = db.MajorTb.Where(m => m.DepartId == stringId).ToList();
+            majorList.Add(new MajorModel() { Id = 0, DepartId = "0", Name = "===请选择===" });
             foreach (var item in list)
                 majorList.Add(new MajorModel() { Id = item.Id, DepartId = item.DepartId, Name = item.Name });
             return Json(majorList, JsonRequestBehavior.AllowGet);
@@ -879,8 +871,8 @@ namespace Graduation.Controllers
             if (Session["Id"] != null)
             {
                 ViewBag.type = Session["Type"];
-
                 var user = db.UserTb.Find(Session["Id"]);
+                var upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
                 ViewBag.type = user.TypeCode;
                 #region 删除
                 if (type == 2)
@@ -897,6 +889,7 @@ namespace Graduation.Controllers
                 {
                     ViewBag.style = "1";
                     var userDep = db.DepartmentTb.Find(user.DepartId);
+                    upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
                     #region 院系列表
                     //院列表
                     var aca = db.AcademyTb.ToList();
@@ -918,12 +911,12 @@ namespace Graduation.Controllers
                             majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
                         }
                     }
-
                     ViewBag.major = majorList;
                     #endregion
                 }
                 else if (Session["Type"].ToString() == "2")//管理员登陆
                 {
+                    upload = db.UploadTb.ToList();
                     ViewBag.style = "2";
                     #region 院系列表
                     //院列表
@@ -1097,7 +1090,6 @@ namespace Graduation.Controllers
                 list.upload = new UploadModel();
                 list.uploadList = new List<FillBaseInfoViewModel>();
 
-                var upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
                 foreach (var item in upload)
                 {
                     FillBaseInfoViewModel temp = new FillBaseInfoViewModel();
@@ -1213,21 +1205,21 @@ namespace Graduation.Controllers
                     upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear).ToList();
                 if (av.upload.GraduationTime != null)//毕业时间
                     upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime).ToList();
-                if (av.upload.Academy != null)
+                if (av.upload.Academy!=null&&av.upload.Academy != "0")
                 {
                     int id = Convert.ToInt32(av.upload.Academy);
                     var acaTemp = db.AcademyTb.Find(id);
                     upload = upload.Where(m => m.Academy == acaTemp.Name).ToList();
                     disPlay.upload.Academy = acaTemp.Id.ToString();
                 }
-                if (av.upload.Department != null)
+                if (av.upload.Department !=null&& av.upload.Department != "0")
                 {
                     int id = Convert.ToInt32(av.upload.Department);
                     var depTemp = db.DepartmentTb.Find(id);
                     upload = upload.Where(m => m.Department == depTemp.Name).ToList();
                     disPlay.upload.Department = depTemp.Id.ToString();
                 }
-                if (av.upload.Major != null)//专业
+                if (av.upload.Major!=null&&av.upload.Major != "0")//专业
                 {
                     int id = Convert.ToInt16(av.upload.Major);
                     var majorTemp = db.MajorTb.Find(id);
@@ -1486,9 +1478,11 @@ namespace Graduation.Controllers
             {
                 ViewBag.type = Session["Type"];
                 var user = db.UserTb.Find(Session["Id"]);
+                var upload = db.UploadTb.Include("ApplInfoModel").Where(m => m.Department == user.DepartName);
                 ViewBag.type = user.TypeCode;
                 if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
                 {
+                    upload = db.UploadTb.Include("ApplInfoModel").Where(m => m.Department == user.DepartName);
                     ViewBag.style = "1";
                     var userDep = db.DepartmentTb.Find(user.DepartId);
                     #region 院系列表
@@ -1518,6 +1512,7 @@ namespace Graduation.Controllers
                 }
                 else if (Session["Type"].ToString() == "2")//管理员登陆
                 {
+                    upload = db.UploadTb.Include("ApplInfoModel");
                     ViewBag.style = "2";
                     #region 院系列表
                     //院列表
@@ -1560,7 +1555,6 @@ namespace Graduation.Controllers
                 list.upload = new UploadModel();
                 list.appInfoList = new List<ApplInfoViewModel>();
 
-                var upload = db.UploadTb.Include("ApplInfoModel").Where(m => m.Department == user.DepartName);
                 foreach (var item in upload.ToList())
                 {
                     ApplInfoViewModel temp = new ApplInfoViewModel();
@@ -1673,7 +1667,21 @@ namespace Graduation.Controllers
                 upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear);
             if (av.upload.GraduationTime != null)//毕业时间
                 upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime);
-            if (av.upload.Major != null)//专业
+            if (av.upload.Academy != "0" && av.upload.Academy != null)
+            {
+                int Id = Convert.ToInt32(av.upload.Academy);
+                var acaTemp = db.AcademyTb.Find(Id);
+                upload = upload.Where(m => m.Academy == acaTemp.Name);
+                disPlay.upload.Academy = acaTemp.Id.ToString();
+            }
+            if (av.upload.Department != "0"&&av.upload.Department!=null)
+            {
+                int Id = Convert.ToInt32(av.upload.Department);
+                var depTemp = db.DepartmentTb.Find(Id);
+                upload = upload.Where(m => m.Department == depTemp.Name);
+                disPlay.upload.Department = depTemp.Id.ToString();
+            }
+            if (av.upload.Major != "0" && av.upload.Major != null)//专业
             {
                 int Id = Convert.ToInt16(av.upload.Major);
                 var majorTemp = db.MajorTb.Find(Id);
@@ -1814,10 +1822,110 @@ namespace Graduation.Controllers
             {
                 ViewBag.type = Session["Type"];
                 var user = db.UserTb.Find(Session["Id"]);
-                var userDep = db.DepartmentTb.Find(user.DepartId);
+                var upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
                 ViewBag.type = user.TypeCode;
 
+                if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
+                {
+                    upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
+                    ViewBag.style = "1";
+                    var userDep = db.DepartmentTb.Find(user.DepartId);
+                    #region 院系列表
+                    //院列表
+                    var aca = db.AcademyTb.ToList();
+                    SelectList acaList = new SelectList(aca, "Id", "Name", userDep.BelongId);
+                    ViewBag.aca = acaList;
+
+                    //系列表
+                    var dep = db.DepartmentTb.ToList();
+                    SelectList depList = new SelectList(dep, "Id", "Name", userDep.Id);
+                    ViewBag.dep = depList;
+
+                    //专业列表
+                    List<SelectListItem> majorList = new List<SelectListItem>();
+                    var major = db.MajorTb.ToList();
+                    if (major != null)
+                    {
+                        foreach (var item in major)
+                        {
+                            majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                        }
+                    }
+
+                    ViewBag.major = majorList;
+                    #endregion
+                }
+                else if (Session["Type"].ToString() == "2")//管理员登陆
+                {
+                    upload = db.UploadTb.ToList();
+                    ViewBag.style = "2";
+                    #region 院系列表
+                    //院列表
+                    var aca = db.AcademyTb.ToList();
+                    List<SelectListItem> acaList = new List<SelectListItem>();
+                    if (aca != null)
+                    {
+                        foreach (var item in aca)
+                        { acaList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() }); }
+                    }
+                    ViewBag.aca = acaList;
+
+                    //系列表
+                    var dep = db.DepartmentTb.ToList();
+                    List<SelectListItem> depList = new List<SelectListItem>();
+                    if (dep != null)
+                    {
+                        foreach (var item in dep)
+                        {
+                            depList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                        }
+                    }
+                    ViewBag.dep = depList;
+
+                    //专业列表
+                    List<SelectListItem> majorList = new List<SelectListItem>();
+                    var major = db.MajorTb.ToList();
+                    if (major != null)
+                    {
+                        foreach (var item in major)
+                        {
+                            majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                        }
+                    }
+
+                    ViewBag.major = majorList;
+                    #endregion
+                }
+                var list = new EmplExamListViewModel();
+                list.upload = new UploadModel();
+                list.InfoList = new List<ESchoolInfoViewModel>();
+                foreach (var item in upload)
+                {
+                    ESchoolInfoViewModel temp = new ESchoolInfoViewModel();
+                    temp.upload = new UploadModel();
+                    temp.upload = item;
+                    if (db.ESchoolInfoTb.Find(item.StudentNumber) != null)
+                        temp.eSchoolInfo = db.ESchoolInfoTb.Find(item.StudentNumber);
+                    list.InfoList.Add(temp);
+                }
+                return View(list);
+            }
+            else
+                return RedirectToAction("Login");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EmplExam(EmplExamListViewModel av)
+        {
+            var user = db.UserTb.Find(Session["Id"]);
+            ViewBag.type = user.TypeCode;
+
+            if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
+            {
+                ViewBag.style = "1";
                 #region 院系列表
+                var userDep = db.DepartmentTb.Find(user.DepartId);
                 //院列表
                 var aca = db.AcademyTb.ToList();
                 SelectList acaList = new SelectList(aca, "Id", "Name", userDep.BelongId);
@@ -1841,59 +1949,47 @@ namespace Graduation.Controllers
 
                 ViewBag.major = majorList;
                 #endregion
-
-                var list = new EmplExamListViewModel();
-                list.upload = new UploadModel();
-                list.InfoList = new List<ESchoolInfoViewModel>();
-
-                var upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
-                foreach (var item in upload)
-                {
-                    ESchoolInfoViewModel temp = new ESchoolInfoViewModel();
-                    temp.upload = new UploadModel();
-                    temp.upload = item;
-                    if (db.ESchoolInfoTb.Find(item.StudentNumber) != null)
-                        temp.eSchoolInfo = db.ESchoolInfoTb.Find(item.StudentNumber);
-                    list.InfoList.Add(temp);
-                }
-                return View(list);
             }
             else
-                return View("Login");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EmplExam(EmplExamListViewModel av)
-        {
-            var user = db.UserTb.Find(Session["Id"]);
-            var userDep = db.DepartmentTb.Find(user.DepartId);
-            ViewBag.type = user.TypeCode;
-
-            #region 院系列表
-            //院列表
-            var aca = db.AcademyTb.ToList();
-            SelectList acaList = new SelectList(aca, "Id", "Name", userDep.BelongId);
-            ViewBag.aca = acaList;
-
-            //系列表
-            var dep = db.DepartmentTb.ToList();
-            SelectList depList = new SelectList(dep, "Id", "Name", userDep.Id);
-            ViewBag.dep = depList;
-
-            //专业列表
-            List<SelectListItem> majorList = new List<SelectListItem>();
-            var major = db.MajorTb.ToList();
-            if (major != null)
             {
-                foreach (var item in major)
+                ViewBag.style = "2";
+                #region 院系列表
+                //院列表
+                var aca = db.AcademyTb.ToList();
+                List<SelectListItem> acaList = new List<SelectListItem>();
+                if (aca != null)
                 {
-                    majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    foreach (var item in aca)
+                    { acaList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() }); }
                 }
-            }
+                ViewBag.aca = acaList;
 
-            ViewBag.major = majorList;
-            #endregion
+                //系列表
+                var dep = db.DepartmentTb.ToList();
+                List<SelectListItem> depList = new List<SelectListItem>();
+                if (dep != null)
+                {
+                    foreach (var item in dep)
+                    {
+                        depList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    }
+                }
+                ViewBag.dep = depList;
+
+                //专业列表
+                List<SelectListItem> majorList = new List<SelectListItem>();
+                var major = db.MajorTb.ToList();
+                if (major != null)
+                {
+                    foreach (var item in major)
+                    {
+                        majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    }
+                }
+
+                ViewBag.major = majorList;
+                #endregion
+            }
 
             #region 查询
             EmplExamListViewModel display = new EmplExamListViewModel();
@@ -1910,7 +2006,21 @@ namespace Graduation.Controllers
                 upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear).ToList();
             if (av.upload.GraduationTime != null)//毕业时间
                 upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime).ToList();
-            if (av.upload.Major != null)//专业
+            if (av.upload.Academy != "0" && av.upload.Academy != null)
+            {
+                int Id = Convert.ToInt32(av.upload.Academy);
+                var acaTemp = db.AcademyTb.Find(Id);
+                upload = upload.Where(m => m.Academy == acaTemp.Name).ToList();
+                display.upload.Academy = acaTemp.Id.ToString();
+            }
+            if (av.upload.Department != "0" && av.upload.Department != null)
+            {
+                int Id = Convert.ToInt32(av.upload.Department);
+                var depTemp = db.DepartmentTb.Find(Id);
+                upload = upload.Where(m => m.Department == depTemp.Name).ToList();
+                display.upload.Department = depTemp.Id.ToString();
+            }
+            if (av.upload.Major != null&av.upload.Major!="0")//专业
             {
                 int id = Convert.ToInt16(av.upload.Major);
                 var majorTemp = db.MajorTb.Find(id);
@@ -2769,29 +2879,76 @@ namespace Graduation.Controllers
             {
                 ViewBag.type = Session["Type"];
                 var user = db.UserTb.Find(Session["Id"]);
-                var userDep = db.DepartmentTb.Find(user.DepartId);
                 ViewBag.type = user.TypeCode;
-                #region 院系列表
-                //院列表
-                var aca = db.AcademyTb.ToList();
-                SelectList acaList = new SelectList(aca, "Id", "Name", userDep.BelongId);
-                ViewBag.aca = acaList;
-                //系列表
-                var dep = db.DepartmentTb.ToList();
-                SelectList depList = new SelectList(dep, "Id", "Name", userDep.Id);
-                ViewBag.dep = depList;
-                //专业列表
-                List<SelectListItem> majorList = new List<SelectListItem>();
-                var major = db.MajorTb.ToList();
-                if (major != null)
+                if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
                 {
-                    foreach (var item in major)
+                    ViewBag.style = "1";
+                    var userDep = db.DepartmentTb.Find(user.DepartId);
+                    #region 院系列表
+                    //院列表
+                    var aca = db.AcademyTb.ToList();
+                    SelectList acaList = new SelectList(aca, "Id", "Name", userDep.BelongId);
+                    ViewBag.aca = acaList;
+
+                    //系列表
+                    var dep = db.DepartmentTb.ToList();
+                    SelectList depList = new SelectList(dep, "Id", "Name", userDep.Id);
+                    ViewBag.dep = depList;
+
+                    //专业列表
+                    List<SelectListItem> majorList = new List<SelectListItem>();
+                    var major = db.MajorTb.ToList();
+                    if (major != null)
                     {
-                        majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                        foreach (var item in major)
+                        {
+                            majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                        }
                     }
+
+                    ViewBag.major = majorList;
+                    #endregion
                 }
-                ViewBag.major = majorList;
-                #endregion
+                else if (Session["Type"].ToString() == "2")//管理员登陆
+                {
+                    ViewBag.style = "2";
+                    #region 院系列表
+                    //院列表
+                    var aca = db.AcademyTb.ToList();
+                    List<SelectListItem> acaList = new List<SelectListItem>();
+                    if (aca != null)
+                    {
+                        foreach (var item in aca)
+                        { acaList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() }); }
+                    }
+                    ViewBag.aca = acaList;
+
+                    //系列表
+                    var dep = db.DepartmentTb.ToList();
+                    List<SelectListItem> depList = new List<SelectListItem>();
+                    if (dep != null)
+                    {
+                        foreach (var item in dep)
+                        {
+                            depList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                        }
+                    }
+                    ViewBag.dep = depList;
+
+                    //专业列表
+                    List<SelectListItem> majorList = new List<SelectListItem>();
+                    var major = db.MajorTb.ToList();
+                    if (major != null)
+                    {
+                        foreach (var item in major)
+                        {
+                            majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                        }
+                    }
+
+                    ViewBag.major = majorList;
+                    #endregion
+                }
                 #region 下载表格
                 if (type == 1)
                 {
@@ -2869,7 +3026,7 @@ namespace Graduation.Controllers
             }
             else
             {
-                return View("Login");
+                return RedirectToAction("Login");
             }
         }
 
@@ -2878,31 +3035,76 @@ namespace Graduation.Controllers
         public ActionResult EmplExpot(AdminGradViewModel students, int id = 0)
         {
             var user = db.UserTb.Find(Session["Id"]);
-            var userDep = db.DepartmentTb.Find(user.DepartId);
             ViewBag.type = user.TypeCode;
-            #region 院系列表
-            //院列表
-            var aca = db.AcademyTb.ToList();
-            SelectList acaList = new SelectList(aca, "Id", "Name", userDep.BelongId);
-            ViewBag.aca = acaList;
-            //系列表
-            var dep = db.DepartmentTb.ToList();
-            SelectList depList = new SelectList(dep, "Id", "Name", userDep.Id);
-            ViewBag.dep = depList;
-            //专业列表
-            List<SelectListItem> majorList = new List<SelectListItem>();
-            var major = db.MajorTb.ToList();
-            if (major != null)
+            if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
             {
-                foreach (var item in major)
+                ViewBag.style = "1";
+                var userDep = db.DepartmentTb.Find(user.DepartId);
+                #region 院系列表
+                //院列表
+                var aca = db.AcademyTb.ToList();
+                SelectList acaList = new SelectList(aca, "Id", "Name", userDep.BelongId);
+                ViewBag.aca = acaList;
+
+                //系列表
+                var dep = db.DepartmentTb.ToList();
+                SelectList depList = new SelectList(dep, "Id", "Name", userDep.Id);
+                ViewBag.dep = depList;
+
+                //专业列表
+                List<SelectListItem> majorList = new List<SelectListItem>();
+                var major = db.MajorTb.ToList();
+                if (major != null)
                 {
-                    majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    foreach (var item in major)
+                    {
+                        majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    }
                 }
+
+                ViewBag.major = majorList;
+                #endregion
             }
-            ViewBag.major = majorList;
-            #endregion
+            else if (Session["Type"].ToString() == "2")//管理员登陆
+            {
+                ViewBag.style = "2";
+                #region 院系列表
+                //院列表
+                var aca = db.AcademyTb.ToList();
+                List<SelectListItem> acaList = new List<SelectListItem>();
+                if (aca != null)
+                {
+                    foreach (var item in aca)
+                    { acaList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() }); }
+                }
+                ViewBag.aca = acaList;
 
+                //系列表
+                var dep = db.DepartmentTb.ToList();
+                List<SelectListItem> depList = new List<SelectListItem>();
+                if (dep != null)
+                {
+                    foreach (var item in dep)
+                    {
+                        depList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    }
+                }
+                ViewBag.dep = depList;
 
+                //专业列表
+                List<SelectListItem> majorList = new List<SelectListItem>();
+                var major = db.MajorTb.ToList();
+                if (major != null)
+                {
+                    foreach (var item in major)
+                    {
+                        majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    }
+                }
+
+                ViewBag.major = majorList;
+                #endregion
+            }
 
             #region 查询
             AdminGradViewModel display = new AdminGradViewModel();
@@ -2919,7 +3121,22 @@ namespace Graduation.Controllers
                 upload = upload.Where(m => m.EntranceYear == students.upload.EntranceYear);
             if (students.upload.GraduationTime != null)//毕业时间
                 upload = upload.Where(m => m.GraduationTime == students.upload.GraduationTime);
-            if (students.upload.Major != null)//专业
+
+            if (students.upload.Academy != "0" && students.upload.Academy != null)
+            {
+                int Id = Convert.ToInt32(students.upload.Academy);
+                var acaTemp = db.AcademyTb.Find(Id);
+                upload = upload.Where(m => m.Academy == acaTemp.Name);
+                display.upload.Academy = acaTemp.Id.ToString();
+            }
+            if (students.upload.Department != "0" && students.upload.Department != null)
+            {
+                int Id = Convert.ToInt32(students.upload.Department);
+                var depTemp = db.DepartmentTb.Find(Id);
+                upload = upload.Where(m => m.Department == depTemp.Name);
+                display.upload.Department = depTemp.Id.ToString();
+            }
+            if (students.upload.Major != "0" && students.upload.Major != null)//专业
             {
                 int Id = Convert.ToInt16(students.upload.Major);
                 var majorTemp = db.MajorTb.Find(Id);

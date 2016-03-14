@@ -4,12 +4,13 @@
 
 @using Webdiyer.WebControls.Mvc;
 
-@{
-    Layout = "~/Views/Shared/Guide.cshtml";
-}
 @if (ViewBag.type == "1")
 {
-    ViewBag.type = "display:none";
+    ViewBag.type = "disabled";
+}
+@if (ViewBag.style == "1")
+{
+    ViewBag.style = "display:none";
 }
 
 <!DOCTYPE html>
@@ -27,6 +28,63 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/templatemo-style.css" rel="stylesheet">
     <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+    @if (ViewBag.type == "2")
+{
+    <script type="text/javascript">
+        $(function () {
+            GetAca();
+            $("#Depart").empty();
+            $("#Major").empty();
+            $("#Aca").change(function () {
+                GetDepart();
+            });
+            $("#Depart").change(function () {
+                GetMajor();
+            });
+        });
+        //获取院
+        function GetAca() {
+            $("#Aca").empty();
+            $.getJSON(
+            "/Admin/GetAcalist",
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Aca"));
+
+                })
+            });
+        }
+
+        //获取系
+        function GetDepart() {
+            $("#Depart").empty();
+            $.getJSON(
+            "/Admin/GetDepartList",
+            { pid: $("#Aca").val() },
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Depart"));
+
+                })
+            });
+        }
+        //获取专业
+        function GetMajor() {
+            $("#Major").empty();
+            $.getJSON(
+            "/Admin/GetMajorList",
+            { pid: $("#Depart").val() },
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Major"));
+
+                })
+            });
+        }
+    </script>
+}
+else
+{
     <script type="text/javascript">
         $(function () {
             GetDepartM();
@@ -67,34 +125,8 @@
                 })
             });
         }
-
-        //只选择院的时候table显示的值
-        function GetAcaM() {
-            $("#table").empty();
-            $("#table").append("<thead><tr><th>专业ID</th><th>专业名称</th><th>专业代码</th><th>学院名称</th><th>系名称</th><th>学历</th><th>删除</th><th>选择</th></tr></thead>");
-            $.getJSON(
-            "/Admin/GetMajorTbByAc",
-            { pid: $("#Aca").val() },
-            function (data) {
-                $.each(data, function (i, item) {
-                    $("#table").append("<tr><td>" + item["Id"] + "</td><td>" + item["Name"] + "</td><td>" + item["Code"] + "</td><td>" + item["AcademyName"] + "</td><td>" + item["DepartmentName"] + "</td><td>" + item["Edu"] + "</td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + ">选择</a></td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + "?type=1>删除</a></td>");
-                })
-            });
-        }
-        //选择系的时候，显示该系下面的专业
-        function GetDepartM() {
-            $("#table").empty();
-            $("#table").append("<thead><tr><th>专业ID</th><th>专业名称</th><th>专业代码</th><th>学院名称</th><th>系名称</th><th>学历</th><th>删除</th><th>选择</th></tr></thead>");
-            $.getJSON(
-            "/Admin/GetMajorTbBydDe",
-            { pid: $("#Depart").val() },
-            function (data) {
-                $.each(data, function (i, item) {
-                    $("#table").append("<tr><td>" + item["Id"] + "</td><td>" + item["Name"] + "</td><td>" + item["Code"] + "</td><td>" + item["AcademyName"] + "</td><td>" + item["DepartmentName"] + "</td><td>" + item["Edu"] + "</td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + ">选择</a></td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + "?type=1>删除</a></td>");
-                })
-            });
-        }
     </script>
+}
 
 </head>
 <body>
@@ -284,9 +316,18 @@
 
                     <div class="form-group">
                         <label class="col-sm-1 control-label">所在院系</label>
-                        @Html.DropDownListFor(model => model.upload.Academy, ViewBag.aca as SelectList, "=请选择=", new { id = "Aca", @class = "form-control ly-select", disabled = @ViewBag.type })
-                        @Html.DropDownListFor(model => model.upload.Department, ViewBag.dep as SelectList, "=请选择=", new { id = "Depart", @class = "form-control ly-select", disabled = @ViewBag.type })
-                        @Html.DropDownListFor(model => model.upload.Major, ViewBag.major as List<SelectListItem>, "=请选择=", new { id = "Major", @class = "form-control ly-select" })
+                        @if (@ViewBag.style == "2")
+                        {
+                            @Html.DropDownListFor(model => model.upload.Academy, ViewBag.aca as List<SelectListItem>, "=请选择=", new { id = "Aca", @class = "form-control ly-select" })
+                            @Html.DropDownListFor(model => model.upload.Department, ViewBag.dep as List<SelectListItem>, "=请选择=", new { id = "Depart", @class = "form-control ly-select" })
+                            @Html.DropDownListFor(model => model.upload.Major, ViewBag.major as List<SelectListItem>, "=请选择=", new { id = "Major", @class = "form-control ly-select" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.upload.Academy, ViewBag.aca as SelectList, "=请选择=", new { id = "Aca", @class = "form-control ly-select", disabled = @ViewBag.type })
+                            @Html.DropDownListFor(model => model.upload.Department, ViewBag.dep as SelectList, "=请选择=", new { id = "Depart", @class = "form-control ly-select", disabled = @ViewBag.type })
+                            @Html.DropDownListFor(model => model.upload.Major, ViewBag.major as List<SelectListItem>, "=请选择=", new { id = "Major", @class = "form-control ly-select" })
+                        }
                     </div>
 
                     <div class="right marginbottom col-sm-5">
@@ -340,42 +381,42 @@
                             @foreach (var item in Model.uploadPagedList)
                             {
 
-                            <tr>
-                                <td><input type="checkbox"></td>
+                                <tr>
+                                    <td><input type="checkbox"></td>
 
 
-                                <td>@item.StudentNumber</td>
-                                <td>@item.Name</td>
-                                <td>@item.Academy</td>
-                                <td>@item.Department</td>
-                                <td>@item.Major</td>
-                                <td>@item.Class</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.AgreementID)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.CompanyName)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ComBelongDep)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.CompanyCode)</td>
-                             
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ComBelongDep)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ComIndustry)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.JobTitle)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.SCompanyName)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ComLocation)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ComType)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.Contacts)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ConCommAddress)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ContactsCode)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ConPost)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ConTel)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ResChangedAdd)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.FileChangedAdd)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.FileZipCode)</td>v
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.IsMajorFit)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.UPSchool)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.UpMajor)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.OutCountry)</td>
-                                <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.Note)</td>
+                                    <td>@item.StudentNumber</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Academy</td>
+                                    <td>@item.Department</td>
+                                    <td>@item.Major</td>
+                                    <td>@item.Class</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.AgreementID)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.CompanyName)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ComBelongDep)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.CompanyCode)</td>
 
-                            </tr>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ComBelongDep)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ComIndustry)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.JobTitle)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.SCompanyName)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ComLocation)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ComType)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.Contacts)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ConCommAddress)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ContactsCode)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ConPost)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ConTel)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ResChangedAdd)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.FileChangedAdd)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.FileZipCode)</td>v
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.IsMajorFit)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.UPSchool)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.UpMajor)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.OutCountry)</td>
+                                    <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.Note)</td>
+
+                                </tr>
 
                             }
 
@@ -386,8 +427,8 @@
                     </div>
 
                     <div class="left page">
-                            <p>共<b>@Model.uploadPagedList.TotalPageCount</b>页<b>@Model.uploadPagedList.Count</b>条记录，当前为第<b>@Model.uploadPagedList.CurrentPageIndex</b>页，每页<b>@Model.uploadPagedList.PageSize</b>条</p>
-                        </div>
+                        <p>共<b>@Model.uploadPagedList.TotalPageCount</b>页<b>@Model.uploadPagedList.Count</b>条记录，当前为第<b>@Model.uploadPagedList.CurrentPageIndex</b>页，每页<b>@Model.uploadPagedList.PageSize</b>条</p>
+                    </div>
                     <div class="right page">
                         @Html.Pager(Model.uploadPagedList, new PagerOptions
                    {
