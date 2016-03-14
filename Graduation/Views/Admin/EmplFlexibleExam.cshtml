@@ -79,9 +79,9 @@
                             <a href="/Admin/EmplFlexibleExam">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "76灵活就业", new { @checked = true }) 灵活就业</a>
                             <a href="/Admin/EmplUpSchExam">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "80升学") 升学</a>
                             <a href="/Admin/EmplAbroadExam">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "85出国") 出国</a>
-                            <a href="/Admin/EmplCountry">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "90国家基层项目") 国家基层项目</a>
-                            <a href="/Admin/EmplScience">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "91科研助理") 科研助理</a>
-                            <a href="/Admin/EmplPlace">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "92地方基层项目") 地方基层项目</a>
+                            <a href="/Admin/EmplCountry">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "50国家基层项目") 国家基层项目</a>
+                            <a href="/Admin/EmplScience">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "27科研助理") 科研助理</a>
+                            <a href="/Admin/EmplPlace">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "51地方基层项目") 地方基层项目</a>
                         </td>
                     </tr>
                     <tr>
@@ -105,29 +105,23 @@
                     <tr>
                         <td>是否通过审核</td>
                         <td colspan="3">
-                            <input type="radio" name="type2">是
-                            <input type="radio" name="type2">否
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsChecked, "是")是
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsChecked, "否")否
                         </td>
                     </tr>
                     <tr>
                         <td>是否锁定</td>
                         <td colspan="3">
-                            <input type="radio" name="type3">是
-                            <input type="radio" name="type3">否
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsClock, "锁定")锁定
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsClock, "可编辑")可编辑
                         </td>
                     </tr>
                     <tr>
                         <td>就业状态</td>
                         <td colspan="3">
-                            <input type="radio" name="type4">是
-                            <input type="radio" name="type4">否
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>是否对外显示</td>
-                        <td colspan="3">
-                            <input type="radio" name="type5">是
-                            <input type="radio" name="type5">否
+
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsJiuYe, "是")是
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsJiuYe, "否")否
                         </td>
                     </tr>
                     <tr>

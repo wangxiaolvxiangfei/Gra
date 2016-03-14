@@ -81,5 +81,15 @@ namespace Graduation.Models
         /// 协议书编号
         /// </summary>
         public string AgreementID { get; set; }
+
+
+        /// <summary>
+        /// 是否审核
+        /// </summary>
+        public string IsChecked { get; set; }
+        /// <summary>
+        /// 是否锁定
+        /// </summary>
+        public string IsClocked { get; set; }
     }
 }

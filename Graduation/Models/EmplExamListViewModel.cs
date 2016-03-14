@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Webdiyer.WebControls.Mvc;
 
 namespace Graduation.Models
 {
@@ -12,6 +13,10 @@ namespace Graduation.Models
         /// </summary>
         public UploadModel upload { get; set; }
 
+        /// <summary>
+        /// 分页
+        /// </summary>
+        public PagedList<UploadModel> uploadPagedList { get; set; }
         /// <summary>
         /// table中显示的数据
         /// </summary>

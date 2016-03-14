@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Webdiyer.WebControls.Mvc;
 
 namespace Graduation.Models
 {
@@ -11,6 +12,10 @@ namespace Graduation.Models
         /// 用于搜索框的model
         /// </summary>
         public UploadModel upload { get; set; }
+        /// <summary>
+        /// 分页
+        /// </summary>
+        public PagedList<UploadModel> uploadPagedList { get;set;}
         /// <summary>
         /// 基本信息的列表
         /// </summary>

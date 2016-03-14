@@ -103,7 +103,7 @@ namespace Graduation.Controllers
                     student.baseInfo.StudentNumber = Session["number"].ToString();
                 }
                 student.baseInfo.PoliticalStatus = student.baseInfo.PoliticalStatusCode + student.baseInfo.PoliticalStatus;
-                ViewBag.locked = student.baseInfo.IsClocked;
+                ViewBag.clocked = student.baseInfo.IsClocked;
                 return View(student);
             }
             else 
@@ -288,6 +288,7 @@ namespace Graduation.Controllers
                     student.signInfo.StudentNumber = Session["number"].ToString();
                 }
                 student.signInfo.ComType = student.signInfo.ComTypeCode + student.signInfo.ComType;
+                ViewBag.clocked = student.signInfo.IsClocked;
                 return View(student);
             }
             else
@@ -462,6 +463,7 @@ namespace Graduation.Controllers
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
                 student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
+                ViewBag.clocked = student.eSchoolInfo.IsClock;
                 return View(student);
             }
             else
@@ -548,6 +550,7 @@ namespace Graduation.Controllers
                     ViewBag.ADDR = temp.CommAddress;//通信地址
                     ViewBag.FL = temp.FamilyLocation;//家庭地址
                 }
+                ViewBag.clocked = students.eSchoolInfo.IsClock;
                 return View(students);
             }
             else
@@ -645,9 +648,7 @@ namespace Graduation.Controllers
                     ViewBag.FL = temp.FamilyLocation;//家庭地址
                 }
                 students.eSchoolInfo.ComIndustry = students.eSchoolInfo.ComIndustryCode + students.eSchoolInfo.ComIndustry;
-
-
-
+                ViewBag.clocked = students.eSchoolInfo.IsClock;
                 return View(students);
             }
             else
@@ -724,6 +725,7 @@ namespace Graduation.Controllers
                     ViewBag.ADDR = temp.CommAddress;//通信地址
                     ViewBag.FL = temp.FamilyLocation;//家庭地址
                 }
+                ViewBag.clocked = students.eSchoolInfo.IsClock;
                 return View(students);
             }
             else
@@ -796,6 +798,7 @@ namespace Graduation.Controllers
                     ViewBag.FL = temp.FamilyLocation;//家庭地址
 
                 }
+                ViewBag.clocked = students.eSchoolInfo.IsClock;
                 return View(students);
             }
             else
@@ -865,6 +868,7 @@ namespace Graduation.Controllers
                     ViewBag.ADDR = temp.CommAddress;//通信地址
                     ViewBag.FL = temp.FamilyLocation;//家庭地址
                 }
+                ViewBag.clocked = students.eSchoolInfo.IsClock;
                 return View(students);
             }
             else
@@ -902,7 +906,6 @@ namespace Graduation.Controllers
 
         #endregion
 
-
         #region 国家基层项目
 
         public ActionResult FillEOtherCountry()
@@ -932,6 +935,7 @@ namespace Graduation.Controllers
                     ViewBag.FL = temp.FamilyLocation;//家庭地址
                 }
                 //ViewBag.IsLocked = students.eSchoolInfo.IsLocked;
+                ViewBag.clocked = students.eSchoolInfo.IsClock;
                 return View(students);
             }
             else
@@ -997,6 +1001,7 @@ namespace Graduation.Controllers
                     ViewBag.FL = temp.FamilyLocation;//家庭地址
                 }
                // ViewBag.IsLocked = students.eSchoolInfo.IsLocked;
+                ViewBag.clocked = students.eSchoolInfo.IsClock;
                 return View(students);
             }
             else
@@ -1064,6 +1069,7 @@ namespace Graduation.Controllers
                     ViewBag.FL = temp.FamilyLocation;//家庭地址
                 }
                 //ViewBag.IsLocked = students.eSchoolInfo.IsLocked;
+                ViewBag.clocked = students.eSchoolInfo.IsClock;
                 return View(students);
             }
             else
@@ -1140,6 +1146,7 @@ namespace Graduation.Controllers
                     ViewBag.ADDR = temp.CommAddress;//通信地址
                     ViewBag.FL = temp.FamilyLocation;//家庭地址
                 }
+                ViewBag.clocked = student.eSchoolInfo.IsClock;
                 return View(student);
             }
             else
