@@ -1,7 +1,8 @@
 ﻿@model Graduation.Models.ESchoolInfoViewModel
-
-
-
+@if (ViewBag.clocked == "锁定")
+{
+    ViewBag.clocked = "disabled";
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -174,7 +175,7 @@
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <input type="submit" value="提交" class="btn btn-info" />
+                        <input type="submit" value="提交或修改" class="btn btn-info" @ViewBag.clocked />
                     </td>
                 </tr>
             </table>

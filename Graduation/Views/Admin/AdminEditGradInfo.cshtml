@@ -291,26 +291,23 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>审核</td>
+                    <td>审核是否通过</td>
                     <td colspan="2">
-                        @*@Html.CheckBoxFor(model=>model.baseInfo.IsBaseChecked= Convert.ToBoolean( model=>model.baseInfo.IsBaseChecked))*@<span>通过审核：</span><span class="warn">*院系对生源信息的审核</span>
+                        @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "是")是
+                        @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "否")否
                     </td>
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <input type="radio" name="type10">可编辑
-                        <input type="radio" name="type10">预定
-                        <input type="radio" name="type10">预删除
-                        <input type="radio" name="type10">预增加
-
+                    <td>是否锁定</td>
+                        @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "是")是
+                        @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "否")否
                         <span class="warn">*如果同意院系的预添加，选择可编辑</span>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="3" align="center">
-                        <button class="btn btn-info">编辑</button>
-                        <button class="btn">提交</button>
-                        <span class="warn">点击提交，将预定学生信息，请慎重</span>
+                        <button class="btn">提交或编辑</button>
                     </td>
                 </tr>
             </table>

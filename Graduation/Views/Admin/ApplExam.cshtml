@@ -422,7 +422,7 @@ else
                     </table>
                 </div>
                 <div class="left page">
-                    @*<p>共<b>@Model.uploadPagedList.TotalPageCount</b>页<b>@Model.uploadPagedList.TotalItemCount</b>条记录，当前为第<b>@Model.uploadPagedList.CurrentPageIndex</b>页，每页<b>@Model.uploadPagedList.PageSize</b>条</p>*@
+                    <p>共<b>@Model.uploadPagedList.TotalPageCount</b>页<b>@Model.uploadPagedList.TotalItemCount</b>条记录，当前为第<b>@Model.uploadPagedList.CurrentPageIndex</b>页，每页<b>@Model.uploadPagedList.PageSize</b>条</p>
                 </div>
                 <div class="right page">
                     @Html.Pager(Model.uploadPagedList, new PagerOptions
