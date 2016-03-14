@@ -342,6 +342,8 @@
     <Content Include="Views\Admin\EmplScience.cshtml" />
     <Content Include="Views\Admin\EmplPlace.cshtml" />
     <Content Include="Views\Admin\Upload.cshtml" />
+    <Content Include="Views\Admin\jiyeYX.cshtml" />
+    <Content Include="Views\Shared\Guide.cshtml" />
     <Content Include="Views\Admin\AddGradInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
