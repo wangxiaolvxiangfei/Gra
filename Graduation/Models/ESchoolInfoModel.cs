@@ -189,8 +189,22 @@ namespace Graduation.Models
         /// <summary>
         /// 就业形式代码
         /// </summary>
-
         public string EmploymentCode { get; set; }
+
+        /// <summary>
+        /// 就业困难下的就业形式
+        /// </summary>
+        public string JobDiff { get; set; }
+        /// <summary>
+        /// 就业困难下的就业形式代码
+        /// </summary>
+
+        public string JobDiffCode { get; set; }
+
+        /// <summary>
+        /// 就业困难原因
+        /// </summary>
+        public string JobDiffCause { get; set; }
 
         /// <summary>
         /// 学生编辑时间

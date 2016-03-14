@@ -103,6 +103,7 @@ namespace Graduation.Controllers
                     student.baseInfo.StudentNumber = Session["number"].ToString();
                 }
                 student.baseInfo.PoliticalStatus = student.baseInfo.PoliticalStatusCode + student.baseInfo.PoliticalStatus;
+                ViewBag.locked = student.baseInfo.IsClocked;
                 return View(student);
             }
             else 
@@ -172,11 +173,14 @@ namespace Graduation.Controllers
                     applInfo = db.ApplInfoTb.Find(Session["number"]),
                     upload = db.UploadTb.Find(Session["number"])
                 };
+                ViewBag.type = student.upload.StudentType;
+                ViewBag.numberCount = student.upload.StudentNumber.Length;
                 if (student.applInfo == null)
                 {
                     student.applInfo = new ApplInfoModel();
                     student.applInfo.StudentNumber = Session["number"].ToString();
                 }
+                ViewBag.clocked = student.applInfo.IsClocked;
                 return View(student);
             }
             else
@@ -1110,6 +1114,7 @@ namespace Graduation.Controllers
         {
             if (Session["number"] != null)
             {
+                
                 var student = new ESchoolInfoViewModel()
                 {
                     eSchoolInfo = db.ESchoolInfoTb.Find(Session["number"]),
@@ -1119,6 +1124,10 @@ namespace Graduation.Controllers
                 {
                     student.eSchoolInfo = new ESchoolInfoModel();
                     student.eSchoolInfo.StudentNumber = Session["number"].ToString();
+                }
+                else
+                {
+                    student.eSchoolInfo.JobDiff = student.eSchoolInfo.JobDiffCode + student.eSchoolInfo.JobDiff; 
                 }
                 var temp = db.BaseInfoTb.Find(Session["number"]);
                 if (temp != null)
@@ -1151,6 +1160,9 @@ namespace Graduation.Controllers
         {
             if (ModelState.IsValid)
             {
+                var jobDiff = students.eSchoolInfo.JobDiff;
+                students.eSchoolInfo.JobDiffCode = jobDiff.Substring(0, 1);
+                students.eSchoolInfo.JobDiff = jobDiff.Substring(1);
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
                     ESchoolInfoModel temp = db.ESchoolInfoTb.Find(Session["number"].ToString());

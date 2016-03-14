@@ -1,6 +1,13 @@
 ﻿@model Graduation.Models.ApplInfoViewModel
 
-
+@if (ViewBag.type == "0" || ViewBag.numberCount == 12)
+{
+    ViewBag.type = "hidden";
+}
+else
+{
+    ViewBag.numberCount = "hidden";
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -185,213 +192,288 @@
                         @Html.ValidationSummary(true)
 
 
+                    <table class="informationTable table">
+                        <thead>
+                            <tr>
+                                <td colspan="8" style="text-align:center">
+                                    <b>
+                                        华北电力大学本专科毕业生求职信息（推荐表）
+                                    </b>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td rowspan="2" style="width:10px; border-right:1px solid black">毕业生信息</td>
+                            <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                            <td><p>学号：</p><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
+                            <td><p>出生年月日：</p><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
+                            <td>
+                                <p>政治面貌：</p>
+                                @ViewBag.P
+                            </td>
+                            <td>
+                                <p>健康状况：</p>@ViewBag.H
+                            </td>
+                            <td>
+                                <p>邮政编码</p>@ViewBag.E
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <p>通讯地址：</p>@ViewBag.CA
+                            </td>
+                            <td colspan="2">
+                                <p>现家庭居住地：</p>@ViewBag.F
+                            </td>
+                            <td>
+                                <p>Email：</p>@ViewBag.E
+                            </td>
+                            <td>
+                                <p>联系电话：</p>@ViewBag.T
+                            </td>
+                        </tr>
+                        <tr>
+                            <td rowspan="9" style="width:10px; border-right:1px solid black">教育背景</td>
+                            <td colspan="2">
+                                <span>专业：</span><span>@Html.ValueFor(model => model.upload.MajorDirection)</span>
+                            </td>
+                            <td>
+                                <span>学历：</span><span>@Html.ValueFor(model => model.upload.Education)</span>
+                            </td>
+                            <td>
+                                <span>培养方式：</span><span>@Html.ValueFor(model => model.upload.TrainType)</span>
+                            </td>
+                            <td>
+                                <span>毕业时间：</span><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
+                            </td>
+                            <td>
+                                <p>成绩班级名次</p>
+                                @Html.TextBoxFor(model => model.applInfo.Rank)
+                            </td>
+                        </tr>
+                        <tr style="text-align:center">
+                            <td><b>教育背景</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p>第一年度获奖（评优，荣誉，奖学金）</p>
+                                @Html.TextAreaFor(model => model.applInfo.FristYearPrize)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p>第二年度获奖（评优，荣誉，奖学金）</p>
+                                @Html.TextAreaFor(model => model.applInfo.SecondYearPrize)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p>第三年度获奖（评优，荣誉，奖学金）</p>
+                                @Html.TextAreaFor(model => model.applInfo.ThirdYearPrize)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p>2.竞赛获奖情况：</p>
+                                @Html.TextAreaFor(model => model.applInfo.CompetitionPrize)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p>3.其他获奖情况：</p>
+                                @Html.TextAreaFor(model => model.applInfo.OtherPrize)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <p>4.发表论文和学术成果：</p>
+                                @Html.TextAreaFor(model => model.applInfo.PublishPaper)
+                            </td>
+                        </tr>
+                    </table>
+                        //本科生能力特长
+                        <table class="informationTable table" @ViewBag.numbercount>
+                            <tr style="text-align:center">
+                                <td><b>能力特长</b></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <span>外语语种：英语通过级别：</span>
+                                    @Html.DropDownListFor(model => model.applInfo.EnglishLevel, ViewBag.english as List<SelectListItem>
+                                    )
+                                    <span>四级成绩：</span>@Html.TextBoxFor(model => model.applInfo.LevelFour)
+                                    <span>六级成绩：</span>@Html.TextBoxFor(model => model.applInfo.LevelSix)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <span>计算机级别：</span>@Html.TextBoxFor(model => model.applInfo.ComputerLevel)
+                                </td>
+                            </tr>
+                        </table>
+                        //研究生能力特长
+                        <table class="informationTable table" @ViewBag.type>
+                            <tr style="text-align:center">
+                                <td><b>能力特长</b></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    1.主修外语注：非英英语专业填写"CET-4","CET-6";英语专业填写"TEM-4","TEM-8","无",其他语种毕业生填写“——”
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    语种：语言考试分数：@Html.TextBoxFor(model => model.applInfo.LanguageScore)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <span>计算机水平：</span>@Html.TextAreaFor(model => model.applInfo.ComputerLevel)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <span>特长能力：</span>@Html.TextAreaFor(model => model.applInfo.SpecialtyAbilty)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <span>社会工作：</span>@Html.TextAreaFor(model => model.applInfo.SocietyJob)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <span>实践活动：</span>@Html.TextAreaFor(model => model.applInfo.PracticeActivity)
+                                </td>
+                            </tr>
+                        </table>
+
+
                         <table class="informationTable table">
-                            <thead>
-                                <tr>
-                                    <td colspan="8" style="text-align:center">
-                                        <b>
-                                            华北电力大学本专科毕业生求职信息（推荐表）
-                                        </b>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tr>
-                                <td rowspan="2" style="width:10px; border-right:1px solid black">毕业生信息</td>
-                                <td><span>姓名：</span><span>@Html.ValueFor(model=>model.upload.Name)</span></td>
-                                <td><p>学号：</p><span>@Html.ValueFor(model=>model.upload.StudentNumber)</span></td>
-                                <td><p>出生年月日：</p><span>@Html.ValueFor(model=>model.upload.BirthTime)</span></td>
-                                <td>
-                                    <p>政治面貌：</p>
-                                    @ViewBag.P
-                                </td>
-                                <td>
-                                    <p>健康状况：</p>@ViewBag.H
-                                </td>
-                                <td>
-                                    <p>邮政编码</p>@ViewBag.E
-                                </td>
+                            <tr style="text-align:center">
+                                <td><b>求职备注</b></td>
                             </tr>
                             <tr>
-                                <td colspan="2">
-                                    <p>通讯地址：</p>@ViewBag.CA
-                                </td>
-                                <td colspan="2">
-                                    <p>现家庭居住地：</p>@ViewBag.F
-                                </td>
-                                <td>
-                                    <p>Email：</p>@ViewBag.E
-                                </td>
-                                <td>
-                                    <p>联系电话：</p>@ViewBag.T
-                                </td>
-                            </tr>
-                            <tr>
-                                <td rowspan="9" style="width:10px; border-right:1px solid black">教育背景</td>
-                                <td colspan="2">
-                                    <span>专业：</span><span>@Html.ValueFor(model=>model.upload.MajorDirection)</span>
-                                </td>
-                                <td>
-                                    <span>学历：</span><span>@Html.ValueFor(model=>model.upload.Education)</span>
-                                </td>
-                                <td>
-                                    <span>培养方式：</span><span>@Html.ValueFor(model=>model.upload.TrainType)</span>
-                                </td>
-                                <td>
-                                    <span>毕业时间：</span><span>@Html.ValueFor(model=>model.upload.GraduationTime)</span>
-                                </td>
-                                <td>
-                                    <p>成绩班级名次</p>
-                                    @Html.TextBoxFor(model=>model.applInfo.Rank)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td rowspan="8" style="border-right:1px solid black; text-align:center">获奖情况</td>
-                                <td colspan="5">
-                                    <p>1.校内评优（本科生分年度，专科生填写第一框就行了）</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="5">
-                                    <p>第一年度</p>
-                                    @Html.TextAreaFor(model=>model.applInfo.FristYearPrize)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="5">
-                                    <p>第二年度</p>
-                                    @Html.TextAreaFor(model=>model.applInfo.SecondYearPrize)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="5">
-                                    <p>第三年度</p>
-                                    @Html.TextAreaFor(model=>model.applInfo.ThirdYearPrize)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="5">
-                                    2.竞赛获奖情况
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="5">
-                                   <textarea></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="5">
-                                    <p>3.其他获奖情况</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="5">
-                                    <textarea></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td rowspan="8" style="width:10px; border-right:1px solid black">能力特长</td>
-                                <td colspan="6">
-                                    <p>1.主修外语语种：水平</p>@Html.TextBoxFor(model=>model.applInfo.EnglishLevel)
-                                    <p>注：非英语专业填写：“CET-4”,"CET-6","无"，英语专业填写“TEM-4”,"TEM-8","无",其他语种毕业填写"--"</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <p>2.计算机水平</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    @Html.TextBoxFor(model=>model.applInfo.ComputerLevel)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <p>3.特长能力</p>
-                                    <textarea></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6"></td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <p>4.社会工作</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                   <textarea></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <p>5.实践活动</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <textarea></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td rowspan="7" style="width:10px; border-right:1px solid black">学校推荐意见</td>
-                                <td colspan="6">院（系）鉴定意见</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">1.业务素质</td>
                                 <td colspan="4">
-                                    @Html.RadioButtonFor(model=>model.applInfo.StudyTest,"1")优
-                                    @Html.RadioButtonFor(model=>model.applInfo.StudyTest,"2")良
-                                    @Html.RadioButtonFor(model=>model.applInfo.StudyTest,"3")中
+                                    @Html.TextAreaFor(model => model.applInfo.ApplNote)
                                 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <input type="submit" value="提交" class="btn btn-warning">
+                                </td>
+                            </tr>
+                        </table>
+                   
+                @*本科生*@
+                <table class="informationTable table" @ViewBag.numbercount>
+                    <tr style="text-align:center">
+                        <td colspan="4">
+                            <b>综合评测档次</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <p>院系鉴定意见：注：学生不能编辑，此项由院系给出</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:130px">
+                            <span>1.业务素质</span>
+                        </td>
+                        <td>
+                            @Html.RadioButtonFor(model => model.applInfo.StudyTest, "0") 优
+                            @Html.RadioButtonFor(model => model.applInfo.StudyTest, "1") 良
+                            @Html.RadioButtonFor(model => model.applInfo.StudyTest, "2") 中
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>2.思想道德素质表现</span>
+                        </td>
+                        <td>
+                            @Html.RadioButtonFor(model => model.applInfo.MoralTest, "0") 优
+                            @Html.RadioButtonFor(model => model.applInfo.MoralTest, "1") 良
+                            @Html.RadioButtonFor(model => model.applInfo.MoralTest, "2") 中
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>3.科技创新能力</span>
+                        </td>
+                        <td>
+                            @Html.RadioButtonFor(model => model.applInfo.ScienceTest, "0") 优
+                            @Html.RadioButtonFor(model => model.applInfo.ScienceTest, "1") 良
+                            @Html.RadioButtonFor(model => model.applInfo.ScienceTest, "2") 中
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>4.社会活动能力</span>
+                        </td>
+                        <td>
+                            @Html.RadioButtonFor(model => model.applInfo.ActTest, "0") 优
+                            @Html.RadioButtonFor(model => model.applInfo.ActTest, "1") 良
+                            @Html.RadioButtonFor(model => model.applInfo.ActTest, "2") 中
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>5.文化素质</span>
+                        </td>
+                        <td>
+                            @Html.RadioButtonFor(model => model.applInfo.CultureTest, "0") 优
+                            @Html.RadioButtonFor(model => model.applInfo.CultureTest, "1") 良
+                            @Html.RadioButtonFor(model => model.applInfo.CultureTest, "2") 中
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>6.身心素质</span>
+                        </td>
+                        <td>
+                            @Html.RadioButtonFor(model => model.applInfo.HealthTest, "0") 优
+                            @Html.RadioButtonFor(model => model.applInfo.HealthTest, "1") 良
+                            @Html.RadioButtonFor(model => model.applInfo.HealthTest, "2") 中
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <span>综合测评结果：</span>
+                            @Html.RadioButtonFor(model => model.applInfo.TotalTest, "0") 优
+                            @Html.RadioButtonFor(model => model.applInfo.TotalTest, "1") 良
+                            @Html.RadioButtonFor(model => model.applInfo.TotalTest, "2") 中
+                        </td>
+                    </tr>
+                </table>
 
-                            </tr>
-                            <tr>
-                                <td colspan="2">2.思想道德素质表现</td>
-                                <td colspan="4">
-                                   
-                                    @Html.RadioButtonFor(model=>model.applInfo.MoralTest,"1")优
-                                    @Html.RadioButtonFor(model=>model.applInfo.MoralTest,"2")良
-                                    @Html.RadioButtonFor(model=>model.applInfo.MoralTest,"3")中
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">3.科技创新能力</td>
-                                <td colspan="4">
-                                   
-                                    @Html.RadioButtonFor(model=>model.applInfo.ScienceTest,"1")优
-                                    @Html.RadioButtonFor(model=>model.applInfo.ScienceTest,"2")良
-                                    @Html.RadioButtonFor(model=>model.applInfo.ScienceTest,"3")中
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">4.社会活动能力</td>
-                                <td colspan="4">
-                                    
-                                    @Html.RadioButtonFor(model=>model.applInfo.ActTest,"1")优
-                                    @Html.RadioButtonFor(model=>model.applInfo.ActTest,"2")良
-                                    @Html.RadioButtonFor(model=>model.applInfo.ActTest,"3")中
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">5.文化素质</td>
-                                <td colspan="4">
-
-                                    @Html.RadioButtonFor(model=>model.applInfo.ActTest,"1")优
-                                    @Html.RadioButtonFor(model=>model.applInfo.ActTest,"2")良
-                                    @Html.RadioButtonFor(model=>model.applInfo.ActTest,"3")中
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">6.身心素质</td>
-                                <td colspan="4">
-
-                                    @Html.RadioButtonFor(model=>model.applInfo.HealthTest,"1")优
-                                    @Html.RadioButtonFor(model=>model.applInfo.HealthTest,"2")良
-                                    @Html.RadioButtonFor(model=>model.applInfo.HealthTest,"3")中
-                                </td>
-                            </tr>
+                <table class="informationTable table" @ViewBag.type>
+                    <tr style="text-align:center">
+                        <td><b>学校推荐意见</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <span>院系鉴定意见： 注：学生不能编辑，该项由院系给出</span>@Html.TextAreaFor(model => model.applInfo.AcademicOpinion)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <span>导师意见:注：学生不能编辑，该项由导师给出</span>@Html.TextAreaFor(model => model.applInfo.TutorOpinion)
+                        </td>
+                    </tr>
+                </table>
                             <tr>
                                 <td rowspan="3" style="width:10px; border-right:1px solid black">设置</td>
                                 <td colspan="6">
@@ -402,14 +484,7 @@
                                     @Html.RadioButtonFor(model=>model.applInfo.IsQiuChecked,"0",new{@checked=true})否
                                 </td>
                             </tr>
-                            <tr>
-                                <td colspan="6">
-                                    <span>是否对外显示</span>
-                                    <input type="radio" name="type8">是
-                                    <input type="radio" name="type8" checked>否
-                                    <textarea placeholder="若不对外显示请填写原因，对外显示则不填写"></textarea>
-                                </td>
-                            </tr>
+                            
                             <tr>
                                 <td colspan="6">
                                     <span>是否锁定</span>
@@ -425,7 +500,7 @@
                                     <a href="#">返回上一页</a>
                                 </td>
                             </tr>
-                        </table>
+                       
                     }
                 </div>
 

@@ -251,15 +251,23 @@
                             <tr>
                                 <td colspan="3">
                                     <span>就业形式：</span>
-                                    @*<input type="radio" name="jobPosition">就业困难
-                <input type="radio" name="jobPosition">继续考公务员
-                <input type="radio" name="jobPosition">继续考研
-                <input type="radio" name="jobPosition">其他*@
-                                    @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "就业困难")就业困难
-                                    @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "继续考公务员")继续考公务员
-                                    @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "继续考研")继续考研
-                                    @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "其他")其他
-
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.JobDiff, "1就业困难", new { @class = "radio1 aa", @checked = true })就业困难
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.JobDiff, "2继续考公务员", new { @class = "radio aa", @checked = true })继续考公务员
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.JobDiff, "3继续考研", new { @class = "radio aa", @checked = true })继续考研
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.JobDiff, "4其他", new { @class = "radio2 aa", @checked = true })其他
+                                    @Html.TextBoxFor(model => model.eSchoolInfo.JobDiff, new { @class = "liyu", style = "display:none" })
+                                </td>
+                            </tr>
+                            <tr class="hide1">
+                                <td colspan="3">
+                                    <spa>困难原因</spa>
+                                    @Html.TextBoxFor(model => model.eSchoolInfo.JobDiffCause, new { style = "width:70%" })
+                                </td>
+                            </tr>
+                            <tr class="hide2" style="display:none">
+                                <td colspan="3">
+                                    <spa>备注</spa>
+                                    @Html.TextBoxFor(model => model.eSchoolInfo.Note, new { style = "width:70%" })
                                 </td>
                             </tr>
                             <tr>
@@ -319,5 +327,34 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $(".radio1").click(function () {
+                $('.hide2').hide();
+                $(".hide1").show();
+            })
+            $(".radio2").click(function () {
+                $('.hide1').hide();
+                $(".hide2").show();
+            })
+            $(".radio").click(function () {
+                $('.hide1').hide();
+                $(".hide2").hide();
+            })
+
+            if ($(".liyu").val() == "4其他") {
+                $('.hide1').hide();
+                $(".hide2").show();
+            } else if ($(".liyu").val() == "1就业困难") {
+                $('.hide2').hide();
+                $(".hide1").show();
+            } else {
+                $('.hide1').hide();
+                $(".hide2").hide();
+            }
+        })
+    </script>
+
 </body>
 </html>

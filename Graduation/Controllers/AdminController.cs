@@ -1520,6 +1520,8 @@ namespace Graduation.Controllers
                 applInfo = db.ApplInfoTb.Find(studentNumber),
                 upload = db.UploadTb.Find(studentNumber)
             };
+            ViewBag.type = student.upload.StudentType;
+            ViewBag.numberCount = student.upload.StudentNumber.Length;
             if (student.applInfo == null)
             {
                 student.applInfo = new ApplInfoModel();
@@ -3011,7 +3013,7 @@ namespace Graduation.Controllers
                             break;
                         case "xl"://学历
                             model.Education = data;
-                            if (data == "本科生")
+                            if (data == "本科生"||data=="本科")
                             {
                                 model.StudentType = "0";
                                 model.EducationCode = "31";
