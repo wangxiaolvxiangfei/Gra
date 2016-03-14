@@ -3,6 +3,10 @@
 {
     ViewBag.type = "disabled";
 }
+@if (ViewBag.style == "1")
+{
+    ViewBag.style = "display:none";
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +16,63 @@
     <title>就业信息审核</title>
     <meta name="description" content="">
     <meta name="author" content="templatemo">
+    @if (ViewBag.type == "2")
+{
+    <script type="text/javascript">
+        $(function () {
+            GetAca();
+            $("#Depart").empty();
+            $("#Major").empty();
+            $("#Aca").change(function () {
+                GetDepart();
+            });
+            $("#Depart").change(function () {
+                GetMajor();
+            });
+        });
+        //获取院
+        function GetAca() {
+            $("#Aca").empty();
+            $.getJSON(
+            "/Admin/GetAcalist",
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Aca"));
+
+                })
+            });
+        }
+
+        //获取系
+        function GetDepart() {
+            $("#Depart").empty();
+            $.getJSON(
+            "/Admin/GetDepartList",
+            { pid: $("#Aca").val() },
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Depart"));
+
+                })
+            });
+        }
+        //获取专业
+        function GetMajor() {
+            $("#Major").empty();
+            $.getJSON(
+            "/Admin/GetMajorList",
+            { pid: $("#Depart").val() },
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Major"));
+
+                })
+            });
+        }
+    </script>
+}
+else
+{
     <script type="text/javascript">
         $(function () {
             GetDepartM();
@@ -52,34 +113,8 @@
                 })
             });
         }
-
-        //只选择院的时候table显示的值
-        function GetAcaM() {
-            $("#table").empty();
-            $("#table").append("<thead><tr><th>专业ID</th><th>专业名称</th><th>专业代码</th><th>学院名称</th><th>系名称</th><th>学历</th><th>删除</th><th>选择</th></tr></thead>");
-            $.getJSON(
-            "/Admin/GetMajorTbByAc",
-            { pid: $("#Aca").val() },
-            function (data) {
-                $.each(data, function (i, item) {
-                    $("#table").append("<tr><td>" + item["Id"] + "</td><td>" + item["Name"] + "</td><td>" + item["Code"] + "</td><td>" + item["AcademyName"] + "</td><td>" + item["DepartmentName"] + "</td><td>" + item["Edu"] + "</td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + ">选择</a></td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + "?type=1>删除</a></td>");
-                })
-            });
-        }
-        //选择系的时候，显示该系下面的专业
-        function GetDepartM() {
-            $("#table").empty();
-            $("#table").append("<thead><tr><th>专业ID</th><th>专业名称</th><th>专业代码</th><th>学院名称</th><th>系名称</th><th>学历</th><th>删除</th><th>选择</th></tr></thead>");
-            $.getJSON(
-            "/Admin/GetMajorTbBydDe",
-            { pid: $("#Depart").val() },
-            function (data) {
-                $.each(data, function (i, item) {
-                    $("#table").append("<tr><td>" + item["Id"] + "</td><td>" + item["Name"] + "</td><td>" + item["Code"] + "</td><td>" + item["AcademyName"] + "</td><td>" + item["DepartmentName"] + "</td><td>" + item["Edu"] + "</td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + ">选择</a></td>" + "<td><a href=" + "/Admin/AdminMajor/" + item["Id"] + "?type=1>删除</a></td>");
-                })
-            });
-        }
     </script>
+}
 </head>
 <body>
     <!-- Left column -->
@@ -251,22 +286,31 @@
                         </div>
                     </div>
                     <div class="form-group">
-                            <label for="inputPassword3" class="col-sm-1 control-label">入学年份</label>
-                            <div class="col-sm-3">
-                                @Html.TextBoxFor(m => m.upload.EntranceYear, new { placeholder = "入学年份" })
-                            </div>
+                        <label for="inputPassword3" class="col-sm-1 control-label">入学年份</label>
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(m => m.upload.EntranceYear, new { placeholder = "入学年份" })
                         </div>
-                        <div class="form-group">
-                            <label for="inputPassword3" class="col-sm-1 control-label">毕业年份</label>
-                            <div class="col-sm-3">
-                                @Html.TextBoxFor(m => m.upload.GraduationTime, new { placeholder = "毕业年份" })
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-1 control-label">毕业年份</label>
+                        <div class="col-sm-3">
+                            @Html.TextBoxFor(m => m.upload.GraduationTime, new { placeholder = "毕业年份" })
                         </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">所在院系</label>
-                        @Html.DropDownListFor(model => model.upload.Academy, ViewBag.aca as SelectList, "=请选择=", new { id = "Aca", @class = "form-control ly-select", disabled = @ViewBag.type })
-                        @Html.DropDownListFor(model => model.upload.Department, ViewBag.dep as SelectList, "=请选择=", new { id = "Depart", @class = "form-control ly-select", disabled = @ViewBag.type })
-                        @Html.DropDownListFor(model => model.upload.Major, ViewBag.major as List<SelectListItem>, "=请选择=", new { id = "Major", @class = "form-control ly-select" })
+                        @if (@ViewBag.style == "2")
+                        {
+                            @Html.DropDownListFor(model => model.upload.Academy, ViewBag.aca as List<SelectListItem>, "=请选择=", new { id = "Aca", @class = "form-control ly-select" })
+                            @Html.DropDownListFor(model => model.upload.Department, ViewBag.dep as List<SelectListItem>, "=请选择=", new { id = "Depart", @class = "form-control ly-select" })
+                            @Html.DropDownListFor(model => model.upload.Major, ViewBag.major as List<SelectListItem>, "=请选择=", new { id = "Major", @class = "form-control ly-select" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.upload.Academy, ViewBag.aca as SelectList, "=请选择=", new { id = "Aca", @class = "form-control ly-select", disabled = @ViewBag.type })
+                            @Html.DropDownListFor(model => model.upload.Department, ViewBag.dep as SelectList, "=请选择=", new { id = "Depart", @class = "form-control ly-select", disabled = @ViewBag.type })
+                            @Html.DropDownListFor(model => model.upload.Major, ViewBag.major as List<SelectListItem>, "=请选择=", new { id = "Major", @class = "form-control ly-select" })
+                        }
                     </div>
                     <div class="form-group">
                         <label for="inputPassword3" class="col-sm-2 control-label">
@@ -274,7 +318,7 @@
                         </label>
                         <div class="col-sm-5">
                             <div class="radio">
-                                <span>@Html.RadioButtonFor(m=>m.IsCheckEd,"1")<b>是</b></span>
+                                <span>@Html.RadioButtonFor(m => m.IsCheckEd, "1")<b>是</b></span>
                                 <span>@Html.RadioButtonFor(m => m.IsCheckEd, "0")<b>否</b></span>
                             </div>
                         </div>
@@ -285,7 +329,7 @@
                         </label>
                         <div class="col-sm-5">
                             <div class="radio">
-                                <span>@Html.RadioButtonFor(m=>m.IsESchool,"1")<b>是</b></span>
+                                <span>@Html.RadioButtonFor(m => m.IsESchool, "1")<b>是</b></span>
                                 <span>@Html.RadioButtonFor(m => m.IsESchool, "0")<b>否</b></span>
                             </div>
                         </div>
@@ -296,7 +340,7 @@
                         </label>
                         <div class="col-sm-5">
                             <div class="radio">
-                                <span>@Html.RadioButtonFor(m=>m.IsJiuye,"1")<b>是</b></span>
+                                <span>@Html.RadioButtonFor(m => m.IsJiuye, "1")<b>是</b></span>
                                 <span>@Html.RadioButtonFor(m => m.IsJiuye, "0")<b>否</b></span>
                             </div>
                         </div>
@@ -307,7 +351,7 @@
                         </label>
                         <div class="col-sm-5">
                             <div class="radio">
-                                <span>@Html.RadioButtonFor(m=>m.IsClocked,"1")<b>是</b></span>
+                                <span>@Html.RadioButtonFor(m => m.IsClocked, "1")<b>是</b></span>
                                 <span>@Html.RadioButtonFor(m => m.IsClocked, "0")<b>否</b></span>
                             </div>
                         </div>
@@ -351,9 +395,11 @@
                                     <td>@item.upload.Major</td>
                                     <td>@item.upload.Class</td>
                                     @if (@item.eSchoolInfo == null)
-                                    { <td></td>}
+                                    {
+                                    <td></td>}
                                     else
-                                    {<td>@item.eSchoolInfo.AgreementID</td> }
+                                    {
+                                    <td>@item.eSchoolInfo.AgreementID</td> }
                                     @if (@item.eSchoolInfo == null)
                                     {
                                         <td>否</td>
@@ -364,36 +410,45 @@
                                     else
                                     {
                                         if (@item.eSchoolInfo.EmploymentCode == "10")
-                                        { <td>是</td>}
+                                        {
+                                        <td>是</td>}
                                         else
-                                        { <td>否</td>}
-                                                   
+                                        {
+                                        <td>否</td>}
+
                                         if (@item.eSchoolInfo.IsJiuYe == "1")
-                                        { <td>是</td>}       
+                                        {
+                                        <td>是</td>}
                                         else
-                                        { <td>否</td>} 
-                                                    
+                                        {
+                                        <td>否</td>}
+
                                         if (@item.eSchoolInfo.IsChecked == "1")
-                                        { <td>是</td> }  
+                                        {
+                                        <td>是</td> }
                                         else
-                                        { <td>否</td>}
+                                        {
+                                        <td>否</td>}
 
                                         if (@item.eSchoolInfo.IsClock == "1")
-                                        { <td>是</td>}
+                                        {
+                                        <td>是</td>}
                                         else
-                                        {<td>否</td> }
+                                        {
+                                        <td>否</td> }
                                     }
-                                    
+
                                     @if (@item.eSchoolInfo == null)
-                                    {   <td></td>
+                                    {
+                                    <td></td>
                                         <td></td>
                                     }
-                                    else 
-                                    { 
+                                    else
+                                    {
                                         <td>@item.eSchoolInfo.StudentEditTime</td>
                                         <td>@item.eSchoolInfo.TeacherEditTime</td>
                                     }
-                                    
+
                                 </tr>
 
                             }
