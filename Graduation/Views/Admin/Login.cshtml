@@ -1,0 +1,43 @@
+﻿@model Graduation.Models.UserModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>管理员登录</title>
+    <meta name="description" content="">
+</head>
+<body class="light-gray-bg">
+    <div class="templatemo-content-widget templatemo-login-widget white-bg" style="margin-top:100px;">
+        <header class="text-center">
+            <div class="square"></div>
+            <h1>管理员登录</h1>
+        </header>
+        @using (Html.BeginForm(null, null, null, FormMethod.Post, new { @class = "templatemo-login-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "用户名" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
+                     @Html.PasswordFor(m => m.Pwd, new { @class = "form-control", placeholder = "密码" })
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="templatemo-blue-button width-100">登录</button>
+            </div>
+        }
+        <div class="dreamtech">
+            <p><span>版权所有：</span><a href="#">华北电力大学学生处</a>&nbsp;&nbsp;<a href="StudentLogin.html">用户登录</a></p>
+            <p><span>技术支持：</span><a href="#">Dreamtech</a></p>
+        </div>
+    </div>
+</body>
+</html>

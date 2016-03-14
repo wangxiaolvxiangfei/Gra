@@ -1,0 +1,666 @@
+﻿@model Graduation.Models.ESchoolInfoViewModel
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>审核</title>
+    <meta name="description" content="">
+    <meta name="author" content="templatemo">
+
+    <!-- <link href='http://fonts.useso.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css'> -->
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/templatemo-style.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="js/ly.js"></script>
+
+
+</head>
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div class="templatemo-sidebar">
+            <header class="templatemo-site-header">
+                <h1>华北电力大学</h1>
+            </header>
+            <div class="profile-photo-container">
+                <img src="images/profile-photo.jpg" alt="Profile Photo" class="img-responsive">
+                <div class="profile-photo-overlay"></div>
+            </div>
+            <div class="mobile-menu-icon">
+                <i class="fa fa-bars"></i>
+            </div>
+            <nav class="templatemo-left-nav">
+                <ul class="ly-ul-parent">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-home fa-fw"></i>
+                            系统设置
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li>
+                                <a href="#">
+                                    院系及专业名称管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="index.html">学院名称管理</a></li>
+                                    <li><a href="departmentName.html">系名称管理</a></li>
+                                    <li><a href="professionalName.html">专业名称管理</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="loginTimeControl.html">登录时间控制</a></li>
+                            <li><a href="schoolChange.html">学籍变动管理</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="user.html">
+                            <i class="fa fa-bar-chart fa-fw"></i>
+                            系统用户管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="resertPassword.html">
+                            <i class="fa fa-database fa-fw"></i>
+                            重置密码
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-map-marker fa-fw"></i>
+                            通知管理
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="new.html">发布通知</a></li>
+                            <li><a href="newdetail.html">通告公告</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-users fa-fw"></i>
+                            生源库导入导出
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="graduateMess.html">毕业生信息导入</a></li>
+                            <li><a href="graduateOut.html">毕业生信息导出</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-sliders fa-fw"></i>
+                            毕业生
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="graduateWork.html">签约登记表</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-eject fa-fw"></i>
+                            统计管理
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="employ.html">就业统计</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fa fa-user-md fa-fw"></i>
+                            本专科生/研究生
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li>
+                                <a href="#">
+                                    基本信息管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="undergraduateList.html">毕业生列表</a></li>
+                                    <li><a href="addUndergraduate.html">院系预增加的生源</a></li>
+                                    <li><a href="deleteUndergradute.html">院系预删除的生源</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    求职信息管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="jobSearchInformationManagement3.html">审核管理</a></li>
+                                    <li><a href="jobSearchInformationManagement.html">显示设置</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    就业信息管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="employmentInformationAudit.html">就业信息审核</a></li>
+                                    <li><a href="exportEmploymentInformation.html">就业信息导出</a></li>
+                                    <li><a href="count.html">就业统计</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="login.html">
+                            安全退出
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <h2>求职与就业信息管理系统</h2>
+                <div class="right">
+                    <span>欢迎&nbsp;&nbsp;</span><span class="admin">就业中心管理员：</span><span class="admin">Admin</span><span>&nbsp;&nbsp;登录本系统</span>
+                </div>
+            </div>
+            <div class="templatemo-content-container now-position ly-tab">
+                <!--  <span>当前位置：</span><span>管理员登录>></span><span>本科转生求职与就业管理>></span><span><a href="StudentJobInformation.html">就业签约管理>></a></span><span>无协议书就业</span> -->
+                <div class="content">
+                    <p><b class="warn">1.就业形势：(必选)</b></p>
+                    @using (@Html.BeginForm())
+                    {
+                        @Html.HiddenFor(model => model.eSchoolInfo.StudentNumber)
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        <p class="a">
+                            
+
+                            <a href="/Admin/EmplESchoolExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "有协议就业/合同就业", new { @checked=true }) 有协议就业/合同就业</a>
+                            <a href="/Admin/EmplArmyExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "其他形式就业") 其他形式就业</a>
+                            <a href="/Admin/EmplNotJobExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "暂未就业") 暂未就业</a>
+
+
+                        </p>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th colspan="4" style="text-align:center">个人信息</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span>学号：</span><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
+                                    <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                                    <td><span>性别：</span><span>@Html.ValueFor(model => model.upload.Sex)</span></td>
+                                    <td><span>出生年月：</span><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>政治面貌：</span><span>@ViewBag.P</span></td>
+                                    <td><span>专业：</span><span>@Html.ValueFor(model => model.upload.Major)</span></td>
+                                    <td><span>培养方式：</span><span>@Html.ValueFor(model => model.upload.TrainType)</span></td>
+                                    <td><span>学历：</span><span>@Html.ValueFor(model => model.upload.Education)</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span>学制：</span><span>@Html.ValueFor(model => model.upload.LengthOfSch)</span>
+                                    </td>
+                                    <td>
+                                        <span>毕业时间：</span><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
+                                    </td>
+                                    <td>
+                                        <span>生源地区：</span><span>@ViewBag.L</span>
+                                    </td>
+                                    <td>
+                                        <span>身份证号：</span><span>@Html.ValueFor(model => model.upload.IDNumber)</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span>健康状况：</span><span>@ViewBag.H</span>
+                                    </td>
+                                    <td>
+                                        <span>手机号码：</span><span>@ViewBag.T</span>
+                                    </td>
+                                    <td>
+                                        <span>邮政编码：</span><span>@ViewBag.C</span>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <span>通信地址：</span><span>@ViewBag.ADDR</span>
+                                    </td>
+                                    <td colspan="2">
+                                        <span>家庭所在地</span><span>@ViewBag.FL</span>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table1">
+                            <tr>
+                                <td colspan="4"><span>协议书编号：</span>@Html.TextBoxFor(model => model.eSchoolInfo.AgreementID)*唯一</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>单位名称：</p>
+                                    @Html.TextBoxFor(model => model.eSchoolInfo.CompanyName)
+                                </td>
+                                <td>
+                                    <p>单位所属集团或系统</p>
+                                    @Html.DropDownListFor(model => model.eSchoolInfo.ComBelongGroup, ViewBag.Group as List<SelectListItem>)
+                                </td>
+                                <td>
+                                    <p>单位组织机构代码</p>
+                                    <p class="warn">(9位数字或字母不含‘-’)</p>
+                                    @Html.TextBoxFor(model => model.eSchoolInfo.CompanyCode)
+                                </td>
+                                <td>
+                                    <p>单位上级隶属部门</p>
+                                    <select>
+                                        <option selected="selected" value="---">---</option>
+                                        <option value="000">空值</option>
+                                        <option value="010">录取研究生</option>
+                                        <option value="011">出国、退学及其它</option>
+                                        <option value="101">人大常委会办公厅</option>
+                                        <option value="103">全国人大民族委员会</option>
+                                        <option value="107">人大法制委员会</option>
+                                        <option value="109">全国人大内务司法委员会</option>
+                                        <option value="111">全国人大财政经济委员会</option>
+                                        <option value="113">全国人大教科文卫委员会</option>
+                                        <option value="115">全国人大外事委员会</option>
+                                        <option value="117">全国人大华侨委员会</option>
+                                        <option value="131">全国政协</option>
+                                        <option value="151">最高检察院</option>
+                                        <option value="161">最高法院</option>
+                                        <option value="201">中央办公厅</option>
+                                        <option value="203">中央组织部</option>
+                                        <option value="211">中央宣传部</option>
+                                        <option value="213">中央统战部</option>
+                                        <option value="215">中央对外联络部</option>
+                                        <option value="217">中央政治体制改革研究室</option>
+                                        <option value="219">中央农村政策研究室</option>
+                                        <option value="221">中央顾问委员会机关</option>
+                                        <option value="222">中央纪律检查委员会</option>
+                                        <option value="231">中央对台工作领导小组</option>
+                                        <option value="233">中央直属机关工作委员会</option>
+                                        <option value="235">中央国家机关工作委员会</option>
+                                        <option value="281">中央党校</option>
+                                        <option value="282">人民日报社</option>
+                                        <option value="283">中央党史研究室</option>
+                                        <option value="284">中央文献研究室</option>
+                                        <option value="285">中央编译局</option>
+                                        <option value="301">外交部</option>
+                                        <option value="302">国防科学技术工业委员会</option>
+                                        <option value="303">国家发展和改革委员会</option>
+                                        <option value="305">国家经济体制改革委员会</option>
+                                        <option value="306">国家科学技术委员会</option>
+                                        <option value="307">总装备部</option>
+                                        <option value="308">国家民族事务委员会</option>
+                                        <option value="311">国家监察部</option>
+                                        <option value="312">公安部</option>
+                                        <option value="313">国家安全部</option>
+                                        <option value="314">民政部</option>
+                                        <option value="315">司法部</option>
+                                        <option value="316">人事部</option>
+                                        <option value="317">劳动和社会保障部</option>
+                                        <option value="318">财政部</option>
+                                        <option value="319">审计署</option>
+                                        <option value="320">中国人民银行</option>
+                                        <option value="322">商务部</option>
+                                        <option value="323">中华供销合作总社</option>
+                                        <option value="326">农业部</option>
+                                        <option value="327">国家林业局</option>
+                                        <option value="329">中国航空工业第一集团公司</option>
+                                        <option value="330">中国航天科技集团公司</option>
+                                        <option value="331">国家电力公司</option>
+                                        <option value="332">水利部</option>
+                                        <option value="333">建设部</option>
+                                        <option value="334">国土资源部</option>
+                                        <option value="347">铁道部</option>
+                                        <option value="348">交通部</option>
+                                        <option value="349">信息产业部</option>
+                                        <option value="357">文化部</option>
+                                        <option value="359">广播电影电视局</option>
+                                        <option value="360">教育部</option>
+                                        <option value="361">卫生部</option>
+                                        <option value="362">国家体育总局</option>
+                                        <option value="363">国家人口和计划生育委员会</option>
+                                        <option value="405">中央大型企业工作委员会</option>
+                                        <option value="406">国务院国有资产监督管理委员会</option>
+                                        <option value="407">中国银行业监督管理委员会</option>
+                                        <option value="410">国家统计局</option>
+                                        <option value="411">国家物价局</option>
+                                        <option value="414">国家工商行政管理局</option>
+                                        <option value="415">海关总署</option>
+                                        <option value="416">中国气象局</option>
+                                        <option value="417">中国民用航空局</option>
+                                        <option value="418">国家海洋局</option>
+                                        <option value="419">国家地震局</option>
+                                        <option value="420">国家旅游局</option>
+                                        <option value="421">国家新闻出版署</option>
+                                        <option value="422">国家技术监督局</option>
+                                        <option value="423">国家土地管理局</option>
+                                        <option value="427">国务院宗教事务局</option>
+                                        <option value="428">国家档案局</option>
+                                        <option value="429">国务院参事室</option>
+                                        <option value="430">国务院机关事务管理局</option>
+                                        <option value="431">国务院研究室</option>
+                                        <option value="433">国务院法制局</option>
+                                        <option value="434">国务院办公厅</option>
+                                        <option value="435">国务院侨务办公室</option>
+                                        <option value="436">国务院港澳办公室</option>
+                                        <option value="437">国务院特区办公室</option>
+                                        <option value="438">国务院外事办公室</option>
+                                        <option value="439">国务院台湾事务办公室</option>
+                                        <option value="440">国家外国专家局</option>
+                                        <option value="444">国家税务总局</option>
+                                        <option value="445">国家外汇管理局</option>
+                                        <option value="446">中国黄金管理局</option>
+                                        <option value="447">国家矿产储量管理局</option>
+                                        <option value="448">国家国有资产管理局</option>
+                                        <option value="452">国家保密局</option>
+                                        <option value="453">国家文物局</option>
+                                        <option value="454">国家版权局</option>
+                                        <option value="455">外文出版局</option>
+                                        <option value="458">国家核安全局</option>
+                                        <option value="462">国家物资储备局</option>
+                                        <option value="463">中国专利局</option>
+                                        <option value="464">国家食品药品监督管理局</option>
+                                        <option value="465">国家进出口商品捡验局</option>
+                                        <option value="466">国家测绘局</option>
+                                        <option value="467">国家环境保护局</option>
+                                        <option value="468">国家中医药管理局</option>
+                                        <option value="476">国际问题研究中心</option>
+                                        <option value="480">国家自然科学基金委员会</option>
+                                        <option value="481">国家信息中心</option>
+                                        <option value="490">新华通讯社</option>
+                                        <option value="491">中国科学院</option>
+                                        <option value="492">中国社会科学院</option>
+                                        <option value="493">中国工程物理研究院</option>
+                                        <option value="494">国务院经济技术社会研究中心</option>
+                                        <option value="495">国务院农村发展研究中心</option>
+                                        <option value="501">中国工商银行</option>
+                                        <option value="502">中国农业银行</option>
+                                        <option value="503">中国银行</option>
+                                        <option value="504">中国人民建设银行</option>
+                                        <option value="505">中国人民保险公司</option>
+                                        <option value="507">中国交通银行</option>
+                                        <option value="508">中国投资银行</option>
+                                        <option value="509">国家开发银行</option>
+                                        <option value="510">光大实业银行</option>
+                                        <option value="511">中国船舶工业集团公司</option>
+                                        <option value="512">中国国际信托投资公司</option>
+                                        <option value="513">中国石油化工集团公司</option>
+                                        <option value="515">中国石油天然气集团公司</option>
+                                        <option value="516">国家安全生产监督管理局</option>
+                                        <option value="517">中国核工业集团公司</option>
+                                        <option value="518">中国兵器工业集团公司</option>
+                                        <option value="519">信息产业部</option>
+                                        <option value="521">中国证监会</option>
+                                        <option value="522">中国保监会</option>
+                                        <option value="523">农村合作金融协会</option>
+                                        <option value="524">中国农业发展银行</option>
+                                        <option value="525">中国进出口银行</option>
+                                        <option value="526">中信实业银行</option>
+                                        <option value="527">招商银行</option>
+                                        <option value="528">中国人民保险公司</option>
+                                        <option value="529">中国人寿保险公司</option>
+                                        <option value="530">平安保险公司</option>
+                                        <option value="531">太平洋保险公司</option>
+                                        <option value="532">中国华融资产管理公司</option>
+                                        <option value="533">中国东方资产管理公司</option>
+                                        <option value="534">中国信达资产管理公司</option>
+                                        <option value="535">中国核工业建设集团公司</option>
+                                        <option value="536">中国航天机电集团公司</option>
+                                        <option value="537">中国航空工业第二集团公司</option>
+                                        <option value="538">中国船舶重工集团公司</option>
+                                        <option value="539">中国兵器装备集团公司</option>
+                                        <option value="542">中国包装总公司</option>
+                                        <option value="543">中国烟草总公司</option>
+                                        <option value="544">中国建筑工程总公司</option>
+                                        <option value="545">中国汽车工业总公司</option>
+                                        <option value="546">中国海洋石油总公司</option>
+                                        <option value="548">中国国际工程咨询公司</option>
+                                        <option value="549">中国高新技术投资集团公司</option>
+                                        <option value="550">中国能源投资公司</option>
+                                        <option value="551">中国农业投资公司</option>
+                                        <option value="552">中国林业投资公司</option>
+                                        <option value="553">中国交通投资公司</option>
+                                        <option value="560">中国非金属矿业总公司</option>
+                                        <option value="561">中国非金属材料总公司</option>
+                                        <option value="562">中国新型建材总公司</option>
+                                        <option value="563">中国北方机车车辆工业集团公司</option>
+                                        <option value="601">东风汽车工业联营公司</option>
+                                        <option value="602">解放汽车工业联营公司</option>
+                                        <option value="603">中国重型汽车集团公司</option>
+                                        <option value="604">第一拖拉机联营公司</option>
+                                        <option value="605">西安电力机械制造公司</option>
+                                        <option value="606">中国长城计算机集团公司</option>
+                                        <option value="608">广东核电联营公司</option>
+                                        <option value="609">中国东方电气(集团)公司</option>
+                                        <option value="610">哈尔滨电站成套设备公司</option>
+                                        <option value="611">东北输变电设备公司</option>
+                                        <option value="613">长江计算机集团公司</option>
+                                        <option value="614">上海电气联合公司</option>
+                                        <option value="615">中国国际企业合作公司</option>
+                                        <option value="616">华能集团公司</option>
+                                        <option value="617">新疆生产建设兵团</option>
+                                        <option value="618">中国长江三峡开发总公司</option>
+                                        <option value="619">神华集团公司</option>
+                                        <option value="620">中国联通公司</option>
+                                        <option value="621">中国电信集团</option>
+                                        <option value="622">中国移动</option>
+                                        <option value="623">中国网通</option>
+                                        <option value="624">国家邮政局</option>
+                                        <option value="631">光明日报社</option>
+                                        <option value="632">中国日报社</option>
+                                        <option value="633">经济日报</option>
+                                        <option value="634">《求是》杂志社</option>
+                                        <option value="635">工人日报</option>
+                                        <option value="636">中国青年报</option>
+                                        <option value="637">科技日报</option>
+                                        <option value="651">解放军总政治部</option>
+                                        <option value="652">解放军总后工厂部</option>
+                                        <option value="653">武警部队</option>
+                                        <option value="711">全国总工会</option>
+                                        <option value="712">共青团中央</option>
+                                        <option value="713">全国妇联</option>
+                                        <option value="714">全国工商联</option>
+                                        <option value="715">中华教职社</option>
+                                        <option value="721">中国文联</option>
+                                        <option value="723">中国作家协会</option>
+                                        <option value="731">中国科学技术协会</option>
+                                        <option value="732">中国佛教协会</option>
+                                        <option value="734">全国新闻工作者协会</option>
+                                        <option value="741">中国国际贸易促进会</option>
+                                        <option value="751">中国人民对外友好协会</option>
+                                        <option value="752">中国人民外交协会</option>
+                                        <option value="761">中国红十字会总会</option>
+                                        <option value="762">中国残疾人福利基金会</option>
+                                        <option value="771">中华全国归国华侨联合会</option>
+                                        <option value="772">中华全国台湾同胞联谊会</option>
+                                        <option value="773">欧美同学会</option>
+                                        <option value="774">黄埔同学会</option>
+                                        <option value="781">宋庆龄基金会</option>
+                                        <option value="782">中国致公党中央</option>
+                                        <option value="783">民革中央</option>
+                                        <option value="784">民盟中央</option>
+                                        <option value="785">民建中央</option>
+                                        <option value="911">北京市</option>
+                                        <option value="912">天津市</option>
+                                        <option value="913">河北省</option>
+                                        <option value="914">山西省</option>
+                                        <option value="915">内蒙古自治区</option>
+                                        <option value="921">辽宁省</option>
+                                        <option value="922">吉林省</option>
+                                        <option value="923">黑龙江省</option>
+                                        <option value="931">上海市</option>
+                                        <option value="932">江苏省</option>
+                                        <option value="933">浙江省</option>
+                                        <option value="934">安徽省</option>
+                                        <option value="935">福建省</option>
+                                        <option value="936">江西省</option>
+                                        <option value="937">山东省</option>
+                                        <option value="941">河南省</option>
+                                        <option value="942">湖北省</option>
+                                        <option value="943">湖南省</option>
+                                        <option value="944">广东省</option>
+                                        <option value="945">广西壮族自治区</option>
+                                        <option value="946">海南省</option>
+                                        <option value="950">重庆市</option>
+                                        <option value="951">四川省</option>
+                                        <option value="952">贵州省</option>
+                                        <option value="953">云南省</option>
+                                        <option value="954">西藏自治区</option>
+                                        <option value="961">陕西省</option>
+                                        <option value="962">甘肃省</option>
+                                        <option value="963">青海省</option>
+                                        <option value="964">宁夏回族自治区</option>
+                                        <option value="965">新疆维吾尔自治区</option>
+                                        <option value="971">台湾省</option>
+                                        <option value="972">香港</option>
+                                        <option value="973">澳门</option>
+                                        <option value="981">大连市</option>
+                                        <option value="982">宁波市</option>
+                                        <option value="983">厦门市</option>
+                                        <option value="984">青岛市</option>
+                                        <option value="985">深圳市</option>
+
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>单位行业</p>
+                                    @Html.DropDownListFor(model => model.eSchoolInfo.ComIndustry, ViewBag.hangye as List<SelectListItem>)
+                                </td>
+                                <td>
+                                    <p>工作职务</p>
+                                    @Html.DropDownListFor(model => model.eSchoolInfo.JobTitle, ViewBag.zhiwei as List<SelectListItem>)
+                                </td>
+                                <td colspan="2">
+                                    <p>《就业报到证》开具单位名称</p>
+                                    @Html.TextBoxFor(model => model.eSchoolInfo.SCompanyName)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <p>单位所在地</p>
+                                    <select class="province"></select>
+                                    <select class="city"></select>
+                                    <select class="country"></select>
+                                </td>
+                                <td colspan="2">
+                                    <span>单位性质：</span>
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "10机关")机关
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "20科研设计单位")科研设计单位
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "21高等教育单位")高等教育单位
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "22中初教育单位")中初教育单位
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "23医疗卫生单位")医疗卫生单位
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "29其他事业单位")其他事业单位
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "31国有企业")国有企业
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "32三资企业")三资企业
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "39其他企业")其他企业
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "40部队")部队
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "55农村建设")农村建设
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "56城镇社区")城镇社区
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "99其他")其他
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>联系人：</span>@Html.TextBoxFor(model => model.eSchoolInfo.Contacts)
+                                </td>
+                                <td>
+                                    <span>联系人邮编(6位数字)：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ContactsCode)
+                                </td>
+                                <td colspan="2">
+                                    <span>联系人通信地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConCommAddress)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>联系人职务：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConPost)
+                                </td>
+                                <td>
+                                    <span>联系人电话：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConTel)
+                                </td>
+                                <td colspan="2">
+                                    <span>户口迁移地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span>档案转寄详细地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)
+                                </td>
+                                <td>
+                                    <span>邮政编码(6位数字)：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)
+                                </td>
+                                <td>
+                                    <span>是否专业对口：</span>
+                                    @Html.RadioButtonFor(model=>model.eSchoolInfo.IsMajorFit,"1") 是
+                                    @Html.RadioButtonFor(mdoel=>mdoel.eSchoolInfo.IsMajorFit,"0") 否
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <p>备注：</p>
+                                    @Html.TextAreaFor(model => model.eSchoolInfo.Note)
+                                </td>
+                            </tr>
+                           
+                        </table>
+
+                        <table class="table table5">
+                            <tr>
+                                <td>是否通过审核</td>
+                                <td colspan="3">
+                                    <input type="radio" name="type2">是
+                                    <input type="radio" name="type2">否
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>是否锁定</td>
+                                <td colspan="3">
+                                    <input type="radio" name="type3">是
+                                    <input type="radio" name="type3">否
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>就业状态</td>
+                                <td colspan="3">
+                                    <input type="radio" name="type4">是
+                                    <input type="radio" name="type4">否
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>是否对外显示</td>
+                                <td colspan="3">
+                                    <input type="radio" name="type5">是
+                                    <input type="radio" name="type5">否
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <input type="submit" value="提交" class="btn btn-info" />
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                    </div>
+                    
+
+                        <footer class="text-right"></footer>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </html>

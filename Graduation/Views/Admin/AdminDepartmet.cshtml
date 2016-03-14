@@ -1,0 +1,246 @@
+﻿@model Graduation.Models.DepartmentViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>系名称管理</title>
+    <meta name="description" content="">
+    <meta name="author" content="templatemo">
+    <script type="text/javascript">
+        $(function () {
+            GetTbale();
+            $("#Aca").change(function () {
+                GetTbale();
+            });
+        });
+        function GetTbale() {
+            $("#table").empty();
+            $("#table").append("<thead><tr><th>系ID</th><th>系名称</th><th>系代码</th><th>学院名称</th><th>选择</th><th>删除</th></tr></thead>");
+            $.getJSON(
+            "/Admin/Gettable",
+            { pid: $("#Aca").val() },
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("#table").append("<tr><td>" + item["Id"] + "</td><td>" + item["Name"] + "</td><td>" + item["Code"] + "</td><td>" + item["BelongName"] + "</td>" + "<td><a href=" + "/Admin/AdminDepartmet/" + item["Id"] + ">选择</a></td>" + "<td><a href=" + "/Admin/AdminDepartmet/" + item["Id"] + "?type=1>删除</a></td>");
+                })
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div class="templatemo-sidebar">
+            <header class="templatemo-site-header">
+                <h1>华北电力大学</h1>
+            </header>
+            <div class="profile-photo-container">
+                <img src="../../images/profile-photo.jpg" alt="Profile Photo" class="img-responsive">
+                <div class="profile-photo-overlay"></div>
+            </div>
+            <div class="mobile-menu-icon">
+                <i class="fa fa-bars"></i>
+            </div>
+            <nav class="templatemo-left-nav">
+                <ul class="ly-ul-parent">
+                    <li>
+                        <a href="#" class="active">
+                            <i class="fa fa-home fa-fw"></i>
+                            系统设置
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li>
+                                <a href="#">
+                                    院系及专业名称管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="index.html">学院名称管理</a></li>
+                                    <li><a href="departmentName.html">系名称管理</a></li>
+                                    <li><a href="professionalName.html">专业名称管理</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="loginTimeControl.html">登录时间控制</a></li>
+                            <li><a href="schoolChange.html">学籍变动管理</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="uesr.html">
+                            <i class="fa fa-bar-chart fa-fw"></i>
+                            系统用户管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="resertPassword.html">
+                            <i class="fa fa-database fa-fw"></i>
+                            重置密码
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-map-marker fa-fw"></i>
+                            通知管理
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="new.html">发布通知</a></li>
+                            <li><a href="newdetail.html">通告公告</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-users fa-fw"></i>
+                            生源库导入导出
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="graduateMess.html">毕业生信息导入</a></li>
+                            <li><a href="graduateOut.html">毕业生信息导出</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-sliders fa-fw"></i>
+                            毕业生
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="graduateWork.html">签约登记表</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-eject fa-fw"></i>
+                            统计管理
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li><a href="employ.html">就业统计</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-user-md fa-fw"></i>
+                            本专科生/研究生
+                            <i class="fa fa-angle-down fa-fw right"></i>
+                        </a>
+                        <ul class="ly-ul" style="display:none">
+                            <li>
+                                <a href="#">
+                                    基本信息管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="undergraduateList.html">毕业生列表</a></li>
+                                    <li><a href="addUndergraduate.html">院系预增加的生源</a></li>
+                                    <li><a href="deleteUndergradute.html">院系预删除的生源</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    求职信息管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="jobSearchInformationManagement3.html">审核管理</a></li>
+                                    <li><a href="jobSearchInformationManagement.html">显示设置</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    就业信息管理
+                                    <i class="fa fa-angle-right fa-fw right"></i>
+                                </a>
+                                <ul class="ly-ul-child" style="display:none">
+                                    <li><a href="employmentInformationAudit.html">就业信息审核</a></li>
+                                    <li><a href="exportEmploymentInformation.html">就业信息导出</a></li>
+                                    <li><a href="count.html">就业统计</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="login.html">
+                            安全退出
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <h2>求职与就业信息管理系统</h2>
+                <div class="right">
+                    <span>欢迎&nbsp;&nbsp;</span><span class="admin">就业中心管理员：</span><span class="admin">Admin</span><span>&nbsp;&nbsp;登录本系统</span>
+                </div>
+            </div>
+            <div class="templatemo-content-container now-position">
+                <span>当前位置：</span><span>系统设置>></span><span>院系名称管理</span><span>系名称管理</span>
+                <h1 class="ly-title">系名称管理</h1>
+                @using (@Html.BeginForm(null, null, null, FormMethod.Post, new { @class = "form-inline ly-form" }))
+                {
+                    @Html.HiddenFor(model => model.depart.Id)
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    <div class="form-group">
+                        <label for="exampleInputAmount">系名称：</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.depart.Name, new { @class = "form-control departmentNameInput1", placeholder = "系名称", required = "required" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputAmount">系代码：</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.depart.Code, new { @class = "form-control departmentNameInput1", placeholder = "系代码", required = "required" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputAmount">选择学院：</label>
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.depart.BelongId, ViewBag.list as List<SelectListItem>, new { id = "Aca" })
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">添加或更新</button>
+                }
+                <div class="panel panel-default table-responsive clear">
+                    <table class="table table-striped table-bordered templatemo-user-table table-hover .houtai-table select" id="table">
+                        @if (@ViewBag.Opentype != 0)
+                        {
+                            <thead>
+                                <tr>
+                                    <th>系ID</th>
+                                    <th>系名称</th>
+                                    <th>系代码</th>
+                                    <th>学院名称</th>
+                                    <th>选择</th>
+                                    <th>删除</th>
+                                </tr>
+                            </thead>
+                            if (Model.departList != null)
+                            {
+                                foreach (var item in Model.departList)
+                                {
+                                    <tr>
+                                        <td>@item.Id</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.BelongName</td>
+                                        <td>@Html.ActionLink("选择", "AdminDepartmet", new { Id = item.Id })</td>
+                                        <td>@Html.ActionLink("删除", "AdminDepartmet", new { Id = item.Id, type = 1 })</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </table>
+                </div>
+                <footer class="text-right"></footer>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

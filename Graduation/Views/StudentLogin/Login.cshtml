@@ -1,0 +1,48 @@
+﻿@model Graduation.Models.StudentsLoginModel
+
+@{
+    Layout = null;
+}
+@Styles.Render("~/Content/bootstrap.css")
+@Styles.Render("~/Content/templatemo-style.css")
+@Styles.Render("~/Content/font-awesome.css")
+
+<html>
+<head>
+    <title>毕业生求职与就业信息管理系统</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <div class="login">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                <label for="exampleInputEmail1">学号</label>
+                @Html.TextBoxFor(model => model.StudentNumber, new { @class = "form-control", placeholder = "请输入学号" })
+                @Html.ValidationMessageFor(model => model.StudentNumber)
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">密码</label>
+                @Html.PasswordFor(model => model.Pwd, new { @class = "form-control", placeholder = "请输入密码" })
+                @Html.ValidationMessageFor(model => model.Pwd)
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">学生类型</label>
+                @Html.RadioButtonFor(m=>m.Type,"0",true ) 研究生
+                @Html.RadioButtonFor(m=>m.Type,"1") 本科生
+            </div>
+            <div>
+                @ViewBag.message
+            </div>
+            <button type="submit" class="btn btn-success right">登录</button>
+        }
+        <div class="dreamtech">
+            <p><span>版权所有：</span><a href="#">华北电力大学学生处</a>&nbsp;&nbsp;<a href="login.html">管理员登录</a></p>
+            <p><span>技术支持：</span><a href="#">Dreamtech</a></p>
+        </div>
+    </div>
+</body>
+</html>
+}

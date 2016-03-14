@@ -1,0 +1,187 @@
+﻿@model Graduation.Models.ESchoolInfoViewModel
+
+@{
+    ViewBag.Title = "FillEOtherAbroadInfo";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>本科生就业信息管理</title>
+    <meta name="description" content="">
+    <meta name="author" content="templatemo">
+
+    <!-- <link href='http://fonts.useso.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css'> -->
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/templatemo-style.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="js/ly.js"></script>
+</head>
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div class="templatemo-sidebar">
+            <header class="templatemo-site-header">
+                <h1>华北电力大学</h1>
+            </header>
+            <div class="profile-photo-container">
+                <img src="../images/profile-photo.jpg" alt="Profile Photo" class="img-responsive">
+                <div class="profile-photo-overlay"></div>
+            </div>
+            <div class="mobile-menu-icon">
+                <i class="fa fa-bars"></i>
+            </div>
+            <nav class="templatemo-left-nav">
+                <ul class="ly-ul-parent">
+                    <li>
+                        <a href="/FillBaseInfo/Index" class="active">
+                            <i class="fa fa-home fa-fw"></i>
+                            通知
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/FillBaseInfo/FillBaseInfo">
+                            <i class="fa fa-bar-chart fa-fw"></i>
+                            基本信息管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/FillBaseInfo/FillApplInfo">
+                            <i class="fa fa-database fa-fw"></i>
+                            求职信息管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/FillBaseInfo/EmployInfo">
+                            <i class="fa fa-map-marker fa-fw"></i>
+                            就业信息管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/FillBaseInfo/FillSignInfo">
+                            <i class="fa fa-users fa-fw"></i>
+                            签约登记管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="StudentLogin.html">
+                            <i class="fa fa-sliders fa-fw"></i>
+                            修改密码
+                        </a>
+                    </li>
+                    <li>
+                        <a href="StudentImg.html">
+                            <i class="fa fa-eject fa-fw"></i>
+                            上传照片
+                        </a>
+                    </li>
+                    <li>
+                        <a href="StudentLogin.html">
+                            <i class="fa fa-user-md fa-fw"></i>
+                            退出系统
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <h2>求职与就业信息管理系统</h2>
+                <div class="right">
+                    <span>用户信息：</span><span>学号：</span><span>&nbsp;&nbsp;</span><span class="admin">@Html.ValueFor(model => model.upload.StudentNumber)</span>
+                </div>
+            </div>
+            <div class="templatemo-content-container now-position ly-tab">
+                <span>当前位置：</span><span>毕业生登录>></span><span>本科转生求职与就业管理>></span><span><a href="StudentJobInformation.html">就业签约管理>></a></span><span>无协议书就业</span>
+                @using (@Html.BeginForm())
+                {
+                    @Html.HiddenFor(model => model.eSchoolInfo.StudentNumber)
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    <div class="content">
+                        <span class="marginLeft">允许操作时间：</span><span>起始时间：</span><span class="admin">2015/10/18 0:00:00</span><span>结束时间：</span><span class="admin">2016/8/5 23:59:34</span>
+
+                        <table class="informationTable table">
+                            <thead>
+                                <tr>
+                                    <td colspan="4" style="text-align:center"><b>个人信息</b></td>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td><span>学号：</span><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
+                                <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                                <td><span>性别：</span><span>@Html.ValueFor(model => model.upload.Sex)</span></td>
+                                <td><span>出生年月：</span><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>政治面貌：</span><span>@ViewBag.P</span></td>
+                                <td><span>专业：</span><span>@Html.ValueFor(model => model.upload.Major)</span></td>
+                                <td><span>培养方式：</span><span>@Html.ValueFor(model => model.upload.TrainType)</span></td>
+                                <td><span>学历：</span><span>@Html.ValueFor(model => model.upload.Education)</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>学制：</span><span>@Html.ValueFor(model => model.upload.LengthOfSch)</span></td>
+                                <td><span>毕业时间：</span><span>@Html.ValueFor(model => model.upload.GraduationTime)</span></td>
+                                <td colspan="2"><span>生源地区：</span><span>@ViewBag.L</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>健康状况：</span><span>@ViewBag.H</span></td>
+                                <td><span>手机号码：</span><span>@ViewBag.T</span></td>
+                                <td><span>家庭所在地：</span><span>@ViewBag.FL</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><span>通信地址：</span><span>@ViewBag.ADDR</span></td>
+                                <td><span>邮政编码</span><span>@ViewBag.C</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="text-align:center"><span><b>毕业去向</b></span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <span>就业形式：</span>
+
+
+                                    <a href="/FillBaseInfo/FillEOtherArmyInfo"> @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "46应征入伍") 应征入伍</a>
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "西部就业计划") 西部就业计划
+                                    <a href="/FillBaseInfo/FillEOtherSelfInfo">  @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "75自主创业") 自主创业</a>
+                                    <a href="/FillBaseInfo/FillEOtherFlexibleInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "76灵活就业", new { @checked = true }) 灵活就业</a>
+                                    <a href="/FillBaseInfo/FillEOtherSchoolInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "80升学") 升学</a>
+                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "85出国", new { @checked = true }) 出国</a>
+                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "90国家基层项目", new { @checked = true }) 国家基层项目</a>
+                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "91科研助理") 科研助理</a>
+                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "92地方基层项目") 地方基层项目</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>留学院校名称：</span>@Html.TextBoxFor(model => model.eSchoolInfo.OutSchool)</td>
+                                <td><span>留学专业：</span>@Html.TextBoxFor(model => model.eSchoolInfo.OutMajor)</td>
+                                <td><span>出国国家：</span>@Html.TextBoxFor(model => model.eSchoolInfo.OutCountry)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <p>备注：</p>
+                                    @Html.TextAreaFor(model => model.eSchoolInfo.Note)
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4">
+                                    <input type="submit" value="添加" class="btn btn-info" />
+                                    <input type="submit" value="修改" class="btn" disabled />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

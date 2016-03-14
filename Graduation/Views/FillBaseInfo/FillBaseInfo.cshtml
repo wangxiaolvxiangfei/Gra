@@ -1,0 +1,295 @@
+﻿@model Graduation.Models.FillBaseInfoViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>基本信息管理</title>
+    <meta name="description" content="">
+    <meta name="author" content="templatemo">
+    <!-- <link href='http://fonts.useso.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css'> -->
+
+</head>
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div class="templatemo-sidebar">
+            <header class="templatemo-site-header">
+                <h1>华北电力大学</h1>
+            </header>
+            <div class="profile-photo-container">
+                <img src="../../images/profile-photo.jpg" alt="Profile Photo" class="img-responsive">
+                <div class="profile-photo-overlay"></div>
+            </div>
+            <div class="mobile-menu-icon">
+                <i class="fa fa-bars"></i>
+            </div>
+            <nav class="templatemo-left-nav">
+                <ul class="ly-ul-parent">
+                    <li>
+                        <a href="/FillBaseInfo/Index" class="active">
+                            <i class="fa fa-home fa-fw"></i>
+                            通知
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/FillBaseInfo/FillBaseInfo">
+                            <i class="fa fa-bar-chart fa-fw"></i>
+                            基本信息管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/FillBaseInfo/FillApplInfo">
+                            <i class="fa fa-database fa-fw"></i>
+                            求职信息管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/FillBaseInfo/EmployInfo">
+                            <i class="fa fa-map-marker fa-fw"></i>
+                            就业信息管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/FillBaseInfo/FillSignInfo">
+                            <i class="fa fa-users fa-fw"></i>
+                            签约登记管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="StudentLogin.html">
+                            <i class="fa fa-sliders fa-fw"></i>
+                            修改密码
+                        </a>
+                    </li>
+                    <li>
+                        <a href="StudentImg.html">
+                            <i class="fa fa-eject fa-fw"></i>
+                            上传照片
+                        </a>
+                    </li>
+                    <li>
+                        <a href="StudentLogin.html">
+                            <i class="fa fa-user-md fa-fw"></i>
+                            退出系统
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Main content -->
+
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <h2>求职与就业信息管理系统</h2>
+                <div class="right">
+                    <span>用户信息：</span><span>学号：</span><span>&nbsp;&nbsp;</span><span class="admin">@Html.ValueFor(model => model.upload.StudentNumber)</span>
+                </div>
+            </div>
+            <div class="templatemo-content-container now-position ly-tab">
+                <span>当前位置：</span><span>毕业生登录>></span><span>本科转生求职与就业管理>></span><span>基本信息管理</span>
+                <div class="content">
+                    <span class="marginLeft">允许操作时间：</span><span>起始时间：</span><span class="admin">2015/10/18 0:00:00</span><span>结束时间：</span><span class="admin">2016/8/5 23:59:34</span>
+                    @using (@Html.BeginForm())
+                    {
+                        @Html.HiddenFor(model => model.baseInfo.StudentNumber)
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        <table class="informationTable table">
+                            <thead>
+                                <tr>
+                                    <td colspan="4" style="text-align:center">个人信息</td>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td><span>学号：</span><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
+                                <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                                <td><span>性别：</span><span>@Html.ValueFor(model => model.upload.Sex)</span></td>
+                                <td rowspan="5">
+                                    <img src="images/person.jpg" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>出生年月：</span><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
+                                <td><span>所在学院：</span><span>@Html.ValueFor(model => model.upload.Academy)</span></td>
+                                <td><span>所在系：</span><span>@Html.ValueFor(model => model.upload.Department)</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>专业名称：</span><span>@Html.ValueFor(model => model.upload.Major)</span></td>
+                                <td><span>专业方向：</span><span>@Html.ValueFor(model => model.upload.MajorDirection)</span></td>
+                                <td><span></span><span></span></td>
+                            </tr>
+                            <tr>
+                                <td><span>所在班级：</span><span>@Html.ValueFor(model => model.upload.Class)</span></td>
+                                <td><span>所在教学班：</span><span>@Html.ValueFor(model => model.upload.TeachingClass)</span></td>
+                                <td><span>民族：</span><span>@Html.ValueFor(model => model.upload.Nation)</span></td>
+                            </tr>
+                            <tr>
+                                <td><span>身份证号：</span><span>@Html.ValueFor(model => model.upload.IDNumber)</span></td>
+                                <td><span>健康状况：</span><span>@Html.TextBoxFor(model => model.baseInfo.Health)</span></td>
+                                <td>
+                                    <span>政治面貌：</span>
+                                    <span>
+                                        @Html.DropDownListFor(model => model.baseInfo.PoliticalStatus, ViewBag.Political as List<SelectListItem>)
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>班主任：</span>@Html.TextBoxFor(model => model.baseInfo.ClassTeacher)</td>
+                                <td><span>手机号：</span>@Html.TextBoxFor(model => model.baseInfo.TelNumber)</td>
+                                <td><span>email：</span>@Html.TextBoxFor(model => model.baseInfo.Email)</td>
+                                <td><span>qq号：</span>@Html.TextBoxFor(model => model.baseInfo.QQ)</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span>宿舍#宿舍号：</span>
+                                    @Html.DropDownListFor(model => model.baseInfo.Dormitory, ViewBag.dor as List<SelectListItem>)
+                                    @Html.TextBoxFor(model => model.baseInfo.RoomNumber)
+                                </td>
+                                <td>
+                                    <span>户口是否转入学校</span>
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsResidenceToSch, "1", new { @checked = true }) 是
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsResidenceToSch, "0") 否
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>婚否：</span>
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsMargery, "1") 是
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsMargery, "0", new { @checked = true }) 否
+                                </td>
+                                <td>
+                                    <span>档案是否转入学校：</span>
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsArchivesToSch, "1", new { @checked = true }) 是
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsArchivesToSch, "0") 否
+                                </td>
+                                <td colspan="2">
+                                    <span>入学前户口所在派出所：</span>
+                                    @Html.TextBoxFor(model => model.baseInfo.PoliceBefore)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="changeFaculty">
+                                    <span>是否曾转专业：</span>
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsChangeMaj, "1") 是
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsChangeMaj, "0", new { @checked = true }) 否
+                                    <span>(若曾转系请填写转系之前的专业)</span>
+                                    @Html.TextBoxFor(model => model.baseInfo.BeforeMajor, new { placeholder = "转专业请填写之前专业" })
+                                </td>
+                                <td>
+                                    <span>独生子女标识：</span>
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsOnlyChild, "1", new { @checked = true }) 是
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsOnlyChild, "0") 否
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span>困难生级别：</span>
+                                    @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "0", new { @checked = true })非困难生
+                                    @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "1")就业困难
+                                    @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "2")家庭困难
+                                    @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "3")残疾
+                                </td>
+                                <td colspan="2">
+                                    <span>家庭困难级别：</span>
+                                    @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "0", new { @checked = true })不贫困
+                                    @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "1")特困
+                                    @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "2")贫困
+                                    @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "3")一般贫困
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>生源地是否发生过变动：</span>
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsChangeOrigin, "1", new { @checked = true }) 是
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsChangeOrigin, "0") 否
+                                </td>
+                                <td colspan="3">
+                                    <p>生源所在地(高考所在地)：</p>
+                                    <select class="province"></select>
+                                    <select class="city"></select>
+                                    <select class="country"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>家庭户口所在地类型：</span>
+                                    @Html.DropDownListFor(model => model.baseInfo.ResLocationType, ViewBag.type as List<SelectListItem>)
+                                </td>
+                                <td colspan="2">
+                                    <p>家庭户口所在地：</p>
+                                    <select class="province"></select>
+                                    <select class="city"></select>
+                                    <select class="country"></select>
+                                </td>
+                                <td>
+                                    <span>家庭户口类型：</span>
+                                    @Html.RadioButtonFor(model => model.baseInfo.ResType, "1") 城市户口
+                                    @Html.RadioButtonFor(model => model.baseInfo.ResType, "2") 农村户口
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>现任职务：</span>@Html.TextBoxFor(model => model.baseInfo.Post)</td>
+                                <td><span>家庭电话：</span>@Html.TextBoxFor(model => model.baseInfo.FamilyTel)</td>
+                                <td colspan="2"><span>其他联系方式：</span>@Html.TextBoxFor(model => model.baseInfo.OtherTel)</td>
+                            </tr>
+                            <tr>
+                                <td><span>通讯编码：</span>@Html.TextBoxFor(model => model.baseInfo.CommCode)</td>
+                                <td colspan="3">
+                                    <span>通讯地址：</span>
+                                    @Html.TextBoxFor(model => model.baseInfo.CommAddress)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>家庭邮编：</span>@Html.TextBoxFor(model => model.baseInfo.FamilyZipCode)</td>
+                                <td colspan="3">
+                                    <span>家庭详细地址(具体到门牌号农村的行政村级)：</span>
+                                    @Html.TextBoxFor(model => model.baseInfo.FamilyLocation)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>父亲姓名：</span>@Html.TextBoxFor(model => model.baseInfo.FatherName)</td>
+                                <td colspan="3">
+                                    <span>父亲工作地址：</span>
+                                    @Html.TextBoxFor(model => model.baseInfo.FatherWorkUnit)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>母亲姓名：</span>@Html.TextBoxFor(model => model.baseInfo.MotherName)</td>
+                                <td colspan="3">
+                                    <span>母亲工作地址：</span>
+                                    @Html.TextBoxFor(model => model.baseInfo.MotherWorkUnit)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <p>备注：</p>
+                                    @Html.TextAreaFor(model=>model.baseInfo.BaseNote)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><input class="btn btn-info" type="submit" value="提交" /></td>
+                            </tr>
+                        </table>
+                    }
+                    <table class="informationTable table">
+                        <tr><td colspan="4">信息当前状态：注 由管理员设置</td></tr>
+                        <tr>
+                            <td colspan="4">
+                                <span>是否通过审核：</span>
+                                @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "1") 是
+                                @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "0", new { @checked = true }) 否
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
