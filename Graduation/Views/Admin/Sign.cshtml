@@ -6,6 +6,7 @@
 {
     ViewBag.type = "display:none";
 }
+@using Webdiyer.WebControls.Mvc;
 
 <div class="templatemo-content col-1 light-gray-bg">
     <div class="templatemo-top-nav-container">
@@ -73,29 +74,29 @@
                         </tr>
 
                     </thead>
-                    @foreach (var item in Model.SignList)
+                    @foreach (var item in Model.uploadPagedList)
                     {
                         <tr>
-                            <td>@Html.ActionLink("编辑", "EditSign", new { studentNumber = @item.upload.StudentNumber })</td>
-                            <td>@item.upload.StudentNumber</td>
-                            <td>@item.upload.Name</td>
-                            <td>@item.upload.Education</td>
-                            <td>@item.upload.Academy</td>
-                            <td>@item.upload.Department</td>
-                            <td>@item.upload.Class</td>
-                            @if (@item.signInfo != null)
+                            <td>@Html.ActionLink("编辑", "EditSign", new { studentNumber = @item.StudentNumber })</td>
+                            <td>@item.StudentNumber</td>
+                            <td>@item.Name</td>
+                            <td>@item.Education</td>
+                            <td>@item.Academy</td>
+                            <td>@item.Department</td>
+                            <td>@item.Class</td>
+                            @if (@item.signInfoModel != null)
                             {
-                                <td>@item.signInfo.SignTime</td>
-                                <td>@item.signInfo.CompanyName</td>
-                                <td>@item.signInfo.ComBelongDep</td>
-                                <td>@item.signInfo.ComType</td>
-                                <td>@item.signInfo.CompanyAddress</td>
-                                <td>@item.signInfo.CompanyConn</td>
-                                <td>@item.signInfo.CompanyTel</td>
-                                <td>@item.signInfo.PerTelType</td>
-                                <td>@item.signInfo.SignType</td>
-                                <td>@item.signInfo.AgreementID</td>
-                                <td>@item.signInfo.ComBelongGroup</td>
+                                <td>@item.signInfoModel.SignTime</td>
+                                <td>@item.signInfoModel.CompanyName</td>
+                                <td>@item.signInfoModel.ComBelongDep</td>
+                                <td>@item.signInfoModel.ComType</td>
+                                <td>@item.signInfoModel.CompanyAddress</td>
+                                <td>@item.signInfoModel.CompanyConn</td>
+                                <td>@item.signInfoModel.CompanyTel</td>
+                                <td>@item.signInfoModel.PerTelType</td>
+                                <td>@item.signInfoModel.SignType</td>
+                                <td>@item.signInfoModel.AgreementID</td>
+                                <td>@item.signInfoModel.ComBelongGroup</td>
                             }
                             else
                             {
@@ -115,6 +116,16 @@
                     }
                 </table>
             </div>
+            <div class="left page">
+                    <p>共<b>@Model.uploadPagedList.TotalPageCount</b>页<b>@Model.uploadPagedList.TotalItemCount</b>条记录，当前为第<b>@Model.uploadPagedList.CurrentPageIndex</b>页，每页<b>@Model.uploadPagedList.PageSize</b>条</p>
+                </div>
+                <div class="right page">
+                    @Html.Pager(Model.uploadPagedList, new PagerOptions
+                   {
+                       PageIndexParameterName = "id",
+                       // ShowPageIndexBox = true
+                   })
+                </div>
         }
         <footer class="text-right"></footer>
     </div>
