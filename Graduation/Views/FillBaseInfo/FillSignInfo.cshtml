@@ -1,4 +1,10 @@
 ﻿@model Graduation.Models.SignInfoViewModel
+
+@if (ViewBag.clocked == "锁定")
+{
+    ViewBag.clocked = "disabled";
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -435,7 +441,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><input class="btn btn-info" type="submit" value="提交" /></td>
+                                <td><input class="btn btn-info" type="submit" value="提交" @ViewBag.clocked /></td>
                             </tr>
                         </table>
                     }

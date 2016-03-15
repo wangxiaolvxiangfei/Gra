@@ -7,6 +7,7 @@
 {
     ViewBag.style = "display:none"; 
 }
+@using Webdiyer.WebControls.Mvc;
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -376,26 +377,26 @@
                                 <th>删除</th>
                             </tr>
                         </thead>
-                     @if (Model.uploadList != null)
+                     @if (Model.uploadPagedList != null)
                      { 
-                        foreach(var item in Model.uploadList)
+                        foreach(var item in Model.uploadPagedList)
                         { 
                         <tr>
-                            <td>@Html.ActionLink("编辑", "AdminEditGradInfo", new { studentNumber = item.upload.StudentNumber, type = 1 })</td>
-                            <td>@item.upload.StudentNumber</td>
-                            <td>@item.upload.Name</td>
-                            <td>@item.upload.Sex</td>
-                            <td>@item.upload.Academy</td>
-                            <td>@item.upload.Department</td>
-                            <td>@item.upload.Major</td>
-                            <td>@item.upload.Class</td>
-                            <td>@item.upload.EntranceYear</td>
-                            <td>@item.upload.GraduationTime</td>
-                            @if (item.baseInfo == null||item.baseInfo.IsBaseChecked=="0"||item.baseInfo.IsBaseChecked==null)
+                            <td>@Html.ActionLink("编辑", "AdminEditGradInfo", new { studentNumber = item.StudentNumber, type = 1 })</td>
+                            <td>@item.StudentNumber</td>
+                            <td>@item.Name</td>
+                            <td>@item.Sex</td>
+                            <td>@item.Academy</td>
+                            <td>@item.Department</td>
+                            <td>@item.Major</td>
+                            <td>@item.Class</td>
+                            <td>@item.EntranceYear</td>
+                            <td>@item.GraduationTime</td>
+                            @if (item.fillBaseInfoModel == null||item.fillBaseInfoModel.IsBaseChecked=="0"||item.fillBaseInfoModel.IsBaseChecked==null)
                             {<td>否</td> }
                             else
                             {<td>是</td>}
-                            <td>@Html.ActionLink("删除", "AdminGradList", new { Id = item.upload.StudentNumber, type = 2 })</td>
+                            <td>@Html.ActionLink("删除", "AdminGradList", new { Idd = item.StudentNumber, type = 2 })</td>
                         </tr>
                         }
                      }
@@ -403,17 +404,15 @@
                         
                     </table>
                 </div>
+                <div class="left page">
+                    <p>共<b>@Model.uploadPagedList.TotalPageCount</b>页<b>@Model.uploadPagedList.TotalItemCount</b>条记录，当前为第<b>@Model.uploadPagedList.CurrentPageIndex</b>页，每页<b>@Model.uploadPagedList.PageSize</b>条</p>
+                </div>
                 <div class="right page">
-                    <a href="#">首页</a>
-                    <a href="#">&lt;&lt;</a>
-                    <a href="#" class="active">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#">...</a>
-                    <a href="#">&gt;&gt;</a>
-                    <a href="#">尾页</a>
+                    @Html.Pager(Model.uploadPagedList, new PagerOptions
+                   {
+                       PageIndexParameterName = "id",
+                       // ShowPageIndexBox = true
+                   })
                 </div>
                 <footer class="text-right"></footer>
             </div>

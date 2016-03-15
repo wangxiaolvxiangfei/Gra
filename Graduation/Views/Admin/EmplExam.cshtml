@@ -7,6 +7,7 @@
 {
     ViewBag.style = "display:none";
 }
+@using Webdiyer.WebControls.Mvc;
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -381,26 +382,26 @@ else
                                 <th>管理员编辑时间</th>
                             </tr>
                         </thead>
-                        @if (Model.InfoList != null)
+                        @if (Model.uploadPagedList != null)
                         {
-                            foreach (var item in Model.InfoList)
+                            foreach (var item in Model.uploadPagedList)
                             {
                                 <tr>
-                                    <td>@Html.ActionLink("审核", "EditEmplExam", new { studentNumber = item.upload.StudentNumber })</td>
-                                    <td>@item.upload.StudentNumber</td>
-                                    <td>@item.upload.Name</td>
-                                    <td>@item.upload.Sex</td>
-                                    <td>@item.upload.Academy</td>
-                                    <td>@item.upload.Department</td>
-                                    <td>@item.upload.Major</td>
-                                    <td>@item.upload.Class</td>
-                                    @if (@item.eSchoolInfo == null)
+                                    <td>@Html.ActionLink("审核", "EditEmplExam", new { studentNumber = item.StudentNumber })</td>
+                                    <td>@item.StudentNumber</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Sex</td>
+                                    <td>@item.Academy</td>
+                                    <td>@item.Department</td>
+                                    <td>@item.Major</td>
+                                    <td>@item.Class</td>
+                                    @if (@item.eSchoolInfoModel == null)
                                     {
                                     <td></td>}
                                     else
                                     {
-                                    <td>@item.eSchoolInfo.AgreementID</td> }
-                                    @if (@item.eSchoolInfo == null)
+                                    <td>@item.eSchoolInfoModel.AgreementID</td> }
+                                    @if (@item.eSchoolInfoModel == null)
                                     {
                                         <td>否</td>
                                         <td>否</td>
@@ -409,28 +410,28 @@ else
                                     }
                                     else
                                     {
-                                        if (@item.eSchoolInfo.EmploymentCode == "10")
+                                        if (@item.eSchoolInfoModel.EmploymentCode == "10")
                                         {
                                         <td>是</td>}
                                         else
                                         {
                                         <td>否</td>}
 
-                                        if (@item.eSchoolInfo.IsJiuYe == "1")
+                                        if (@item.eSchoolInfoModel.IsJiuYe == "1")
                                         {
                                         <td>是</td>}
                                         else
                                         {
                                         <td>否</td>}
 
-                                        if (@item.eSchoolInfo.IsChecked == "1")
+                                        if (@item.eSchoolInfoModel.IsChecked == "1")
                                         {
                                         <td>是</td> }
                                         else
                                         {
                                         <td>否</td>}
 
-                                        if (@item.eSchoolInfo.IsClock == "1")
+                                        if (@item.eSchoolInfoModel.IsClock == "1")
                                         {
                                         <td>是</td>}
                                         else
@@ -438,15 +439,15 @@ else
                                         <td>否</td> }
                                     }
 
-                                    @if (@item.eSchoolInfo == null)
+                                    @if (@item.eSchoolInfoModel == null)
                                     {
                                     <td></td>
                                         <td></td>
                                     }
                                     else
                                     {
-                                        <td>@item.eSchoolInfo.StudentEditTime</td>
-                                        <td>@item.eSchoolInfo.TeacherEditTime</td>
+                                        <td>@item.eSchoolInfoModel.StudentEditTime</td>
+                                        <td>@item.eSchoolInfoModel.TeacherEditTime</td>
                                     }
 
                                 </tr>
@@ -457,19 +458,14 @@ else
                     </table>
                 </div>
                 <div class="left page">
-                    <p>共<b>85</b>页<b>1699</b>条记录，当前为第<b>1</b>页，每页<b>20</b>条</p>
+                    <p>共<b>@Model.uploadPagedList.TotalPageCount</b>页<b>@Model.uploadPagedList.TotalItemCount</b>条记录，当前为第<b>@Model.uploadPagedList.CurrentPageIndex</b>页，每页<b>@Model.uploadPagedList.PageSize</b>条</p>
                 </div>
                 <div class="right page">
-                    <a href="#">首页</a>
-                    <a href="#">&lt;&lt;</a>
-                    <a href="#" class="active">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#">...</a>
-                    <a href="#">&gt;&gt;</a>
-                    <a href="#">尾页</a>
+                    @Html.Pager(Model.uploadPagedList, new PagerOptions
+                   {
+                       PageIndexParameterName = "id",
+                       // ShowPageIndexBox = true
+                   })
                 </div>
                 <footer class="text-right"></footer>
             </div>

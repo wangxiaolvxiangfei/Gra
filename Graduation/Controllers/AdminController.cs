@@ -625,11 +625,27 @@ namespace Graduation.Controllers
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public ActionResult Sign(int type = 0)
+        public ActionResult Sign(int type = 0,int id=0)
         {
             if (Session["Id"] != null)
             {
                 ViewBag.type = Session["Type"];
+                var user = db.UserTb.Find(Session["Id"]);
+                var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
+                ViewBag.type = user.TypeCode;
+
+                if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
+                {
+                    ViewBag.style = "1";
+                    var userDep = db.DepartmentTb.Find(user.DepartId);
+                    upload = db.UploadTb.Where(m => m.Department == user.DepartName);
+                   
+                }
+                else if (Session["Type"].ToString() == "2")//管理员登陆
+                {
+                    upload = db.UploadTb;
+                    ViewBag.style = "2";                
+                }
 
                 #region 下载excel表格
                 if (type == 1)
@@ -682,7 +698,22 @@ namespace Graduation.Controllers
                 }
                 #endregion
 
-                return View();
+                var list = new SignListViewModel();
+                list.Upload = new UploadModel();
+                //list.uploadList = new List<FillBaseInfoViewModel>();
+
+                foreach (var item in upload.ToList())
+                {
+                    SignInfoViewModel temp = new SignInfoViewModel();
+                    temp.upload = new UploadModel();
+                    temp.upload = item;
+                    if (db.SingInfoTb.Find(item.StudentNumber) != null)
+                        temp.signInfo = db.SingInfoTb.Find(item.StudentNumber);
+                    //list.uploadList.Add(temp);
+                }
+                list.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
+                Session["table"] = list;
+                return View(list);
             }
             else
             {
@@ -697,70 +728,46 @@ namespace Graduation.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Sign(SignListViewModel sl)
+        public ActionResult Sign(SignListViewModel sl,int id=0)
         {
             var UserId = Session["Id"];//用户Id
             var user = db.UserTb.Find(UserId);//查询出该用户
+            ViewBag.type = user.TypeCode;
+            if (Session["Type"].ToString() == "1")
+            {
+                ViewBag.type = "1";
+            }
+            else
+            {
+                ViewBag.type = "2";
+            }
 
             #region 显示查询结果
             SignListViewModel display = new SignListViewModel();
             display.SignList = new List<SignInfoViewModel>();
-            //名字不为空，学号为空，按名字进行模糊查询
-            if (sl.Upload.Name != null && sl.Upload.StudentNumber == null)
+            display.Upload = new UploadModel();
+            display.Upload = sl.Upload;
+            var upload = db.UploadTb.Include("signInfoModel").Where(m => m.Department == user.DepartName);
+            if (Session["Type"].ToString() == "1")
+            { upload = db.UploadTb.Include("signInfoModel").Where(m => m.Department == user.DepartName); }
+            else
+            { upload = db.UploadTb.Include("signInfoModel"); }
+            if (sl.Upload.Name != null)//姓名
+                upload = upload.Where(m => m.Name.Contains(sl.Upload.Name));
+            if (sl.Upload.StudentNumber != null)//学号
+                upload = upload.Where(m => m.StudentNumber.Contains(sl.Upload.StudentNumber));
+            if (sl.Upload.StudentType != null)//学生类型
+                upload = upload.Where(m => m.StudentType == sl.Upload.StudentType);
+            foreach (var item in upload.ToList())
             {
-
-                var upload = db.UploadTb.Where(model => model.Name.Contains(sl.Upload.Name) && model.Department == user.DepartName);
-                if (sl.Upload.StudentType != null)
-                {
-                    upload = db.UploadTb.Where(model => model.Name.Contains(sl.Upload.Name) && model.StudentType == sl.Upload.StudentType && model.Department == user.DepartName);
-                }
-
-                foreach (var item in upload.ToList())
-                {
-                    SignInfoViewModel sign = new SignInfoViewModel();
-                    sign.upload = new UploadModel();
-                    sign.upload = item;
-                    if (db.SingInfoTb.Find(item.StudentNumber) != null)
-                        sign.signInfo = db.SingInfoTb.Find(item.StudentNumber);
-                    display.SignList.Add(sign);
-                }
+                SignInfoViewModel temp = new SignInfoViewModel();
+                temp.upload = new UploadModel();
+                temp.upload = item;
+                if (db.SingInfoTb.Find(item.StudentNumber) != null)
+                    temp.signInfo = db.SingInfoTb.Find(item.StudentNumber);
+                //disPlay.uploadList.Add(temp);
             }
-            //学号不为空，则按照学号进行精确查询
-            if (sl.Upload.StudentNumber != null)
-            {
-                var upload = db.UploadTb.Where(model => model.StudentNumber == sl.Upload.StudentNumber && model.Department == user.DepartName);
-                if (sl.Upload.StudentType != null)
-                {
-                    upload = db.UploadTb.Where(model => model.StudentNumber == sl.Upload.StudentNumber && model.StudentType == sl.Upload.StudentType && model.Department == user.DepartName);
-                }
-                foreach (var item in upload)
-                {
-                    SignInfoViewModel signInfo = new SignInfoViewModel()
-                    {
-                        upload = item,
-                        signInfo = db.SingInfoTb.Find(item.StudentNumber)
-                    };
-                    display.SignList.Add(signInfo);
-                }
-            }
-            //全为空则查询所有数据
-            if (sl.Upload.StudentNumber == null && sl.Upload.Name == null)
-            {
-                var upload = db.UploadTb.ToList();
-                if (sl.Upload.StudentType != null)
-                {
-                    upload = db.UploadTb.Where(model => model.StudentType == sl.Upload.StudentType && model.Department == user.DepartName).ToList();
-                }
-                foreach (var item in upload)
-                {
-                    SignInfoViewModel signInfo = new SignInfoViewModel()
-                    {
-                        upload = item,
-                        signInfo = db.SingInfoTb.Find(item.StudentNumber)
-                    };
-                    display.SignList.Add(signInfo);
-                }
-            }
+            display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
             Session["table"] = display;
             return View(display);
             #endregion
@@ -866,18 +873,18 @@ namespace Graduation.Controllers
 
         #region 毕业生列表
 
-        public ActionResult AdminGradList(string Id = null, int type = 0)
+        public ActionResult AdminGradList(string Idd = null, int type = 0,int id=0)
         {
             if (Session["Id"] != null)
             {
                 ViewBag.type = Session["Type"];
                 var user = db.UserTb.Find(Session["Id"]);
-                var upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
+                var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
                 ViewBag.type = user.TypeCode;
                 #region 删除
                 if (type == 2)
                 {
-                    var item = db.UploadTb.Find(Id);
+                    var item = db.UploadTb.Find(Idd);
                     if (item == null)
                         RedirectToAction("AdminGradList");
                     db.UploadTb.Remove(item);
@@ -889,7 +896,7 @@ namespace Graduation.Controllers
                 {
                     ViewBag.style = "1";
                     var userDep = db.DepartmentTb.Find(user.DepartId);
-                    upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
+                    upload = db.UploadTb.Where(m => m.Department == user.DepartName);
                     #region 院系列表
                     //院列表
                     var aca = db.AcademyTb.ToList();
@@ -916,7 +923,7 @@ namespace Graduation.Controllers
                 }
                 else if (Session["Type"].ToString() == "2")//管理员登陆
                 {
-                    upload = db.UploadTb.ToList();
+                    upload = db.UploadTb;
                     ViewBag.style = "2";
                     #region 院系列表
                     //院列表
@@ -1090,15 +1097,17 @@ namespace Graduation.Controllers
                 list.upload = new UploadModel();
                 list.uploadList = new List<FillBaseInfoViewModel>();
 
-                foreach (var item in upload)
+                foreach (var item in upload.ToList())
                 {
                     FillBaseInfoViewModel temp = new FillBaseInfoViewModel();
                     temp.upload = new UploadModel();
                     temp.upload = item;
                     if (db.BaseInfoTb.Find(item.StudentNumber) != null)
                         temp.baseInfo = db.BaseInfoTb.Find(item.StudentNumber);
-                    list.uploadList.Add(temp);
+                    //list.uploadList.Add(temp);
                 }
+                list.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
+                Session["table"] = list;
                 return View(list);
             }
             else
@@ -1111,7 +1120,7 @@ namespace Graduation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AdminGradList(BaseInfoListViewModel av, string action)
+        public ActionResult AdminGradList(BaseInfoListViewModel av, string action,int id=0)
         {
             var user = db.UserTb.Find(Session["Id"]);
             ViewBag.type = user.TypeCode;
@@ -1192,66 +1201,72 @@ namespace Graduation.Controllers
                 disPlay.uploadList = new List<FillBaseInfoViewModel>();
                 disPlay.upload = new UploadModel();
                 disPlay.upload = av.upload;
-                List<UploadModel> upload;
+                var upload = db.UploadTb.Include("fillBaseInfoModel").Where(m => m.Department == user.DepartName);
                 if (Session["Type"].ToString() == "1")
-                { upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList(); }
+                { upload = db.UploadTb.Include("fillBaseInfoModel").Where(m => m.Department == user.DepartName); }
                 else
-                { upload = db.UploadTb.ToList(); }
+                { upload = db.UploadTb.Include("fillBaseInfoModel"); }
                 if (av.upload.Name != null)//姓名
-                    upload = upload.Where(m => m.Name.Contains(av.upload.Name)).ToList();
+                    upload = upload.Where(m => m.Name.Contains(av.upload.Name));
                 if (av.upload.StudentNumber != null)//学号
-                    upload = upload.Where(m => m.StudentNumber.Contains(av.upload.StudentNumber)).ToList();
+                    upload = upload.Where(m => m.StudentNumber.Contains(av.upload.StudentNumber));
                 if (av.upload.EntranceYear != null)//入学时间
-                    upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear).ToList();
+                    upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear);
                 if (av.upload.GraduationTime != null)//毕业时间
-                    upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime).ToList();
+                    upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime);
                 if (av.upload.Academy!=null&&av.upload.Academy != "0")
                 {
-                    int id = Convert.ToInt32(av.upload.Academy);
-                    var acaTemp = db.AcademyTb.Find(id);
-                    upload = upload.Where(m => m.Academy == acaTemp.Name).ToList();
+                    int Id = Convert.ToInt32(av.upload.Academy);
+                    var acaTemp = db.AcademyTb.Find(Id);
+                    upload = upload.Where(m => m.Academy == acaTemp.Name);
                     disPlay.upload.Academy = acaTemp.Id.ToString();
                 }
                 if (av.upload.Department !=null&& av.upload.Department != "0")
                 {
-                    int id = Convert.ToInt32(av.upload.Department);
-                    var depTemp = db.DepartmentTb.Find(id);
-                    upload = upload.Where(m => m.Department == depTemp.Name).ToList();
+                    int Id = Convert.ToInt32(av.upload.Department);
+                    var depTemp = db.DepartmentTb.Find(Id);
+                    upload = upload.Where(m => m.Department == depTemp.Name);
                     disPlay.upload.Department = depTemp.Id.ToString();
                 }
                 if (av.upload.Major!=null&&av.upload.Major != "0")//专业
                 {
-                    int id = Convert.ToInt16(av.upload.Major);
-                    var majorTemp = db.MajorTb.Find(id);
-                    upload = upload.Where(m => m.Major == majorTemp.Name).ToList();
+                    int Id = Convert.ToInt16(av.upload.Major);
+                    var majorTemp = db.MajorTb.Find(Id);
+                    upload = upload.Where(m => m.Major == majorTemp.Name);
                     disPlay.upload.Academy = majorTemp.AcademyId;
                     disPlay.upload.Department = majorTemp.DepartId;
                 }
                 if (av.upload.StudentType != null)
-                    upload = upload.Where(m => m.StudentType == av.upload.StudentType).ToList();
-                foreach (var item in upload)
+                    upload = upload.Where(m => m.StudentType == av.upload.StudentType);
+                foreach (var item in upload.ToList())
                 {
                     FillBaseInfoViewModel temp = new FillBaseInfoViewModel();
                     temp.upload = new UploadModel();
                     temp.upload = item;
                     if (db.BaseInfoTb.Find(item.StudentNumber) != null)
                         temp.baseInfo = db.BaseInfoTb.Find(item.StudentNumber);
-                    disPlay.uploadList.Add(temp);
+                    //disPlay.uploadList.Add(temp);
                 }
+                disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
                 if (av.isChecked != null)
                 {
                     if (av.isChecked == "0")
-                        disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsBaseChecked == av.isChecked || m.baseInfo.IsBaseChecked == null).ToList();
+                        // disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsBaseChecked == av.isChecked || m.baseInfo.IsBaseChecked == null).ToList();
+                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsBaseChecked == av.isChecked || m.fillBaseInfoModel.IsBaseChecked == null).ToPagedList(id, 10);
                     else if (av.isChecked == "1")
-                        disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsBaseChecked == av.isChecked).ToList();
+                        //disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsBaseChecked == av.isChecked).ToList();
+                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsBaseChecked == av.isChecked).ToPagedList(id, 10);
                 }
                 if (av.isClocked != null)
                 {
                     if (av.isClocked == "0")
-                        disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsClocked == av.isClocked || m.baseInfo.IsClocked == null).ToList();
+                        //disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsClocked == av.isClocked || m.baseInfo.IsClocked == null).ToList();
+                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsClocked == av.isClocked || m.fillBaseInfoModel.IsClocked == null).ToPagedList(id, 10);
                     else if (av.isClocked == "1")
-                        disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsClocked == av.isClocked).ToList();
+                        //disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsClocked == av.isClocked).ToList();
+                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsClocked == av.isClocked || m.fillBaseInfoModel.IsClocked == null).ToPagedList(id, 10);
                 }
+                Session["table"] = disPlay;
                 return View(disPlay);
             }
             #endregion
@@ -1565,6 +1580,7 @@ namespace Graduation.Controllers
                     //list.appInfoList.Add(temp);
                 }
                 list.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
+                Session["table"] = list;
 
                 return View(list);
             }
@@ -1726,6 +1742,7 @@ namespace Graduation.Controllers
                     // disPlay.appInfoList = disPlay.appInfoList.Where(m => m.applInfo.IsFinish == av.IsFinish).ToList();
                     disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.applInfoModel.IsFinish == av.IsFinish).ToPagedList(id, 10);
             }
+            Session["table"] = disPlay;
             // disPlay.appInfoPageList = disPlay.appInfoList.OrderBy(a => a.upload.StudentNumber).ToPageList(Id, 10);
             #endregion
             return View(disPlay);
@@ -1755,7 +1772,7 @@ namespace Graduation.Controllers
                 applInfo = db.ApplInfoTb.Find(studentNumber),
                 upload = db.UploadTb.Find(studentNumber)
             };
-            ViewBag.type = student.upload.StudentType;
+            ViewBag.studentType = student.upload.StudentType;
             ViewBag.numberCount = student.upload.StudentNumber.Length;
             if (student.applInfo == null)
             {
@@ -1816,18 +1833,18 @@ namespace Graduation.Controllers
         /// 就业信息审核界面
         /// </summary>
         /// <returns></returns>
-        public ActionResult EmplExam()
+        public ActionResult EmplExam(int id=0)
         {
             if (Session["Id"] != null)
             {
                 ViewBag.type = Session["Type"];
                 var user = db.UserTb.Find(Session["Id"]);
-                var upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
+                var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
                 ViewBag.type = user.TypeCode;
 
                 if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
                 {
-                    upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
+                    upload = db.UploadTb.Where(m => m.Department == user.DepartName);
                     ViewBag.style = "1";
                     var userDep = db.DepartmentTb.Find(user.DepartId);
                     #region 院系列表
@@ -1857,7 +1874,7 @@ namespace Graduation.Controllers
                 }
                 else if (Session["Type"].ToString() == "2")//管理员登陆
                 {
-                    upload = db.UploadTb.ToList();
+                    upload = db.UploadTb;
                     ViewBag.style = "2";
                     #region 院系列表
                     //院列表
@@ -1899,15 +1916,17 @@ namespace Graduation.Controllers
                 var list = new EmplExamListViewModel();
                 list.upload = new UploadModel();
                 list.InfoList = new List<ESchoolInfoViewModel>();
-                foreach (var item in upload)
+                foreach (var item in upload.ToList())
                 {
                     ESchoolInfoViewModel temp = new ESchoolInfoViewModel();
                     temp.upload = new UploadModel();
                     temp.upload = item;
                     if (db.ESchoolInfoTb.Find(item.StudentNumber) != null)
                         temp.eSchoolInfo = db.ESchoolInfoTb.Find(item.StudentNumber);
-                    list.InfoList.Add(temp);
+                   // list.InfoList.Add(temp);
                 }
+                list.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
+                Session["table"] = list;
                 return View(list);
             }
             else
@@ -1916,7 +1935,7 @@ namespace Graduation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EmplExam(EmplExamListViewModel av)
+        public ActionResult EmplExam(EmplExamListViewModel av,int id=0)
         {
             var user = db.UserTb.Find(Session["Id"]);
             ViewBag.type = user.TypeCode;
@@ -1996,80 +2015,94 @@ namespace Graduation.Controllers
             display.upload = new UploadModel();
             display.InfoList = new List<ESchoolInfoViewModel>();
             display.upload = av.upload;
-            var upload = db.UploadTb.Where(m => m.Department == user.DepartName).ToList();
+           // var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
+            var upload = db.UploadTb.Include("eSchoolInfoModel").Where(m => m.Department == user.DepartName);
+            if (Session["Type"].ToString() == "1")
+            { upload = db.UploadTb.Include("eSchoolInfoModel").Where(m => m.Department == user.DepartName); }
+            else
+            { upload = db.UploadTb.Include("eSchoolInfoModel"); }
 
             if (av.upload.Name != null)//姓名
-                upload = upload.Where(m => m.Name.Contains(av.upload.Name)).ToList();
+                upload = upload.Where(m => m.Name.Contains(av.upload.Name));
             if (av.upload.StudentNumber != null)//学号
-                upload = upload.Where(m => m.StudentNumber.Contains(av.upload.StudentNumber)).ToList();
+                upload = upload.Where(m => m.StudentNumber.Contains(av.upload.StudentNumber));
             if (av.upload.EntranceYear != null)//入学时间
-                upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear).ToList();
+                upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear);
             if (av.upload.GraduationTime != null)//毕业时间
-                upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime).ToList();
+                upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime);
             if (av.upload.Academy != "0" && av.upload.Academy != null)
             {
                 int Id = Convert.ToInt32(av.upload.Academy);
                 var acaTemp = db.AcademyTb.Find(Id);
-                upload = upload.Where(m => m.Academy == acaTemp.Name).ToList();
+                upload = upload.Where(m => m.Academy == acaTemp.Name);
                 display.upload.Academy = acaTemp.Id.ToString();
             }
             if (av.upload.Department != "0" && av.upload.Department != null)
             {
                 int Id = Convert.ToInt32(av.upload.Department);
                 var depTemp = db.DepartmentTb.Find(Id);
-                upload = upload.Where(m => m.Department == depTemp.Name).ToList();
+                upload = upload.Where(m => m.Department == depTemp.Name);
                 display.upload.Department = depTemp.Id.ToString();
             }
             if (av.upload.Major != null&av.upload.Major!="0")//专业
             {
-                int id = Convert.ToInt16(av.upload.Major);
-                var majorTemp = db.MajorTb.Find(id);
-                upload = upload.Where(m => m.Major == majorTemp.Name).ToList();
+                int Id = Convert.ToInt16(av.upload.Major);
+                var majorTemp = db.MajorTb.Find(Id);
+                upload = upload.Where(m => m.Major == majorTemp.Name);
             }
             if (av.upload.StudentType != null)
-                upload = upload.Where(m => m.StudentType == av.upload.StudentType).ToList();
-            foreach (var item in upload)
+                upload = upload.Where(m => m.StudentType == av.upload.StudentType);
+            foreach (var item in upload.ToList())
             {
                 ESchoolInfoViewModel temp = new ESchoolInfoViewModel();
                 temp.upload = new UploadModel();
                 temp.upload = item;
                 if (db.BaseInfoTb.Find(item.StudentNumber) != null)
                     temp.eSchoolInfo = db.ESchoolInfoTb.Find(item.StudentNumber);
-                display.InfoList.Add(temp);
+                //display.InfoList.Add(temp);
             }
+
             //是否通过审核
             if (av != null)
             {
                 if (av.IsCheckEd == "0")
-                    display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsChecked == av.IsCheckEd || m.eSchoolInfo.IsChecked == null).ToList();
+                   // display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsChecked == av.IsCheckEd || m.eSchoolInfo.IsChecked == null).ToList();
+                    display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.eSchoolInfoModel.IsChecked == av.IsCheckEd || m.applInfoModel.IsQiuChecked == null).ToPagedList(id, 10);
                 else if (av.IsCheckEd == "1")
-                    display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsChecked == av.IsCheckEd).ToList();
+                    //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsChecked == av.IsCheckEd).ToList();
+                    display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.eSchoolInfoModel.IsChecked == av.IsCheckEd).ToPagedList(id, 10);
             }
             //是否锁定
             if (av.IsClocked != null)
             {
                 if (av.IsClocked == "0")
-                    display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsClock == av.IsClocked || m.eSchoolInfo.IsClock == null).ToList();
+                    //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsClock == av.IsClocked || m.eSchoolInfo.IsClock == null).ToList();
+                    display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.eSchoolInfoModel.IsClock == av.IsClocked || m.applInfoModel.IsClocked == null).ToPagedList(id, 10);
                 else if (av.IsClocked == "1")
-                    display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsClock == av.IsClocked).ToList();
+                    //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsClock == av.IsClocked).ToList();
+                    display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.eSchoolInfoModel.IsClock == av.IsClocked).ToPagedList(id, 10);
             }
             //是否就业
             if (av.IsJiuye != null)
             {
                 if (av.IsJiuye == "0")
-                    display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsJiuYe == av.IsJiuye || m.eSchoolInfo.IsClock == null).ToList();
+                    //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsJiuYe == av.IsJiuye || m.eSchoolInfo.IsClock == null).ToList();
+                    display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.eSchoolInfoModel.IsJiuYe == av.IsJiuye || m.eSchoolInfoModel.IsClock == null).ToPagedList(id, 10);
                 else if (av.IsJiuye == "1")
-                    display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsJiuYe == av.IsJiuye).ToList();
+                    //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsJiuYe == av.IsJiuye).ToList();
+                    display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.eSchoolInfoModel.IsJiuYe == av.IsJiuye).ToPagedList(id, 10);
             }
             //是否是第三方签学校
             if (av.IsESchool != null)
             {
                 if (av.IsESchool == "0")
-                    display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.EmploymentCode == null || m.eSchoolInfo.EmploymentCode != "10").ToList();
+                    //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.EmploymentCode == null || m.eSchoolInfo.EmploymentCode != "10").ToList();
+                    display.uploadPagedList = upload.OrderBy(m => m.StudentNumber).Where(m => m.eSchoolInfoModel.EmploymentCode == null || m.eSchoolInfoModel.EmploymentCode != "10").ToPagedList(id, 10);
                 else if (av.IsESchool == "1")
-                    display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.EmploymentCode == "10").ToList();
+                    //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.EmploymentCode == "10").ToList();
+                    display.uploadPagedList = upload.OrderBy(m => m.StudentNumber).Where(m => m.eSchoolInfoModel.EmploymentCode == "10").ToPagedList(id, 10);
             }
-
+            Session["table"]=display;
             return View(display);
             #endregion
 

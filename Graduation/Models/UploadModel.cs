@@ -205,6 +205,11 @@ namespace Graduation.Models
         /// </summary>
         public virtual FillBaseInfoModel fillBaseInfoModel { get; set; }
 
+        /// <summary>
+        /// 连接签约登记表
+        /// </summary>
+        public virtual SignInfoModel signInfoModel { get; set; }
+
 
 
 

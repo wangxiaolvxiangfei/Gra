@@ -133,29 +133,23 @@
                     <tr>
                         <td>是否通过审核</td>
                         <td colspan="3">
-                            <input type="radio" name="type2">是
-                            <input type="radio" name="type2">否
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsChecked, "是")是
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsChecked, "否")否
                         </td>
                     </tr>
                     <tr>
                         <td>是否锁定</td>
                         <td colspan="3">
-                            <input type="radio" name="type3">是
-                            <input type="radio" name="type3">否
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsClock, "锁定")锁定
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsClock, "可编辑")可编辑
                         </td>
                     </tr>
                     <tr>
                         <td>就业状态</td>
                         <td colspan="3">
-                            <input type="radio" name="type4">是
-                            <input type="radio" name="type4">否
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>是否对外显示</td>
-                        <td colspan="3">
-                            <input type="radio" name="type5">是
-                            <input type="radio" name="type5">否
+
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsJiuYe, "是")是
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsJiuYe, "否")否
                         </td>
                     </tr>
                     <tr>

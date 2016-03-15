@@ -24,8 +24,8 @@
             <div class="panel panel-default table-responsive clear">
                 <table class="table table-striped table-bordered templatemo-user-table table-hover .houtai-table">
                     <tr>
-                        <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
-                        <td><span>学号：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                        <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                        <td><span>学号：</span><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
                         <td><span>学历：</span><span>@Html.ValueFor(model => model.upload.Education)</span></td>
                     </tr>
                     <tr>
@@ -345,9 +345,16 @@
                     </tr>
                     <tr>
                         <td colspan="3">
+                            <span>审核状态</span>
+                            @Html.RadioButtonFor(model=>model.signInfo.IsChecked,"是")是
+                            @Html.RadioButtonFor(model=>model.signInfo.IsChecked,"否")否
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
                             <span>锁定状态</span>
-                            <input type="radio" name="type2" />锁定
-                            <input type="radio" name="type2" checked />解锁
+                            @Html.RadioButtonFor(model=>model.signInfo.IsClocked,"锁定")锁定
+                            @Html.RadioButtonFor(model=>model.signInfo.IsClocked,"可编辑")可编辑
                         </td>
                     </tr>
                     <tr>

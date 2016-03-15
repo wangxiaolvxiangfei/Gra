@@ -13,12 +13,10 @@ namespace Graduation.Models
         /// </summary>
         public UploadModel upload { get; set; }
 
-
+        /// <summary>
+        /// 分页
+        /// </summary>
         public PagedList<UploadModel> uploadPagedList { get; set; }
-
-
-       
-
 
         /// <summary>
         /// table中要显示的list
