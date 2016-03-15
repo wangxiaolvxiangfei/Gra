@@ -165,6 +165,7 @@
     <Compile Include="Models\ApplInfoModel.cs" />
     <Compile Include="Models\ApplInfoViewModel.cs" />
     <Compile Include="Models\BaseInfoListViewModel.cs" />
+    <Compile Include="Models\BelongDep.cs" />
     <Compile Include="Models\DepartmentModel.cs" />
     <Compile Include="Models\DepartmentViewModel.cs" />
     <Compile Include="Models\EmplExamListViewModel.cs" />
@@ -176,6 +177,8 @@
     <Compile Include="Models\jieyeListViewModel.cs" />
     <Compile Include="Models\MajorModel.cs" />
     <Compile Include="Models\MajorViewModel.cs" />
+    <Compile Include="Models\Nation.cs" />
+    <Compile Include="Models\SampleData.cs" />
     <Compile Include="Models\SignInfoModel.cs" />
     <Compile Include="Models\SignInfoViewModel.cs" />
     <Compile Include="Models\SignListViewModel.cs" />
@@ -284,7 +287,9 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\templatemo-script.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -345,6 +350,7 @@
     <Content Include="Views\Admin\jiyeYX.cshtml" />
     <Content Include="Views\Shared\Guide.cshtml" />
     <Content Include="Views\Admin\AddGradInfo.cshtml" />
+    <Content Include="Views\FillBaseInfo\FillESchoolContractInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
