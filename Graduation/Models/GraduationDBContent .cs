@@ -43,7 +43,8 @@ namespace Graduation.Models
 
         public DbSet<TimeModel> TimeTb
         { get; set; }
-
+        public DbSet<LocationModel> LocationTb
+	{ get; set; }
         public DbSet<BelongDep> belongDepTb
         { get; set; }
 

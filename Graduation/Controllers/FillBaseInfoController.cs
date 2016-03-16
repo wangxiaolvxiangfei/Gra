@@ -29,6 +29,30 @@ namespace Graduation.Controllers
         }
         #endregion
 
+        #region 地区下拉栏
+        public JsonResult GetCity(string content)
+        {
+            List<LocationModel> CityList = new List<LocationModel>();
+            var list = db.LocationTb.Where(m=>m.name.Contains(content)).ToList();
+            foreach (var item in list)
+            {
+                CityList.Add(new LocationModel() { code = item.code, name = item.name });
+            }
+            return Json(CityList, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetAllCity()
+        {
+            var city = db.LocationTb.ToList();
+            List<LocationModel> cityList = new List<LocationModel>();
+            foreach (var item in city)
+            {
+                cityList.Add(new LocationModel() { code = item.code, name = item.name });
+            }
+            return Json(cityList, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
         #region 基本信息管理界面
 
         /// <summary>
@@ -87,7 +111,19 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="县或县级市",Value="3",Selected=false},
                 new SelectListItem{Text="乡镇村",Value="4",Selected=false}
             };
+            
             ViewBag.type = type;
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.BaseInfoTb.Find(Session["number"]);
+            if (st.OriginCode != null)
+                cityList.Add(new SelectListItem { Text = st.OriginCity, Value = st.OriginCode });
+            else
+            {
+                var list = db.LocationTb.Where(m => m.name.Contains(st.OriginProvince)).ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
             #endregion
 
             if (Session["number"] != null)
@@ -125,6 +161,9 @@ namespace Graduation.Controllers
                 string PoliticalStatus = students.baseInfo.PoliticalStatus;
                 students.baseInfo.PoliticalStatus = PoliticalStatus.Substring(2);
                 students.baseInfo.PoliticalStatusCode = PoliticalStatus.Substring(0, 2);
+                var orig = db.LocationTb.Find(students.baseInfo.OriginCode);//保存生源地
+                students.baseInfo.OriginCity = orig.name;
+                students.baseInfo.OriginProvince = db.BaseInfoTb.Find(students.baseInfo.StudentNumber).OriginProvince;
                 //如果基本信息表中已经有基本，则为更新
                 if (db.BaseInfoTb.Find(students.baseInfo.StudentNumber) != null)
                 {
