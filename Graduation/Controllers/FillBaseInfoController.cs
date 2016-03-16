@@ -279,7 +279,7 @@ namespace Graduation.Controllers
             List<SelectListItem> belongDep = new List<SelectListItem> { };
             foreach (var item in belong)
             {
-                var belongDepList= new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
                 belongDep.Add(belongDepList);
             }
             ViewBag.belong = belongDep;
@@ -321,7 +321,7 @@ namespace Graduation.Controllers
                 students.signInfo.ComTypeCode = comType.Substring(0, 2);
                 string belongDep = students.signInfo.ComBelongDep;
                 students.signInfo.ComBelongDep = belongDep.Substring(3);
-                students.signInfo.ComBelongDepCode = belongDep.Substring(0,3);
+                students.signInfo.ComBelongDepCode = belongDep.Substring(0, 3);
                 //如果基本信息表中已经有基本，则为更新
                 if (db.SingInfoTb.Find(students.signInfo.StudentNumber) != null)
                 {
@@ -346,19 +346,21 @@ namespace Graduation.Controllers
         /// 就业信息管理
         /// </summary>
         /// <returns></returns>
-        public ActionResult EmployInfo()
+        public ActionResult EmployInfo(int other = 0)
         {
             if (Session["number"] != null)
             {
                 ViewBag.number = Session["number"];
-                return View();
+                var student = db.ESchoolInfoTb.Find(Session["number"]);
+                student.Employment = student.EmploymentCode + student.Employment;            
+                return View(student);
             }
             else
             {
                 return RedirectToAction("Login", "StudentLogin");
             }
         }
-        
+
 
         #region 签学校三方协议就业
         /// <summary>
@@ -456,7 +458,7 @@ namespace Graduation.Controllers
             List<SelectListItem> belongDep = new List<SelectListItem> { };
             foreach (var item in belong)
             {
-                var listitem = new SelectListItem { Text = item.ComBelongDep,Value=item.ComBelongDepCode+item.ComBelongDep };
+                var listitem = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
                 belongDep.Add(listitem);
             }
             ViewBag.belongDep = belongDep;
@@ -489,8 +491,7 @@ namespace Graduation.Controllers
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
                 student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
-                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDepCode + student.eSchoolInfo.ComBelongDep;//所属部门
-                student.eSchoolInfo.Employment = student.eSchoolInfo.EmploymentCode + student.eSchoolInfo.Employment;//就业形式
+                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDepCode + student.eSchoolInfo.ComBelongDep;//所属部门               
                 ViewBag.clocked = student.eSchoolInfo.IsClock;
                 return View(student);
             }
@@ -532,9 +533,9 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.ComBelongDepCode = belongDep.Substring(0, 3);
 
                 //就业形式
-                string employment = students.eSchoolInfo.Employment;
-                students.eSchoolInfo.Employment = employment.Substring(2);
-                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+
+                students.eSchoolInfo.Employment = "签学校三方协议就业";
+                students.eSchoolInfo.EmploymentCode = "10";
 
                 //如果基本信息表中已经有基本，则为更新
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -684,8 +685,7 @@ namespace Graduation.Controllers
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
                 student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
-                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDepCode + student.eSchoolInfo.ComBelongDep;//所属部门
-                student.eSchoolInfo.Employment = student.eSchoolInfo.EmploymentCode + student.eSchoolInfo.Employment;//就业形式
+                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDepCode + student.eSchoolInfo.ComBelongDep;//所属部门              
                 ViewBag.clocked = student.eSchoolInfo.IsClock;
                 return View(student);
             }
@@ -727,9 +727,8 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.ComBelongDepCode = belongDep.Substring(0, 3);
 
                 //就业形式
-                string employment = students.eSchoolInfo.Employment;
-                students.eSchoolInfo.Employment = employment.Substring(2);
-                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+                students.eSchoolInfo.Employment = "签合同就业";
+                students.eSchoolInfo.EmploymentCode = "11";
 
 
                 //如果基本信息表中已经有基本，则为更新
@@ -800,8 +799,8 @@ namespace Graduation.Controllers
             {
                 //就业形式
                 string employment = students.eSchoolInfo.Employment;
-                students.eSchoolInfo.Employment = employment.Substring(0, 2);
-                students.eSchoolInfo.EmploymentCode = employment.Substring(2);
+                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+                students.eSchoolInfo.Employment = employment.Substring(2);
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -898,15 +897,11 @@ namespace Graduation.Controllers
             {
                 //就业形式
                 string employment = students.eSchoolInfo.Employment;
-                students.eSchoolInfo.Employment = employment.Substring(0, 2);
-                students.eSchoolInfo.EmploymentCode = employment.Substring(2);
+                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+                students.eSchoolInfo.Employment = employment.Substring(2);
 
                 students.eSchoolInfo.ComIndustry = students.eSchoolInfo.ComIndustry.Substring(2);
                 students.eSchoolInfo.ComIndustryCode = students.eSchoolInfo.ComIndustry.Substring(0, 2);
-
-
-
-
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -975,8 +970,8 @@ namespace Graduation.Controllers
             {
                 //就业形式
                 string employment = students.eSchoolInfo.Employment;
-                students.eSchoolInfo.Employment = employment.Substring(0, 2);
-                students.eSchoolInfo.EmploymentCode = employment.Substring(2);
+                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+                students.eSchoolInfo.Employment = employment.Substring(2);
 
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -1048,8 +1043,8 @@ namespace Graduation.Controllers
             {
                 //就业形式
                 string employment = students.eSchoolInfo.Employment;
-                students.eSchoolInfo.Employment = employment.Substring(0, 2);
-                students.eSchoolInfo.EmploymentCode = employment.Substring(2);
+                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+                students.eSchoolInfo.Employment = employment.Substring(2);
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -1118,8 +1113,8 @@ namespace Graduation.Controllers
             {
                 //就业形式
                 string employment = students.eSchoolInfo.Employment;
-                students.eSchoolInfo.Employment = employment.Substring(0, 2);
-                students.eSchoolInfo.EmploymentCode = employment.Substring(2);
+                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+                students.eSchoolInfo.Employment = employment.Substring(2);
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -1185,8 +1180,8 @@ namespace Graduation.Controllers
             {
                 //就业形式
                 string employment = students.eSchoolInfo.Employment;
-                students.eSchoolInfo.Employment = employment.Substring(0, 2);
-                students.eSchoolInfo.EmploymentCode = employment.Substring(2);
+                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+                students.eSchoolInfo.Employment = employment.Substring(2);
 
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -1251,8 +1246,8 @@ namespace Graduation.Controllers
             {
                 //就业形式
                 string employment = students.eSchoolInfo.Employment;
-                students.eSchoolInfo.Employment = employment.Substring(0, 2);
-                students.eSchoolInfo.EmploymentCode = employment.Substring(2);
+                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+                students.eSchoolInfo.Employment = employment.Substring(2);
 
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -1319,8 +1314,8 @@ namespace Graduation.Controllers
             {
                 //就业形式
                 string employment = students.eSchoolInfo.Employment;
-                students.eSchoolInfo.Employment = employment.Substring(0, 2);
-                students.eSchoolInfo.EmploymentCode = employment.Substring(2);
+                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+                students.eSchoolInfo.Employment = employment.Substring(2);
 
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -1403,6 +1398,10 @@ namespace Graduation.Controllers
                 var jobDiff = students.eSchoolInfo.JobDiff;
                 students.eSchoolInfo.JobDiffCode = jobDiff.Substring(0, 1);
                 students.eSchoolInfo.JobDiff = jobDiff.Substring(1);
+
+                //就业形式
+                students.eSchoolInfo.Employment = "暂未就业";
+                students.eSchoolInfo.EmploymentCode = "70";
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
                     ESchoolInfoModel temp = db.ESchoolInfoTb.Find(Session["number"].ToString());

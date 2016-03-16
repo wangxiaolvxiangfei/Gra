@@ -15,7 +15,6 @@
         </div>
     </div>
     <div class="templatemo-content-container now-position">
-        <a href="undergraduateList.html">返回上一页</a>
         <div class="panel panel-default table-responsive clear">
             <table class="table table-striped table-bordered templatemo-user-table table-hover .houtai-table">
                 <tr>
@@ -297,12 +296,11 @@
                         @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "否")否
                     </td>
                 </tr>
-                <tr>
-                    <td colspan="3">
+                <tr>                   
                     <td>是否锁定</td>
+                    <td colspan="2">
                         @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "是")是
                         @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "否")否
-                        <span class="warn">*如果同意院系的预添加，选择可编辑</span>
                     </td>
                 </tr>
                 <tr>

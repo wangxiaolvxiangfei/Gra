@@ -7,6 +7,7 @@
 {
     ViewBag.type = "display:none";
 }
+
 <div class="templatemo-content col-1 light-gray-bg">
     <div class="templatemo-top-nav-container">
         <h2>求职与就业信息管理系统</h2>
@@ -23,7 +24,16 @@
                 @Html.HiddenFor(model => model.eSchoolInfo.StudentNumber)
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
-              
+                <p class="a">
+
+
+                    <a href="/Admin/EmplESchoolExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "有协议就业/合同就业", new { @checked = true }) 有协议就业/合同就业</a>
+                    <a href="/Admin/EmplArmyExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "其他形式就业") 其他形式就业</a>
+                    <a href="/Admin/EmplNotJobExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "暂未就业") 暂未就业</a>
+
+
+                </p>
+
                 <table class="table">
                     <thead>
                         <tr>
@@ -82,39 +92,104 @@
                 </table>
                 <table class="table table1">
                     <tr>
-                        <td colspan="3" style="text-align:center"><span><b>就业去向</b></span></td>
+                        <td colspan="4"><span>协议书编号：</span>@Html.TextBoxFor(model => model.eSchoolInfo.AgreementID)*唯一</td>
                     </tr>
                     <tr>
-                        <td colspan="3">
-                            <span>就业形式：</span>
-                            @Html.RadioButtonFor(model => model.eSchoolInfo.JobDiff, "1就业困难", new { @class = "radio1 aa", @checked = true })就业困难
-                            @Html.RadioButtonFor(model => model.eSchoolInfo.JobDiff, "2继续考公务员", new { @class = "radio aa", @checked = true })继续考公务员
-                            @Html.RadioButtonFor(model => model.eSchoolInfo.JobDiff, "3继续考研", new { @class = "radio aa", @checked = true })继续考研
-                            @Html.RadioButtonFor(model => model.eSchoolInfo.JobDiff, "4其他", new { @class = "radio2 aa", @checked = true })其他
-                            @Html.TextBoxFor(model => model.eSchoolInfo.JobDiff, new { @class = "liyu", style = "display:none" })
+                        <td>
+                            <p>单位名称：</p>
+                            @Html.TextBoxFor(model => model.eSchoolInfo.CompanyName)
                         </td>
-                    </tr>
-                    <tr class="hide1">
-                        <td colspan="3">
-                            <spa>困难原因</spa>
-                            @Html.TextBoxFor(model => model.eSchoolInfo.JobDiffCause, new { style = "width:70%" })
+                        <td>
+                            <p>单位所属集团或系统</p>
+                            @Html.DropDownListFor(model => model.eSchoolInfo.ComBelongGroup, ViewBag.Group as List<SelectListItem>)
                         </td>
-                    </tr>
-                    <tr class="hide2" style="display:none">
-                        <td colspan="3">
-                            <spa>备注</spa>
-                            @Html.TextBoxFor(model => model.eSchoolInfo.Note, new { style = "width:70%" })
+                        <td>
+                            <p>单位组织机构代码</p>
+                            <p class="warn">(9位数字或字母不含‘-’)</p>
+                            @Html.TextBoxFor(model => model.eSchoolInfo.CompanyCode)
+                        </td>
+                        <td>
+                            <p>单位上级隶属部门</p>
+                            @Html.DropDownListFor(model => model.eSchoolInfo.ComBelongDep, ViewBag.belong as List<SelectListItem>)
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <span>档案转寄地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)
+                            <p>单位行业</p>
+                            @Html.DropDownListFor(model => model.eSchoolInfo.ComIndustry, ViewBag.hangye as List<SelectListItem>)
                         </td>
                         <td>
-                            <span>档案转寄邮编：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)
+                            <p>工作职务</p>
+                            @Html.DropDownListFor(model => model.eSchoolInfo.JobTitle, ViewBag.zhiwei as List<SelectListItem>)
+                        </td>
+                        <td colspan="2">
+                            <p>《就业报到证》开具单位名称</p>
+                            @Html.TextBoxFor(model => model.eSchoolInfo.SCompanyName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p>单位所在地</p>
+                            <select class="province"></select>
+                            <select class="city"></select>
+                            <select class="country"></select>
+                        </td>
+                        <td colspan="2">
+                            <span>单位性质：</span>
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "10机关")机关
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "20科研设计单位")科研设计单位
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "21高等教育单位")高等教育单位
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "22中初教育单位")中初教育单位
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "23医疗卫生单位")医疗卫生单位
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "29其他事业单位")其他事业单位
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "31国有企业")国有企业
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "32三资企业")三资企业
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "39其他企业")其他企业
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "40部队")部队
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "55农村建设")农村建设
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "56城镇社区")城镇社区
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "99其他")其他
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>联系人：</span>@Html.TextBoxFor(model => model.eSchoolInfo.Contacts)
                         </td>
                         <td>
+                            <span>联系人邮编(6位数字)：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ContactsCode)
+                        </td>
+                        <td colspan="2">
+                            <span>联系人通信地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConCommAddress)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>联系人职务：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConPost)
+                        </td>
+                        <td>
+                            <span>联系人电话：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConTel)
+                        </td>
+                        <td colspan="2">
                             <span>户口迁移地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <span>档案转寄详细地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)
+                        </td>
+                        <td>
+                            <span>邮政编码(6位数字)：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)
+                        </td>
+                        <td>
+                            <span>是否专业对口：</span>
+                            @Html.RadioButtonFor(model => model.eSchoolInfo.IsMajorFit, "1") 是
+                            @Html.RadioButtonFor(mdoel => mdoel.eSchoolInfo.IsMajorFit, "0") 否
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <p>备注：</p>
+                            @Html.TextAreaFor(model => model.eSchoolInfo.Note)
                         </td>
                     </tr>
 
@@ -156,32 +231,3 @@
         <footer class="text-right"></footer>
     </div>
 </div>
- 
-<script type="text/javascript">
-    $(function () {
-        $(".radio1").click(function () {
-            $('.hide2').hide();
-            $(".hide1").show();
-        })
-        $(".radio2").click(function () {
-            $('.hide1').hide();
-            $(".hide2").show();
-        })
-        $(".radio").click(function () {
-            $('.hide1').hide();
-            $(".hide2").hide();
-        })
-
-        if ($(".liyu").val() == "4其他") {
-            $('.hide1').hide();
-            $(".hide2").show();
-        } else if ($(".liyu").val() == "1就业困难") {
-            $('.hide2').hide();
-            $(".hide1").show();
-        } else {
-            $('.hide1').hide();
-            $(".hide2").hide();
-        }
-    })
-</script>
-
