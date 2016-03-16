@@ -15,7 +15,53 @@
     <meta name="description" content="">
     <meta name="author" content="templatemo">
     <!-- <link href='http://fonts.useso.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css'> -->
+    @if (@Model.baseInfo.OriginCode == null)
+    {
+        <script type="text/javascript">
 
+        $(function () {
+        });
+
+        function GetAllCity() {
+            $("#originList").empty();
+            $.getJSON(
+            "/FillBaseInfo/GetAllCity",
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["code"]).text(item["name"]).appendTo($("#originList"));
+                })
+            });
+        }
+
+        function GetCity() {
+            $("#originList").empty();
+            $.getJSON(
+            "/FillBaseInfo/GetCity",
+            { content: $("#originPro").val() },
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["code"]).text(item["name"]).appendTo($("#originList"));
+                })
+            });
+        }
+    </script> 
+    }
+    else
+    {
+        <script type="text/javascript">
+        function GetCity() {
+            $("#originList").empty();
+            $.getJSON(
+            "/FillBaseInfo/GetCity",
+            { content: $("#originPro").val() },
+            function (data) {
+                $.each(data, function (i, item) {
+                    $("<option></option>").val(item["code"]).text(item["name"]).appendTo($("#originList"));
+                })
+            });
+        }
+    </script> 
+    }
 </head>
 <body>
     <!-- Left column -->
@@ -163,10 +209,12 @@
 
 
                             <tr>
-                                
+
                                 <td><span>研究生导师：</span>@Html.TextBoxFor(model => model.baseInfo.Tutor)</td>
-                                <td><span>是否专业学位：</span>@Html.RadioButtonFor(model=>model.baseInfo.IsMajorDegrees,"是")是
-                                @Html.RadioButtonFor(model=>model.baseInfo.IsMajorDegrees,"否")否</td>
+                                <td>
+                                    <span>是否专业学位：</span>@Html.RadioButtonFor(model => model.baseInfo.IsMajorDegrees, "是")是
+                                    @Html.RadioButtonFor(model => model.baseInfo.IsMajorDegrees, "否")否
+                                </td>
                             </tr>
 
 
@@ -225,9 +273,8 @@
                                 </td>
                                 <td colspan="3">
                                     <p>生源所在地(高考所在地)：</p>
-                                    <select class="province"></select>
-                                    <select class="city"></select>
-                                    <select class="country"></select>
+                                    @Html.TextBoxFor(m => m.baseInfo.OriginProvince, new { id = "originPro", onkeyup = "GetCity()" })
+                                    @Html.DropDownListFor(m => m.baseInfo.OriginCode, ViewBag.city as List<SelectListItem>, new { id = "originList" })
                                 </td>
                             </tr>
                             <tr>
@@ -283,11 +330,11 @@
                             <tr>
                                 <td colspan="4">
                                     <p>备注：</p>
-                                    @Html.TextAreaFor(model=>model.baseInfo.BaseNote)
+                                    @Html.TextAreaFor(model => model.baseInfo.BaseNote)
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="4"><input class="btn btn-info" type="submit" value="提交" @ViewBag.clocked  /></td>
+                                <td colspan="4"><input class="btn btn-info" type="submit" value="提交" @ViewBag.clocked /></td>
                             </tr>
                         </table>
                     }
@@ -296,8 +343,8 @@
                         <tr>
                             <td colspan="4">
                                 <span>是否通过审核：</span>
-                                @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "1", new { @checked=true, disabled=true}) 是
-                                @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "0", new { @checked = true ,disabled=true}) 否
+                                @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "1", new { @checked = true, disabled = true }) 是
+                                @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "0", new { @checked = true, disabled = true }) 否
                             </td>
                         </tr>
                     </table>

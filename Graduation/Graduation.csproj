@@ -148,6 +148,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\FillBaseInfoController.cs" />
     <Compile Include="Controllers\StudentLoginController.cs" />
+    <Compile Include="Controllers\wxController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -175,6 +176,7 @@
     <Compile Include="Models\FillBaseInfoViewModel.cs" />
     <Compile Include="Models\GraduationDBContent .cs" />
     <Compile Include="Models\jieyeListViewModel.cs" />
+    <Compile Include="Models\LocationModel.cs" />
     <Compile Include="Models\MajorModel.cs" />
     <Compile Include="Models\MajorViewModel.cs" />
     <Compile Include="Models\Nation.cs" />
