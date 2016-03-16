@@ -353,6 +353,7 @@
     <Content Include="Views\Shared\Guide.cshtml" />
     <Content Include="Views\Admin\AddGradInfo.cshtml" />
     <Content Include="Views\FillBaseInfo\FillESchoolContractInfo.cshtml" />
+    <Content Include="Views\Admin\EmplESchoolContractExam.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
