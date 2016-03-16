@@ -2087,7 +2087,7 @@ namespace Graduation.Controllers
                     temp.eSchoolInfo = db.ESchoolInfoTb.Find(item.StudentNumber);
                 //display.InfoList.Add(temp);
             }
-
+            display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
             //是否通过审核
             if (av != null)
             {
@@ -3377,20 +3377,27 @@ namespace Graduation.Controllers
             }
 
             #region 查询
-            AdminGradViewModel display = new AdminGradViewModel();
+            EmplExamListViewModel display = new EmplExamListViewModel();
             display.upload = new UploadModel();
+            display.InfoList = new List<ESchoolInfoViewModel>();
             display.upload = students.upload;
+            // var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
             var upload = db.UploadTb.Include("eSchoolInfoModel").Where(m => m.Department == user.DepartName);
+            if (Session["Type"].ToString() == "1")
+            { upload = db.UploadTb.Include("eSchoolInfoModel").Where(m => m.Department == user.DepartName); }
+            else
+            { upload = db.UploadTb.Include("eSchoolInfoModel"); }
+
 
 
             if (students.upload.Name != null)//姓名
                 upload = upload.Where(m => m.Name.Contains(students.upload.Name));
             if (students.upload.StudentNumber != null)//学号
                 upload = upload.Where(m => m.StudentNumber.Contains(students.upload.StudentNumber));
-            if (students.upload.EntranceYear != null)//入学时间
-                upload = upload.Where(m => m.EntranceYear == students.upload.EntranceYear);
             if (students.upload.GraduationTime != null)//毕业时间
                 upload = upload.Where(m => m.GraduationTime == students.upload.GraduationTime);
+            if (students.upload.eSchoolInfoModel.CheckTime != null)//审核时间
+                upload = upload.Where(m => m.eSchoolInfoModel.CheckTime == students.upload.eSchoolInfoModel.CheckTime);
 
             if (students.upload.Academy != "0" && students.upload.Academy != null)
             {
@@ -3414,8 +3421,6 @@ namespace Graduation.Controllers
                 display.upload.Academy = majorTemp.AcademyId;
                 display.upload.Department = majorTemp.DepartId;
             }
-            if (students.upload.StudentType != null)//学生类型
-                upload = upload.Where(m => m.StudentNumber == students.upload.StudentType);
             //从upload对应到求职信息
             foreach (var item in upload.ToList())
             {

@@ -222,6 +222,11 @@ namespace Graduation.Models
         public string IsChecked { get; set; }
 
         /// <summary>
+        /// 审核时间
+        /// </summary>
+        public DateTime? CheckTime { get; set; }
+
+        /// <summary>
         /// 是否就业
         /// </summary>
         public string IsJiuYe { get; set; }
