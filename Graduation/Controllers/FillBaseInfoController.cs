@@ -10,7 +10,7 @@ using Graduation.Models;
 namespace Graduation.Controllers
 {
     public class FillBaseInfoController : Controller
-        /// jukjkjl
+    /// jukjkjl
     {
         private GraduationDBContent db = new GraduationDBContent();
 
@@ -142,7 +142,7 @@ namespace Graduation.Controllers
                 ViewBag.clocked = student.baseInfo.IsClocked;
                 return View(student);
             }
-            else 
+            else
             {
                 return RedirectToAction("Login", "StudentLogin");
             }
@@ -313,6 +313,18 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="其他",Value="其他",Selected=false},
             };
             ViewBag.Group = Group;
+
+            var belong = db.belongDepTb.ToList();
+            List<SelectListItem> belongDep = new List<SelectListItem> { };
+            foreach (var item in belong)
+            {
+                var belongDepList= new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                belongDep.Add(belongDepList);
+            }
+            ViewBag.belong = belongDep;
+
+
+
             #endregion
             if (Session["number"] != null)
             {
@@ -327,6 +339,7 @@ namespace Graduation.Controllers
                     student.signInfo.StudentNumber = Session["number"].ToString();
                 }
                 student.signInfo.ComType = student.signInfo.ComTypeCode + student.signInfo.ComType;
+                student.signInfo.ComBelongDep = student.signInfo.ComBelongDep + student.signInfo.ComBelongDepCode;//隶属部门
                 ViewBag.clocked = student.signInfo.IsClocked;
                 return View(student);
             }
@@ -345,6 +358,9 @@ namespace Graduation.Controllers
                 string comType = students.signInfo.ComType;
                 students.signInfo.ComType = comType.Substring(2);
                 students.signInfo.ComTypeCode = comType.Substring(0, 2);
+                string belongDep = students.signInfo.ComBelongDep;
+                students.signInfo.ComBelongDep = belongDep.Substring(3);
+                students.signInfo.ComBelongDepCode = belongDep.Substring(0,3);
                 //如果基本信息表中已经有基本，则为更新
                 if (db.SingInfoTb.Find(students.signInfo.StudentNumber) != null)
                 {
@@ -381,6 +397,7 @@ namespace Graduation.Controllers
                 return RedirectToAction("Login", "StudentLogin");
             }
         }
+        
 
         #region 签学校三方协议就业
         /// <summary>
@@ -474,6 +491,15 @@ namespace Graduation.Controllers
             };
             ViewBag.zhiwei = zhiwei;
 
+            var belong = db.belongDepTb.ToList();
+            List<SelectListItem> belongDep = new List<SelectListItem> { };
+            foreach (var item in belong)
+            {
+                var listitem = new SelectListItem { Text = item.ComBelongDep,Value=item.ComBelongDepCode+item.ComBelongDep };
+                belongDep.Add(listitem);
+            }
+            ViewBag.belongDep = belongDep;
+
             #endregion
             if (Session["number"] != null)
             {
@@ -502,6 +528,8 @@ namespace Graduation.Controllers
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
                 student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
+                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDepCode + student.eSchoolInfo.ComBelongDep;//所属部门
+                student.eSchoolInfo.Employment = student.eSchoolInfo.EmploymentCode + student.eSchoolInfo.Employment;//就业形式
                 ViewBag.clocked = student.eSchoolInfo.IsClock;
                 return View(student);
             }
@@ -537,6 +565,15 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.JobTitle = jobTitle.Substring(2);
                 students.eSchoolInfo.JobTitleCode = jobTitle.Substring(0, 2);
 
+                //所属单位
+                string belongDep = students.eSchoolInfo.ComBelongDep;
+                students.eSchoolInfo.ComBelongDep = belongDep.Substring(3);
+                students.eSchoolInfo.ComBelongDepCode = belongDep.Substring(0, 3);
+
+                //就业形式
+                string employment = students.eSchoolInfo.Employment;
+                students.eSchoolInfo.Employment = employment.Substring(2);
+                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
 
                 //如果基本信息表中已经有基本，则为更新
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -551,6 +588,202 @@ namespace Graduation.Controllers
                     db.SaveChanges();
                 }
                 return RedirectToAction("FillESchoolInfo");
+            }
+            return View(students);
+        }
+
+        #endregion
+
+        #region 合同就业
+        /// <summary>
+        /// 合同就业
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult FillESchoolContractInfo()
+        {
+            #region 下拉框初始化
+            //单位所属集团或系统
+            List<SelectListItem> Group = new List<SelectListItem> {
+                new SelectListItem{Text="国网",Value="国网",Selected=true},
+                new SelectListItem{Text="南网",Value="南网",Selected=true},
+                new SelectListItem{Text="大唐集团",Value="大唐集团",Selected=false},
+                new SelectListItem{Text="华能集团",Value="华能集团",Selected=false},
+                new SelectListItem{Text="国电集团",Value="国电集团",Selected=false},
+                new SelectListItem{Text="华电集团",Value="华电集团",Selected=false},
+                new SelectListItem{Text="中电投",Value="中电投",Selected=false},
+                new SelectListItem{Text="中能建",Value="中能建",Selected=false},
+                new SelectListItem{Text="中电建",Value="中电建",Selected=false},
+                new SelectListItem{Text="国核集团",Value="国核集团",Selected=false},
+                new SelectListItem{Text="中核集团",Value="中核集团",Selected=false},
+                new SelectListItem{Text="中广核",Value="中广核",Selected=false},
+                new SelectListItem{Text="华润集团",Value="华润集团",Selected=false},
+                new SelectListItem{Text="神华集团",Value="神华集团",Selected=false},
+                new SelectListItem{Text="京能集团",Value="京能集团",Selected=false},
+                new SelectListItem{Text="浙能集团",Value="浙能集团",Selected=false},
+                new SelectListItem{Text="深能集团",Value="深能集团",Selected=false},
+                new SelectListItem{Text="粤电集团",Value="粤电集团",Selected=false},
+                new SelectListItem{Text="国投电力",Value="国投电力",Selected=false},
+                new SelectListItem{Text="其他地方能源集团",Value="其他地方能源集团",Selected=false},
+                new SelectListItem{Text="金融类",Value="金融类",Selected=false},
+                new SelectListItem{Text="IT类",Value="IT类",Selected=false},
+                new SelectListItem{Text="设计类",Value="设计类",Selected=false},
+                new SelectListItem{Text="地方企业",Value="地方企业",Selected=false},
+                new SelectListItem{Text="教育行业",Value="教育行业",Selected=false},
+                new SelectListItem{Text="银行",Value="银行",Selected=false},
+                new SelectListItem{Text="通信行业",Value="通信行业",Selected=false},
+                new SelectListItem{Text="交通运输业",Value="交通运输业",Selected=false},
+                new SelectListItem{Text="机械机电",Value="机械机电",Selected=false},
+                new SelectListItem{Text="其他",Value="其他",Selected=false}
+            };
+            ViewBag.Group = Group;
+
+            //单位行业
+            List<SelectListItem> hangye = new List<SelectListItem> {
+                new SelectListItem{Text="农、林、牧、渔业",Value="11农、林、牧、渔业",Selected=false},
+                new SelectListItem{Text="采矿业",Value="21采矿业",Selected=false},
+                new SelectListItem{Text="制造业",Value="22制造业",Selected=false},
+                new SelectListItem{Text="电力、热力、燃气及水生产和供应业",Value="23电力、热力、燃气及水生产和供应业",Selected=false},
+                new SelectListItem{Text="建筑业",Value="24建筑业",Selected=false},
+                new SelectListItem{Text="批发和零售业",Value="31批发和零售业",Selected=false},
+                new SelectListItem{Text="交通运输、仓储和邮政业",Value="32交通运输、仓储和邮政业",Selected=false},
+                new SelectListItem{Text="住宿和餐饮业",Value="33住宿和餐饮业",Selected=false},
+                new SelectListItem{Text="信息传输、软件和信息技术服务业",Value="34信息传输、软件和信息技术服务业",Selected=false},
+                new SelectListItem{Text="金融业",Value="35金融业",Selected=false},
+                new SelectListItem{Text="房地产业",Value="36房地产业",Selected=false},
+                new SelectListItem{Text="租赁和商务服务业",Value="37租赁和商务服务业",Selected=false},
+                new SelectListItem{Text="科学研究和技术服务业",Value="38科学研究和技术服务业",Selected=false},
+                new SelectListItem{Text="水利、环境和公共设施管理业",Value="39水利、环境和公共设施管理业",Selected=false},
+                new SelectListItem{Text="居民服务、修理和其他服务业",Value="41居民服务、修理和其他服务业",Selected=false},
+                new SelectListItem{Text="教育",Value="42教育",Selected=false},
+                new SelectListItem{Text="卫生和社会工作",Value="43卫生和社会工作",Selected=false},
+                new SelectListItem{Text="文化、体育和娱乐业",Value="44文化、体育和娱乐业",Selected=false},
+                new SelectListItem{Text="公共管理、社会保障和社会组织",Value="45公共管理、社会保障和社会组织",Selected=false},
+                new SelectListItem{Text="国际组织",Value="46国际组织",Selected=false},
+                new SelectListItem{Text="军队",Value="80军队",Selected=false}
+            };
+            ViewBag.hangye = hangye;
+
+            //工作职务
+            List<SelectListItem> zhiwei = new List<SelectListItem> {
+                new SelectListItem{Text="公务员",Value="10公务员",Selected=false},
+                new SelectListItem{Text="科学研究人员",Value="11科学研究人员",Selected=false},
+                new SelectListItem{Text="工程技术人员",Value="13工程技术人员",Selected=false},
+                new SelectListItem{Text="农林牧渔业技术人员",Value="17农林牧渔业技术人员",Selected=false},
+                new SelectListItem{Text="卫生专业技术人员",Value="19卫生专业技术人员",Selected=false},
+                new SelectListItem{Text="经济业务人员",Value="21经济业务人员",Selected=false},
+                new SelectListItem{Text="金融业务人员",Value="22金融业务人员",Selected=false},
+                new SelectListItem{Text="法律专业人员",Value="23法律专业人员",Selected=false},
+                new SelectListItem{Text="教学人员",Value="24教学人员",Selected=false},
+                new SelectListItem{Text="文学艺术工作人员",Value="25文学艺术工作人员",Selected=false},
+                new SelectListItem{Text="体育工作人员",Value="26体育工作人员",Selected=false},
+                new SelectListItem{Text="体育工作人员",Value="27体育工作人员",Selected=false},
+                new SelectListItem{Text="其他专业技术人员",Value="29其他专业技术人员",Selected=false},
+                new SelectListItem{Text="办事人员和有关人员",Value="30办事人员和有关人员",Selected=false},
+                new SelectListItem{Text="商业和服务业人员",Value="40商业和服务业人员",Selected=false},
+                new SelectListItem{Text="生产和运输设备操作人员",Value="60生产和运输设备操作人员",Selected=false},
+                new SelectListItem{Text="军人",Value="80军人",Selected=false},
+                new SelectListItem{Text="其他人员",Value="90其他人员",Selected=false},
+            };
+            ViewBag.zhiwei = zhiwei;
+
+            var belong = db.belongDepTb.ToList();
+            List<SelectListItem> belongDep = new List<SelectListItem> { };
+            foreach (var item in belong)
+            {
+                var listitem = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                belongDep.Add(listitem);
+            }
+            ViewBag.belongDep = belongDep;
+
+            #endregion
+            if (Session["number"] != null)
+            {
+                var student = new ESchoolInfoViewModel()
+                {
+                    eSchoolInfo = db.ESchoolInfoTb.Find(Session["number"]),
+                    upload = db.UploadTb.Find(Session["number"])
+                };
+                if (student.eSchoolInfo == null)
+                {
+                    student.eSchoolInfo = new ESchoolInfoModel();
+                    student.eSchoolInfo.StudentNumber = Session["number"].ToString();
+                }
+
+                var temp = db.BaseInfoTb.Find(Session["number"]);
+                if (temp != null)
+                {
+                    ViewBag.P = temp.PoliticalStatus;//政治面貌
+                    ViewBag.L = temp.Origin;//生源地
+                    ViewBag.H = temp.Health;//健康状况
+                    ViewBag.T = temp.TelNumber;//手机号
+                    ViewBag.C = temp.FamilyZipCode;//邮政编码
+                    ViewBag.ADDR = temp.CommAddress;//通信地址
+                    ViewBag.FL = temp.FamilyLocation;//家庭地址
+                }
+                student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
+                student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
+                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
+                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDepCode + student.eSchoolInfo.ComBelongDep;//所属部门
+                student.eSchoolInfo.Employment = student.eSchoolInfo.EmploymentCode + student.eSchoolInfo.Employment;//就业形式
+                ViewBag.clocked = student.eSchoolInfo.IsClock;
+                return View(student);
+            }
+            else
+            {
+                return RedirectToAction("Login", "StudentLogin");
+            }
+        }
+
+        /// <summary>
+        /// 合同就业
+        /// </summary>
+        /// <param name="students"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult FillESchoolContractInfo(ESchoolInfoViewModel students)
+        {
+            if (ModelState.IsValid)
+            {
+                //单位性质
+                string comType = students.eSchoolInfo.ComType;
+                students.eSchoolInfo.ComType = comType.Substring(2);
+                students.eSchoolInfo.ComTypeCode = comType.Substring(0, 2);
+
+                //单位行业
+                string comIndustry = students.eSchoolInfo.ComIndustry;
+                students.eSchoolInfo.ComIndustry = comIndustry.Substring(2);
+                students.eSchoolInfo.ComIndustryCode = comIndustry.Substring(0, 2);
+
+                //工作职位
+                string jobTitle = students.eSchoolInfo.JobTitle;
+                students.eSchoolInfo.JobTitle = jobTitle.Substring(2);
+                students.eSchoolInfo.JobTitleCode = jobTitle.Substring(0, 2);
+
+                //所属单位
+                string belongDep = students.eSchoolInfo.ComBelongDep;
+                students.eSchoolInfo.ComBelongDep = belongDep.Substring(3);
+                students.eSchoolInfo.ComBelongDepCode = belongDep.Substring(0, 3);
+
+                //就业形式
+                string employment = students.eSchoolInfo.Employment;
+                students.eSchoolInfo.Employment = employment.Substring(2);
+                students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
+
+
+                //如果基本信息表中已经有基本，则为更新
+                if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
+                {
+                    ESchoolInfoModel temp = db.ESchoolInfoTb.Find(Session["number"].ToString());
+                    db.Entry(temp).CurrentValues.SetValues(students.eSchoolInfo);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    db.ESchoolInfoTb.Add(students.eSchoolInfo);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("FillESchoolContractInfo");
             }
             return View(students);
         }
@@ -625,7 +858,7 @@ namespace Graduation.Controllers
             return View(students);
         }
 
-#endregion
+        #endregion
 
         #region 其他录用自主创业
         /// <summary>
@@ -731,7 +964,7 @@ namespace Graduation.Controllers
         }
 
 
-        #endregion 
+        #endregion
 
         #region 其他录用灵活就业
         /// <summary>
@@ -1039,7 +1272,7 @@ namespace Graduation.Controllers
                     ViewBag.ADDR = temp.CommAddress;//通信地址
                     ViewBag.FL = temp.FamilyLocation;//家庭地址
                 }
-               // ViewBag.IsLocked = students.eSchoolInfo.IsLocked;
+                // ViewBag.IsLocked = students.eSchoolInfo.IsLocked;
                 ViewBag.clocked = students.eSchoolInfo.IsClock;
                 return View(students);
             }
@@ -1159,7 +1392,7 @@ namespace Graduation.Controllers
         {
             if (Session["number"] != null)
             {
-                
+
                 var student = new ESchoolInfoViewModel()
                 {
                     eSchoolInfo = db.ESchoolInfoTb.Find(Session["number"]),
@@ -1172,7 +1405,7 @@ namespace Graduation.Controllers
                 }
                 else
                 {
-                    student.eSchoolInfo.JobDiff = student.eSchoolInfo.JobDiffCode + student.eSchoolInfo.JobDiff; 
+                    student.eSchoolInfo.JobDiff = student.eSchoolInfo.JobDiffCode + student.eSchoolInfo.JobDiff;
                 }
                 var temp = db.BaseInfoTb.Find(Session["number"]);
                 if (temp != null)

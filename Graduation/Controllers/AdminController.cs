@@ -824,6 +824,16 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="其他",Value="其他",Selected=false},
             };
                 ViewBag.Group = Group;
+
+                var belong = db.belongDepTb.ToList();
+                List<SelectListItem> belongDep = new List<SelectListItem> { };
+                foreach (var item in belong)
+                {
+                    var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                    belongDep.Add(belongDepList);
+                }
+                ViewBag.belong = belongDep;
+
                 #endregion
 
                 SignInfoViewModel student = new SignInfoViewModel()
@@ -837,6 +847,7 @@ namespace Graduation.Controllers
                     student.signInfo.StudentNumber = studentNumber.ToString();
                 }
                 student.signInfo.ComType = student.signInfo.ComTypeCode + student.signInfo.ComType;
+                student.signInfo.ComBelongDep = student.signInfo.ComBelongDep + student.signInfo.ComBelongDepCode;
                 return View(student);
             }
             else
@@ -853,6 +864,10 @@ namespace Graduation.Controllers
                 string comType = students.signInfo.ComType;
                 students.signInfo.ComType = comType.Substring(2);
                 students.signInfo.ComTypeCode = comType.Substring(0, 2);
+
+                string belongDep = students.signInfo.ComBelongDep;
+                students.signInfo.ComBelongDep = belongDep.Substring(3);
+                students.signInfo.ComBelongDepCode = belongDep.Substring(0, 3);
                 //如果基本信息表中已经有基本，则为更新
                 if (db.SingInfoTb.Find(students.signInfo.StudentNumber) != null)
                 {
@@ -1338,6 +1353,17 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="乡镇村",Value="4",Selected=false}
             };
                 ViewBag.type = type;
+                
+                //民族
+                var nation = db.nationTb.ToList();
+                List<SelectListItem> nationlist = new List<SelectListItem> { };
+                foreach(var item in nation )
+                {
+                    var listItem = new SelectListItem { Text = item.NationName, Value = item.NationCode + item.NationName };
+                    nationlist.Add(listItem);
+                }
+                ViewBag.nation = nationlist;
+
 
                 #endregion
                 return View();
@@ -1359,9 +1385,9 @@ namespace Graduation.Controllers
                     upLoadModel.SchoolBeCode = "360";
                     upLoadModel.SchoolAddCode = "130600";
                     upLoadModel.fillBaseInfoModel.StudentNumber = upLoadModel.StudentNumber;
-                    // var nation = upLoadModel.Nation;
-                    //upLoadModel.Nation = nation.Substring(2);
-                    //upLoadModel.NationCode = upLoadModel.Nation.Substring(0, 2);
+                    var nation = upLoadModel.Nation;
+                    upLoadModel.Nation = nation.Substring(2);
+                    upLoadModel.NationCode = upLoadModel.Nation.Substring(0, 2);
                     //var resLocation = upLoadModel.fillBaseInfoModel.ResLocationCode;
                     //upLoadModel.fillBaseInfoModel.ResLocation =resLocation. Substring(2);
                     //upLoadModel.fillBaseInfoModel.ResLocationCode = resLocation.Substring(0, 2);
@@ -2234,6 +2260,16 @@ namespace Graduation.Controllers
             };
             ViewBag.zhiwei = zhiwei;
 
+            //隶属部门
+            var belong = db.belongDepTb.ToList();
+            List<SelectListItem> belongDep = new List<SelectListItem> { };
+            foreach (var item in belong)
+            {
+                var belongDepList= new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                belongDep.Add(belongDepList);
+            }
+            ViewBag.belong = belongDep;
+
             #endregion
             if (Session["adminStuNum"] != null)
             {
@@ -2262,6 +2298,7 @@ namespace Graduation.Controllers
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
                 student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
+                student.eSchoolInfo.ComBelongDep=student.eSchoolInfo.ComBelongDep+student.eSchoolInfo.ComBelongDepCode//隶属部门
                 return View(student);
             }
             else
@@ -2291,6 +2328,11 @@ namespace Graduation.Controllers
                 string jobTitle = students.eSchoolInfo.JobTitle;
                 students.eSchoolInfo.JobTitle = jobTitle.Substring(2);
                 students.eSchoolInfo.JobTitleCode = jobTitle.Substring(0, 2);
+
+                //隶属部门
+                string belong = students.eSchoolInfo.ComBelongDep;
+                students.eSchoolInfo.ComBelongDep = belong.Substring(3);
+                students.eSchoolInfo.ComBelongDepCode = belong.Substring(0, 3);
 
 
                 //如果基本信息表中已经有基本，则为更新

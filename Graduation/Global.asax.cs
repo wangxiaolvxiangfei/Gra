@@ -18,8 +18,11 @@ namespace Graduation
     {
         protected void Application_Start()
         {
-            Database.SetInitializer(new 
-                      DropCreateDatabaseIfModelChanges<GraduationDBContent>());
+            //Database.SetInitializer(new
+            //          DropCreateDatabaseIfModelChanges<GraduationDBContent>());
+
+
+            Database.SetInitializer(new SampleData());
 
             AreaRegistration.RegisterAllAreas();
 

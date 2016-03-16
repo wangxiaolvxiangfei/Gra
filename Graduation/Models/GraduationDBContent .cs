@@ -43,8 +43,15 @@ namespace Graduation.Models
 
         public DbSet<TimeModel> TimeTb
         { get; set; }
-
         public DbSet<LocationModel> LocationTb
+	{ get; set; }
+        public DbSet<BelongDep> belongDepTb
+        { get; set; }
+
+        /// <summary>
+        /// 民族
+        /// </summary>
+        public DbSet<Nation> nationTb
         { get; set; }
     }
 }

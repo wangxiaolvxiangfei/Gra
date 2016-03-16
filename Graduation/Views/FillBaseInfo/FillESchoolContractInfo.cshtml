@@ -96,7 +96,6 @@
                 @using (@Html.BeginForm())
                 {
                     @Html.HiddenFor(model => model.eSchoolInfo.StudentNumber)
-                    @Html.HiddenFor(model=>model.eSchoolInfo.Employment)
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
                     <div class="content">
@@ -136,7 +135,7 @@
                                 <td colspan="2"><span>家庭所在地：</span><span>@ViewBag.FL</span></td>
                             </tr>
                             <tr>
-                                <td colspan="2"><span>协议书编号：</span>@Html.TextBoxFor(model => model.eSchoolInfo.AgreementID)*唯一</td>                              
+                                <td colspan="2"><span>协议书编号：</span>@Html.TextBoxFor(model => model.eSchoolInfo.AgreementID)*唯一</td>
                             </tr>
                             <tr>
                                 <td>
@@ -154,7 +153,7 @@
                                 </td>
                                 <td>
                                     <p>单位上级隶属部门</p>
-                                   @Html.DropDownListFor(model=>model.eSchoolInfo.ComBelongDep,ViewBag.belongDep as List<SelectListItem>)
+                                    @Html.DropDownListFor(model => model.eSchoolInfo.ComBelongDep, ViewBag.belongDep as List<SelectListItem>)
                                 </td>
                             </tr>
                             <tr>
@@ -226,8 +225,8 @@
                                 </td>
                                 <td>
                                     <span>是否专业对口：</span>
-                                    @Html.RadioButtonFor(model=>model.eSchoolInfo.IsMajorFit,"1") 是
-                                    @Html.RadioButtonFor(mdoel=>mdoel.eSchoolInfo.IsMajorFit,"0") 否
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.IsMajorFit, "1") 是
+                                    @Html.RadioButtonFor(mdoel => mdoel.eSchoolInfo.IsMajorFit, "0") 否
                                 </td>
                             </tr>
                             <tr>

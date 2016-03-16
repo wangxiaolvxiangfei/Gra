@@ -54,7 +54,7 @@
                         <td><span>身份证号：</span>@Html.TextBoxFor(model => model.IDNumber)</td>
                         <td>
                             <span>民族：</span>
-                            @*@Html.DropDownListFor(model => model.Nation, ViewBag.N as List<SelectListItem>)*@
+                            @Html.DropDownListFor(model => model.Nation, ViewBag.nation as List<SelectListItem>)
                         </td>
                     </tr>
                     <tr>
