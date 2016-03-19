@@ -47,7 +47,7 @@ else
                         </thead>
                         <tr>
                             <td rowspan="2" style="width:10px; border-right:1px solid black">毕业生信息</td>
-                            <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                            <td><p>姓名：</p><span>@Html.ValueFor(model => model.upload.Name)</span></td>
                             <td><p>学号：</p><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
                             <td><p>出生年月日：</p><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
                             <td>
@@ -78,16 +78,16 @@ else
                         <tr>
                             <td rowspan="9" style="width:10px; border-right:1px solid black">教育背景</td>
                             <td colspan="2">
-                                <span>专业：</span><span>@Html.ValueFor(model => model.upload.MajorDirection)</span>
+                                <p>专业：</p><span>@Html.ValueFor(model => model.upload.MajorDirection)</span>
                             </td>
                             <td>
-                                <span>学历：</span><span>@Html.ValueFor(model => model.upload.Education)</span>
+                                <p>学历：</p><span>@Html.ValueFor(model => model.upload.Education)</span>
                             </td>
                             <td>
-                                <span>培养方式：</span><span>@Html.ValueFor(model => model.upload.TrainType)</span>
+                                <p>培养方式：</p><span>@Html.ValueFor(model => model.upload.TrainType)</span>
                             </td>
                             <td>
-                                <span>毕业时间：</span><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
+                                <p>毕业时间：</p><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
                             </td>
                             <td>
                                 <p>成绩班级名次</p>
@@ -141,16 +141,16 @@ else
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <span>外语语种：英语通过级别：</span>
+                                <p>外语语种：英语通过级别：</p>
                                 @Html.DropDownListFor(model => model.applInfo.EnglishLevel, ViewBag.english as List<SelectListItem>
                                     )
-                                <span>四级成绩：</span>@Html.TextBoxFor(model => model.applInfo.LevelFour)
-                                <span>六级成绩：</span>@Html.TextBoxFor(model => model.applInfo.LevelSix)
+                                <p>四级成绩：</p>@Html.TextBoxFor(model => model.applInfo.LevelFour)
+                                <p>六级成绩：</p>@Html.TextBoxFor(model => model.applInfo.LevelSix)
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <span>计算机级别：</span>@Html.TextBoxFor(model => model.applInfo.ComputerLevel)
+                                <p>计算机级别：</p>@Html.TextBoxFor(model => model.applInfo.ComputerLevel)
                             </td>
                         </tr>
                     </table>

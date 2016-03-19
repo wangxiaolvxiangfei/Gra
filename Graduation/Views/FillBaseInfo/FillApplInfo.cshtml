@@ -147,7 +147,7 @@ else
                         </tr>
                         <tr>
                             <td colspan="3">
-                                <span>综合排名：</span>
+                                <p>综合排名：</p>
                                 @Html.TextBoxFor(model => model.applInfo.NumberN)
                                 <span>/</span>
                                 @Html.TextBoxFor(model => model.applInfo.NumberM)
@@ -156,7 +156,7 @@ else
                                 @Html.RadioButtonFor(model => model.applInfo.RankType, "2") 专业排名
                             </td>
                             <td>
-                                <span>在校任职情况：</span>
+                                <p>在校任职情况：</p>
 
                                 @Html.DropDownListFor(model => model.applInfo.PostAtSch, ViewBag.list as List<SelectListItem>)
 

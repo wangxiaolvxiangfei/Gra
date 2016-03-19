@@ -1,4 +1,4 @@
-﻿@model Graduation.Models.BaseInfoListViewModel
+﻿@model Graduation.Models.AdminGradViewModel
 @if (ViewBag.type == "1")
 {
     ViewBag.type = "disabled";
@@ -124,6 +124,7 @@ else
 
         @using (@Html.BeginForm("AdminGradList", "Admin", FormMethod.Post, new { @class = "form-horizontal", Style = "margin-top:20px" }))
         {
+            @Html.HiddenFor(model=>model.upload.StudentNumber)
             @Html.AntiForgeryToken()
             @Html.ValidationSummary()
 
@@ -142,13 +143,13 @@ else
             <div class="form-group">
                 <label for="inputPassword3" class="col-sm-1 control-label">入学年份</label>
                 <div class="col-sm-3">
-                    @Html.TextBoxFor(m => m.upload.EntranceYear, new { placeholder = "入学年份" })
+                    @Html.TextBoxFor(m => m.upload.EntranceYear, new { placeholder = "入学年份", @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputPassword3" class="col-sm-1 control-label">毕业年份</label>
                 <div class="col-sm-3">
-                    @Html.TextBoxFor(m => m.upload.GraduationTime, new { placeholder = "毕业年份" })
+                    @Html.TextBoxFor(m => m.upload.GraduationTime, new { placeholder = "毕业年份", @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
@@ -166,30 +167,7 @@ else
                     @Html.DropDownListFor(model => model.upload.Major, ViewBag.major as List<SelectListItem>, "=请选择=", new { id = "Major", @class = "form-control ly-select" })
                 }
             </div>
-            <div class="form-group">
-                <label for="inputPassword3" class="col-sm-1 control-label">
-                    是否锁定
-                </label>
-                <div class="col-sm-5">
-                    <div class="radio">
-
-                        <span>@Html.RadioButtonFor(m => m.isClocked, "1") 是</span>
-                        <span>@Html.RadioButtonFor(m => m.isClocked, "0") 否</span>
-
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="inputPassword3" class="col-sm-1 control-label">
-                    是否审核
-                </label>
-                <div class="col-sm-5">
-                    <div class="radio">
-                        <span>@Html.RadioButtonFor(m => m.isChecked, "1") 是</span>
-                        <span>@Html.RadioButtonFor(m => m.isChecked, "0") 否</span>
-                    </div>
-                </div>
-            </div>
+            
             <div class="form-group">
                 <label for="inputPassword3" class="col-sm-1 control-label">
                     学生类型
@@ -202,10 +180,10 @@ else
                 </div>
             </div>
 
-            <div class="right marginbottom col-sm-5">
+            <div class="right marginbottom col-sm-3">
                 <button type="submit" value="查询" name="action" class="btn btn-primary">查询</button>
             </div>
-            <div class="right marginbottom col-sm-5">
+            <div class="right marginbottom col-sm-3">
                 <button type="button" class="btn btn-primary" onclick="javascript: window.location = '/Admin/AddGradInfo'">添加毕业生信息</button>
             </div>
         }

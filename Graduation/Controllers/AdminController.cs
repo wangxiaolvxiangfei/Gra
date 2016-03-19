@@ -625,7 +625,7 @@ namespace Graduation.Controllers
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public ActionResult Sign(int type = 0,int id=0)
+        public ActionResult Sign(int type = 0, int id = 0)
         {
             if (Session["Id"] != null)
             {
@@ -639,19 +639,20 @@ namespace Graduation.Controllers
                     ViewBag.style = "1";
                     var userDep = db.DepartmentTb.Find(user.DepartId);
                     upload = db.UploadTb.Where(m => m.Department == user.DepartName);
-                   
+
                 }
                 else if (Session["Type"].ToString() == "2")//管理员登陆
                 {
                     upload = db.UploadTb;
-                    ViewBag.style = "2";                
+                    ViewBag.style = "2";
                 }
 
                 #region 下载excel表格
                 if (type == 1)
                 {
                     SignListViewModel sl = (SignListViewModel)Session["table"];
-                    string[] excelHead = { "学号", "姓名", "学历", "院", "系", "班级", "登记日期", "单位名称", "隶属部门", "隶属部门代码", "单位性质", "单位性质代码", "单位地址", "单位联系人", "单位电话", "个人联系方式", "签约方式", "协议书编号", "所属集团或系统" };
+                    //string[] excelHead = { "学号", "姓名", "学历", "院", "系", "班级", "单位名称", "隶属部门", "隶属部门代码", "单位性质", "单位性质代码", "单位地址", "单位联系人", "单位电话", "个人联系方式", "签约方式", "协议书编号", "所属集团或系统", "所属集团代码", "登记日期" };
+                    string[] excelHead = { "xh", "xm", "xl", "szxy", "szyx", "bj", "dwmc", "dwlsbm", "dwlsbmdm", "dwxz", "dwxzdm", "dwdz", "dwlxr", "lxrdh", "mobilephon", "签约方式", "xysbh", "dwzzjgdm", "所属集团代码", "登记日期" };
                     var workbook = new HSSFWorkbook();
                     //表格显示的名字
                     var sheet = workbook.CreateSheet("签约登记");
@@ -664,30 +665,31 @@ namespace Graduation.Controllers
                     }
                     int a = 1;
                     //遍历表数据
-                    foreach (var item in sl.SignList)
+                    foreach (var item in sl.uploadPagedList)
                     {
                         var row = sheet.CreateRow(a);
-                        row.CreateCell(0).SetCellValue(item.upload.StudentNumber);
-                        row.CreateCell(1).SetCellValue(item.upload.Name);
-                        row.CreateCell(2).SetCellValue(item.upload.Education);
-                        row.CreateCell(3).SetCellValue(item.upload.Academy);
-                        row.CreateCell(4).SetCellValue(item.upload.Department);
-                        row.CreateCell(5).SetCellValue(item.upload.Class);
-                        if (item.signInfo != null)
+                        row.CreateCell(0).SetCellValue(item.StudentNumber);
+                        row.CreateCell(1).SetCellValue(item.Name);
+                        row.CreateCell(2).SetCellValue(item.Education);
+                        row.CreateCell(3).SetCellValue(item.Academy);
+                        row.CreateCell(4).SetCellValue(item.Department);
+                        row.CreateCell(5).SetCellValue(item.Class);
+                        if (item.signInfoModel != null)
                         {
-                            row.CreateCell(6).SetCellValue(item.signInfo.CompanyName);
-                            row.CreateCell(7).SetCellValue(item.signInfo.ComBelongDep);
-                            row.CreateCell(8).SetCellValue(item.signInfo.ComBelongDepCode);
-                            row.CreateCell(9).SetCellValue(item.signInfo.ComType);
-                            row.CreateCell(10).SetCellValue(item.signInfo.ComTypeCode);
-                            row.CreateCell(11).SetCellValue(item.signInfo.CompanyAddress);
-                            row.CreateCell(12).SetCellValue(item.signInfo.CompanyConn);
-                            row.CreateCell(13).SetCellValue(item.signInfo.CompanyTel);
-                            row.CreateCell(14).SetCellValue(item.signInfo.PerTelType);
-                            row.CreateCell(15).SetCellValue(item.signInfo.SignType);
-                            row.CreateCell(16).SetCellValue(item.signInfo.AgreementID);
-                            row.CreateCell(17).SetCellValue(item.signInfo.ComBelongDep);
-                            row.CreateCell(18).SetCellValue(item.signInfo.ComBelongDepCode);
+                            row.CreateCell(6).SetCellValue(item.signInfoModel.CompanyName);
+                            row.CreateCell(7).SetCellValue(item.signInfoModel.ComBelongDep);
+                            row.CreateCell(8).SetCellValue(item.signInfoModel.ComBelongDepCode);
+                            row.CreateCell(9).SetCellValue(item.signInfoModel.ComType);
+                            row.CreateCell(10).SetCellValue(item.signInfoModel.ComTypeCode);
+                            row.CreateCell(11).SetCellValue(item.signInfoModel.CompanyAddress);
+                            row.CreateCell(12).SetCellValue(item.signInfoModel.CompanyConn);
+                            row.CreateCell(13).SetCellValue(item.signInfoModel.CompanyTel);
+                            row.CreateCell(14).SetCellValue(item.signInfoModel.PerTelType);
+                            row.CreateCell(15).SetCellValue(item.signInfoModel.SignType);
+                            row.CreateCell(16).SetCellValue(item.signInfoModel.AgreementID);
+                            row.CreateCell(17).SetCellValue(item.signInfoModel.ComBelongDep);
+                            row.CreateCell(18).SetCellValue(item.signInfoModel.ComBelongDepCode);
+                            row.CreateCell(19).SetCellValue(item.signInfoModel.SignTime);
                         }
                         a++;
                     }
@@ -728,7 +730,7 @@ namespace Graduation.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Sign(SignListViewModel sl,int id=0)
+        public ActionResult Sign(SignListViewModel sl, int id = 0)
         {
             var UserId = Session["Id"];//用户Id
             var user = db.UserTb.Find(UserId);//查询出该用户
@@ -829,7 +831,7 @@ namespace Graduation.Controllers
                 List<SelectListItem> belongDep = new List<SelectListItem> { };
                 foreach (var item in belong)
                 {
-                    var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                    var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode};
                     belongDep.Add(belongDepList);
                 }
                 ViewBag.belong = belongDep;
@@ -846,8 +848,7 @@ namespace Graduation.Controllers
                     student.signInfo = new SignInfoModel();
                     student.signInfo.StudentNumber = studentNumber.ToString();
                 }
-                student.signInfo.ComType = student.signInfo.ComTypeCode + student.signInfo.ComType;
-                student.signInfo.ComBelongDep = student.signInfo.ComBelongDep + student.signInfo.ComBelongDepCode;
+             
                 return View(student);
             }
             else
@@ -864,10 +865,9 @@ namespace Graduation.Controllers
                 string comType = students.signInfo.ComType;
                 students.signInfo.ComType = comType.Substring(2);
                 students.signInfo.ComTypeCode = comType.Substring(0, 2);
-
-                string belongDep = students.signInfo.ComBelongDep;
-                students.signInfo.ComBelongDep = belongDep.Substring(3);
-                students.signInfo.ComBelongDepCode = belongDep.Substring(0, 3);
+            
+                var belongDep = db.belongDepTb.Where(m => m.ComBelongDepCode == students.signInfo.ComBelongDepCode).FirstOrDefault();
+                students.signInfo.ComBelongDep = belongDep.ComBelongDep;
                 //如果基本信息表中已经有基本，则为更新
                 if (db.SingInfoTb.Find(students.signInfo.StudentNumber) != null)
                 {
@@ -888,7 +888,7 @@ namespace Graduation.Controllers
 
         #region 毕业生列表
 
-        public ActionResult AdminGradList(string Idd = null, int type = 0,int id=0)
+        public ActionResult AdminGradList(string Idd = null, int type = 0, int id = 0)
         {
             if (Session["Id"] != null)
             {
@@ -982,7 +982,8 @@ namespace Graduation.Controllers
                 if (type == 3)
                 {
                     AdminGradViewModel s1 = (AdminGradViewModel)Session["table"];
-                    string[] excelHead = { "学号", "姓名", "性别", "性别代码", "民族", "民族代码", "出生日期", "身份证号", "原考生号", "考生号", "师范生类别代码", "学籍变动代码", "院校名称", "院校代码", "院校隶属部门代码", "院校所在地代码", "学院", "系", "班级", "教学班", "专业名称", "专业代码", "专业方向", "政治面貌", "政治面貌代码", "健康状况", "是否曾转专业", "转系前专业", "宿舍楼号", "宿舍号", "班主任", "生源所在地省", "生源所在地级市", "生源所在地级市的区或县级市或县", "生源所在地", "生源所在地代码", "基本信息是否审核", "基本信息状态", "就业信息是否审核", "就业信息状态", "家庭户口所在地", "家庭户口所在地代码", "家庭户口类型", "独生子女标志", "困难生类别代码", "家庭困难级别", "档案是否转入学校", "入学前户口所在地派出所", "父亲姓名", "母亲姓名", "父亲工作单位", "母亲工作单位", "家庭详细通信住址", "家庭所在地邮编", "家庭电话", "个人手机", "QQ号码", "Email", "学历", "学历代码", "学制", "培养方式", "培养方式代码", "定向或委培单位", "入学年份", "入学时间", "毕业时间", "在校任职情况代码", "综合排名", "排名方式", "外语语种", "英语通过级别", "四级成绩", "六级成绩", "计算机级别", "获奖1", "获奖2", "获奖3", "在校期间其他荣誉及奖励", "求职备注", "毕业去向", "协议书编号", "单位名称", "单位所属集团或系统", "单位组织机构代码", "单位上级隶属部门", "单位行业", "工作职务", "开具单位名称", "单位性质", "联系人", "联系人邮编", "联系人通信地址", "联系人职务", "联系人电话", "户口迁移地址", "档案转寄详细地址", "邮政编码", "是否专业对口", "升学院校", "升学专业", "出国国家" };
+                    string[] excelHead = { "xh", "xm", "xb", "xbdm", "mz", "mzdm", "csrq", "sfzh", "原考生号", "ksh", "sfslbdm", "学籍变动代码", "yxmc", "yxdm", "院校隶属部门代码", "yxszsdm", "szxy", "szyx", "bj", "jxb", "专业名称", "zy", "zyfx", "zzmm", "zzmmdm", "健康状况", "是否曾转专业", "转系前专业", "宿舍楼号", "宿舍号", "bzr", "syszdgkkq", "生源所在地级市", "生源所在地级市的区或县级市或县", "syszd", "syszddm", "基本信息是否审核", "基本信息是否锁定", "就业信息是否审核", "就业信息是否锁定", "jthkszd", "家庭户口所在地代码", "jthklx", "dsznbz", "knslbdm", "jtknjb", "dasfzrxx", "rxqhkszdpcs", "fqxm", "mqxm", "mqgzdw", "fqgzdw", "jtdz", "jtyb", "jtdh", "mobilephon", "qq", "Email", "xl", "xldm", "xz", "pyfs", "pyfsdm", "dxhwpdw", "入学年份", "rxsj", "bysj", "在校任职情况代码", "综合排名", "排名方式", "英语通过级别", "四级成绩", "六级成绩", "计算机级别", "获奖1", "获奖2", "获奖3", "在校期间其他荣誉及奖励", "求职备注", "xysbh", "dwmc", "dwzzjgdm", "单位上级隶属部门", "dwhy", "工作职务", "dwmc", "dwxz", "dwlxr", "dwyb", "dwdz", "lxrzw", "lxrdh", "hkqzdz", "dazjdwdz", "dwyb", "是否专业对口", "升学院校", "升学专业", "出国国家", "zzjgdm", "byqxdm" };
+                   // string[] excelHead = { "学号", "姓名", "性别", "性别代码", "民族", "民族代码", "出生日期", "身份证号", "原考生号", "考生号", "师范生类别代码", "学籍变动代码", "院校名称", "院校代码", "院校隶属部门代码", "院校所在地代码", "学院", "系", "班级", "教学班", "专业名称", "专业代码", "专业方向", "政治面貌", "政治面貌代码", "健康状况", "是否曾转专业", "转系前专业", "宿舍楼号", "宿舍号", "班主任", "生源所在地省", "生源所在地级市", "生源所在地级市的区或县级市或县", "生源所在地", "生源所在地代码", "基本信息是否审核", "基本信息是否锁定", "就业信息是否审核", "就业信息是否锁定", "家庭户口所在地", "家庭户口所在地代码", "家庭户口类型", "独生子女标志", "困难生类别代码", "家庭困难级别", "档案是否转入学校", "入学前户口所在地派出所", "父亲姓名", "母亲姓名", "父亲工作单位", "母亲工作单位", "家庭详细通信住址", "家庭所在地邮编", "家庭电话", "个人手机", "QQ号码", "Email", "学历", "学历代码", "学制", "培养方式", "培养方式代码", "定向或委培单位", "入学年份", "入学时间", "毕业时间", "在校任职情况代码", "综合排名", "排名方式", "英语通过级别", "四级成绩", "六级成绩", "计算机级别", "获奖1", "获奖2", "获奖3", "在校期间其他荣誉及奖励", "求职备注", "协议书编号", "单位名称", "单位所属集团或系统", "单位上级隶属部门", "单位行业", "工作职务", "开具单位名称", "单位性质", "联系人", "联系人邮编", "联系人通信地址", "联系人职务", "联系人电话", "户口迁移地址", "档案转寄详细地址", "邮政编码", "是否专业对口", "升学院校", "升学专业", "出国国家", "单位组织机构代码", "毕业去向" };
                     var workhood = new HSSFWorkbook();
                     var sheet = workhood.CreateSheet("基本信息表");
                     var col = sheet.CreateRow(0);
@@ -995,6 +996,10 @@ namespace Graduation.Controllers
                     {
                         if (item.fillBaseInfoModel == null)
                             item.fillBaseInfoModel = new FillBaseInfoModel();
+                        if (item.applInfoModel == null)
+                            item.applInfoModel = new ApplInfoModel();
+                        if (item.eSchoolInfoModel == null)
+                            item.eSchoolInfoModel = new ESchoolInfoModel();
                         var row = sheet.CreateRow(a);
                         row.CreateCell(0).SetCellValue(item.StudentNumber);
                         row.CreateCell(1).SetCellValue(item.Name);
@@ -1033,9 +1038,9 @@ namespace Graduation.Controllers
                         row.CreateCell(34).SetCellValue(item.fillBaseInfoModel.Origin);
                         row.CreateCell(35).SetCellValue(item.fillBaseInfoModel.OriginCode);
                         row.CreateCell(36).SetCellValue(item.fillBaseInfoModel.IsBaseChecked);
-                        row.CreateCell(37).SetCellValue(item.fillBaseInfoModel.IsClocked);
-                        row.CreateCell(38).SetCellValue(item.eSchoolInfoModel.IsChecked);
-                        row.CreateCell(39).SetCellValue(item.eSchoolInfoModel.IsClock);
+                         row.CreateCell(37).SetCellValue(item.fillBaseInfoModel.IsClocked);
+                         row.CreateCell(38).SetCellValue(item.eSchoolInfoModel.IsChecked);
+                         row.CreateCell(39).SetCellValue(item.eSchoolInfoModel.IsClock);
                         row.CreateCell(40).SetCellValue(item.fillBaseInfoModel.ResLocation);
                         row.CreateCell(41).SetCellValue(item.fillBaseInfoModel.ResLocationCode);
                         row.CreateCell(42).SetCellValue(item.fillBaseInfoModel.ResLocationType);
@@ -1076,7 +1081,6 @@ namespace Graduation.Controllers
                         row.CreateCell(76).SetCellValue(item.applInfoModel.ThirdYearPrize);
                         row.CreateCell(77).SetCellValue(item.applInfoModel.BriefPrize);
                         row.CreateCell(78).SetCellValue(item.applInfoModel.ApplNote);
-                        //少毕业去向
                         row.CreateCell(79).SetCellValue(item.eSchoolInfoModel.AgreementID);
                         row.CreateCell(80).SetCellValue(item.eSchoolInfoModel.CompanyName);
                         row.CreateCell(81).SetCellValue(item.eSchoolInfoModel.ComBelongGroup);
@@ -1097,21 +1101,22 @@ namespace Graduation.Controllers
                         row.CreateCell(96).SetCellValue(item.eSchoolInfoModel.UPSchool);
                         row.CreateCell(97).SetCellValue(item.eSchoolInfoModel.UpMajor);
                         row.CreateCell(98).SetCellValue(item.eSchoolInfoModel.OutCountry);
+                        row.CreateCell(99).SetCellValue(item.eSchoolInfoModel.CompanyCode);
+                        row.CreateCell(100).SetCellValue(item.eSchoolInfoModel.Employment)
                         a++;
 
                     }
                     MemoryStream ms = new MemoryStream();
                     workhood.Write(ms);
-                    ms.Seek(a, SeekOrigin.Begin);
+                    ms.Seek(0, SeekOrigin.Begin);
                     return File(ms, "application/vnd.ms-excel", "毕业生信息.xls");
                 }
                 #endregion
 
                 //table表格中显示的内容
-                var list = new BaseInfoListViewModel();
+                var list = new AdminGradViewModel();
                 list.upload = new UploadModel();
-                list.uploadList = new List<FillBaseInfoViewModel>();
-
+             
                 foreach (var item in upload.ToList())
                 {
                     FillBaseInfoViewModel temp = new FillBaseInfoViewModel();
@@ -1135,7 +1140,7 @@ namespace Graduation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AdminGradList(BaseInfoListViewModel av, string action,int id=0)
+        public ActionResult AdminGradList(AdminGradViewModel av, string action, int id = 0)
         {
             var user = db.UserTb.Find(Session["Id"]);
             ViewBag.type = user.TypeCode;
@@ -1212,15 +1217,14 @@ namespace Graduation.Controllers
             #region 查询
             if (action == "查询")
             {
-                BaseInfoListViewModel disPlay = new BaseInfoListViewModel();
-                disPlay.uploadList = new List<FillBaseInfoViewModel>();
-                disPlay.upload = new UploadModel();
-                disPlay.upload = av.upload;
-                var upload = db.UploadTb.Include("fillBaseInfoModel").Where(m => m.Department == user.DepartName);
+                AdminGradViewModel disPlay = new AdminGradViewModel();
+     
+               disPlay.upload = new UploadModel();
+               var upload = db.UploadTb.Include("fillBaseInfoModel").Include("eSchoolInfoModel").Include("applInfoModel").Include("signInfoModel").Where(m => m.Department == user.DepartName);
                 if (Session["Type"].ToString() == "1")
-                { upload = db.UploadTb.Include("fillBaseInfoModel").Where(m => m.Department == user.DepartName); }
+                { upload = db.UploadTb.Include("fillBaseInfoModel").Include("eSchoolInfoModel").Include("applInfoModel").Include("signInfoModel").Where(m => m.Department == user.DepartName); }
                 else
-                { upload = db.UploadTb.Include("fillBaseInfoModel"); }
+                { upload = db.UploadTb.Include("fillBaseInfoModel").Include("eSchoolInfoModel").Include("applInfoModel").Include("signInfoModel"); }
                 if (av.upload.Name != null)//姓名
                     upload = upload.Where(m => m.Name.Contains(av.upload.Name));
                 if (av.upload.StudentNumber != null)//学号
@@ -1229,21 +1233,21 @@ namespace Graduation.Controllers
                     upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear);
                 if (av.upload.GraduationTime != null)//毕业时间
                     upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime);
-                if (av.upload.Academy!=null&&av.upload.Academy != "0")
+                if (av.upload.Academy != null && av.upload.Academy != "0")
                 {
                     int Id = Convert.ToInt32(av.upload.Academy);
                     var acaTemp = db.AcademyTb.Find(Id);
                     upload = upload.Where(m => m.Academy == acaTemp.Name);
                     disPlay.upload.Academy = acaTemp.Id.ToString();
                 }
-                if (av.upload.Department !=null&& av.upload.Department != "0")
+                if (av.upload.Department != null && av.upload.Department != "0")
                 {
                     int Id = Convert.ToInt32(av.upload.Department);
                     var depTemp = db.DepartmentTb.Find(Id);
                     upload = upload.Where(m => m.Department == depTemp.Name);
                     disPlay.upload.Department = depTemp.Id.ToString();
                 }
-                if (av.upload.Major!=null&&av.upload.Major != "0")//专业
+                if (av.upload.Major != null && av.upload.Major != "0")//专业
                 {
                     int Id = Convert.ToInt16(av.upload.Major);
                     var majorTemp = db.MajorTb.Find(Id);
@@ -1262,25 +1266,7 @@ namespace Graduation.Controllers
                         temp.baseInfo = db.BaseInfoTb.Find(item.StudentNumber);
                     //disPlay.uploadList.Add(temp);
                 }
-                disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
-                if (av.isChecked != null)
-                {
-                    if (av.isChecked == "0")
-                        // disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsBaseChecked == av.isChecked || m.baseInfo.IsBaseChecked == null).ToList();
-                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsBaseChecked == av.isChecked || m.fillBaseInfoModel.IsBaseChecked == null).ToPagedList(id, 10);
-                    else if (av.isChecked == "1")
-                        //disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsBaseChecked == av.isChecked).ToList();
-                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsBaseChecked == av.isChecked).ToPagedList(id, 10);
-                }
-                if (av.isClocked != null)
-                {
-                    if (av.isClocked == "0")
-                        //disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsClocked == av.isClocked || m.baseInfo.IsClocked == null).ToList();
-                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsClocked == av.isClocked || m.fillBaseInfoModel.IsClocked == null).ToPagedList(id, 10);
-                    else if (av.isClocked == "1")
-                        //disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsClocked == av.isClocked).ToList();
-                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsClocked == av.isClocked || m.fillBaseInfoModel.IsClocked == null).ToPagedList(id, 10);
-                }
+                disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);             
                 Session["table"] = disPlay;
                 return View(disPlay);
             }
@@ -1299,12 +1285,9 @@ namespace Graduation.Controllers
         #region 添加毕业生信息
         public ActionResult AddGradInfo()
         {
-            if (Session["Id"] != null)
-            {
-                ViewBag.type = Session["Type"];
-                #region 初始化数据
+            #region 初始化数据
 
-                List<SelectListItem> Political = new List<SelectListItem> {
+            List<SelectListItem> Political = new List<SelectListItem> {
                 new SelectListItem{Text="共产党员",Value="01共产党员",Selected=false},
                 new SelectListItem{Text="中共预备党员",Value="02中共预备党员",Selected=false},
                 new SelectListItem{Text="共青团员",Value="03共青团员",Selected=false},
@@ -1319,10 +1302,10 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="无党派民主人士",Value="12无党派民主人士",Selected=false},
                 new SelectListItem{Text="群众",Value="13群众",Selected=true},
             };
-                ViewBag.Political = Political;
+            ViewBag.Political = Political;
 
 
-                List<SelectListItem> dor = new List<SelectListItem> {
+            List<SelectListItem> dor = new List<SelectListItem> {
                 new SelectListItem{Text="学1舍",Value="学1舍",Selected=false},
                 new SelectListItem{Text="学2舍",Value="学2舍",Selected=false},
                 new SelectListItem{Text="学3舍",Value="学3舍",Selected=false},
@@ -1343,29 +1326,48 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="学18舍",Value="学18舍",Selected=false},
                 new SelectListItem{Text="研究生公寓",Value="研究生公寓",Selected=true},
             };
-                ViewBag.dor = dor;
+            ViewBag.dor = dor;
 
-                ///家庭户口类型
-                List<SelectListItem> type = new List<SelectListItem> {
+            ///家庭户口类型
+            List<SelectListItem> type = new List<SelectListItem> {
                 new SelectListItem{Text="省会及直辖市",Value="1",Selected=false},
                 new SelectListItem{Text="地级市",Value="2",Selected=false},
                 new SelectListItem{Text="县或县级市",Value="3",Selected=false},
                 new SelectListItem{Text="乡镇村",Value="4",Selected=false}
             };
-                ViewBag.type = type;
-                
-                //民族
-                var nation = db.nationTb.ToList();
-                List<SelectListItem> nationlist = new List<SelectListItem> { };
-                foreach(var item in nation )
-                {
-                    var listItem = new SelectListItem { Text = item.NationName, Value = item.NationCode + item.NationName };
-                    nationlist.Add(listItem);
-                }
-                ViewBag.nation = nationlist;
+            ViewBag.ftype = type;
 
+            //民族
+            var nation = db.nationTb.ToList();
+            List<SelectListItem> nationlist = new List<SelectListItem> { };
+            foreach (var item in nation)
+            {
+                var listItem = new SelectListItem { Text = item.NationName, Value = item.NationCode + item.NationName };
+                nationlist.Add(listItem);
+            }
+            ViewBag.nation = nationlist;
 
-                #endregion
+            //生源所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var list = db.LocationTb.ToList();
+            foreach (var item in list)
+                cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+
+            ViewBag.city = cityList;
+
+            //家庭户口所在地
+            List<SelectListItem> familyCityList = new List<SelectListItem>();
+
+            foreach (var item in list)
+                familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+
+            ViewBag.familyCityList = familyCityList;
+
+            #endregion
+
+            if (Session["Id"] != null)
+            {
+                ViewBag.type = Session["Type"];
                 return View();
             }
             else
@@ -1388,9 +1390,11 @@ namespace Graduation.Controllers
                     var nation = upLoadModel.Nation;
                     upLoadModel.Nation = nation.Substring(2);
                     upLoadModel.NationCode = upLoadModel.Nation.Substring(0, 2);
-                    //var resLocation = upLoadModel.fillBaseInfoModel.ResLocationCode;
-                    //upLoadModel.fillBaseInfoModel.ResLocation =resLocation. Substring(2);
-                    //upLoadModel.fillBaseInfoModel.ResLocationCode = resLocation.Substring(0, 2);
+                    var orig = db.LocationTb.Find(upLoadModel.fillBaseInfoModel.OriginCode);//保存生源地
+                    upLoadModel.fillBaseInfoModel.OriginCity = orig.name;
+                    upLoadModel.fillBaseInfoModel.OriginProvince = db.BaseInfoTb.Find(upLoadModel.fillBaseInfoModel.StudentNumber).OriginProvince;
+                    var familyLocation = db.LocationTb.Find(upLoadModel.fillBaseInfoModel.ResLocationCode);
+                    upLoadModel.fillBaseInfoModel.ResLocation = familyLocation.name;
                     db.UploadTb.Add(upLoadModel);
                     db.SaveChanges();
                 }
@@ -1461,6 +1465,42 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="乡镇村",Value="4",Selected=false}
             };
                 ViewBag.ftype = type;
+
+                //生源所在地
+                List<SelectListItem> cityList = new List<SelectListItem>();
+                var st = db.BaseInfoTb.Find(studentNumber);
+                if (st.OriginCode != null)
+                    cityList.Add(new SelectListItem { Text = st.OriginCity, Value = st.OriginCode });
+                else
+                {
+                    var list = db.LocationTb.Where(m => m.name.Contains(st.OriginProvince)).ToList();
+                    foreach (var item in list)
+                        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+                }
+                ViewBag.city = cityList;
+
+                //家庭户口所在地
+                List<SelectListItem> familyCityList = new List<SelectListItem>();
+                var fcl = db.BaseInfoTb.Find(studentNumber);
+                if (st.ResLocationCode != null)
+                    familyCityList.Add(new SelectListItem { Text = st.ResLocation, Value = st.ResLocationCode });
+                else
+                {
+                    var list = db.LocationTb.ToList();
+                    foreach (var item in list)
+                        familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+                }
+                ViewBag.familyCityList = familyCityList;
+
+                //民族
+                List<SelectListItem> nation = new List<SelectListItem>();
+                var nationlist = db.nationTb.ToList();
+                foreach (var item in nationlist)
+                {
+                    nation.Add(new SelectListItem { Text = item.NationName, Value = item.NationCode });
+                }
+                ViewBag.nation = nation;
+
                 #endregion
                 FillBaseInfoViewModel fillBaseInfoViewModel = new FillBaseInfoViewModel()
                 {
@@ -1473,6 +1513,8 @@ namespace Graduation.Controllers
                     fillBaseInfoViewModel.baseInfo.StudentNumber = studentNumber;
                 }
                 fillBaseInfoViewModel.baseInfo.PoliticalStatus = fillBaseInfoViewModel.baseInfo.PoliticalStatusCode + fillBaseInfoViewModel.baseInfo.PoliticalStatus;
+
+                fillBaseInfoViewModel.upload.Nation = fillBaseInfoViewModel.upload.NationCode + fillBaseInfoViewModel.upload.Nation;
 
                 return View(fillBaseInfoViewModel);
             }
@@ -1491,20 +1533,33 @@ namespace Graduation.Controllers
                 string PoliticalStatus = fillBaseInfoViewModel.baseInfo.PoliticalStatus;
                 fillBaseInfoViewModel.baseInfo.PoliticalStatusCode = PoliticalStatus.Substring(0, 2);
                 fillBaseInfoViewModel.baseInfo.PoliticalStatusCode = PoliticalStatus.Substring(2);
+
+                //存入民族代码
+                var nation = db.nationTb.Where(m=>m.NationCode==fillBaseInfoViewModel.upload.NationCode).FirstOrDefault();
+                fillBaseInfoViewModel.upload.Nation = nation.NationName;
+
+                var orig = db.LocationTb.Find(fillBaseInfoViewModel.baseInfo.OriginCode);//保存生源地
+                fillBaseInfoViewModel.baseInfo.OriginCity = orig.name;
+                fillBaseInfoViewModel.baseInfo.OriginProvince = db.BaseInfoTb.Find(fillBaseInfoViewModel.baseInfo.StudentNumber).OriginProvince;
+                var familyLocation = db.LocationTb.Find(fillBaseInfoViewModel.baseInfo.ResLocationCode);
+                fillBaseInfoViewModel.baseInfo.ResLocation = familyLocation.name;
                 //如果有基本信息表中已经有基本，则为更新
                 if (db.BaseInfoTb.Find(fillBaseInfoViewModel.baseInfo.StudentNumber) != null)
                 {
                     FillBaseInfoModel temp = db.BaseInfoTb.Find(fillBaseInfoViewModel.baseInfo.StudentNumber);
                     db.Entry(temp).CurrentValues.SetValues(fillBaseInfoViewModel.baseInfo);
+                    //UploadModel upload = db.UploadTb.Find(fillBaseInfoViewModel.baseInfo.StudentNumber);
+                    //db.Entry(upload).CurrentValues.SetValues(fillBaseInfoViewModel.baseInfo);
                     db.SaveChanges();
                 }
                 else
                 {
+                    db.UploadTb.Add(fillBaseInfoViewModel.upload);
                     db.BaseInfoTb.Add(fillBaseInfoViewModel.baseInfo);
                     db.SaveChanges();
 
                 }
-                return RedirectToAction("AdminEditGradInfo");
+                return RedirectToAction("AdminEditGradInfo", new { studentNumber=fillBaseInfoViewModel.upload.StudentNumber});
             }
 
             return View(fillBaseInfoViewModel);
@@ -1716,7 +1771,7 @@ namespace Graduation.Controllers
                 upload = upload.Where(m => m.Academy == acaTemp.Name);
                 disPlay.upload.Academy = acaTemp.Id.ToString();
             }
-            if (av.upload.Department != "0"&&av.upload.Department!=null)
+            if (av.upload.Department != "0" && av.upload.Department != null)
             {
                 int Id = Convert.ToInt32(av.upload.Department);
                 var depTemp = db.DepartmentTb.Find(Id);
@@ -1859,7 +1914,7 @@ namespace Graduation.Controllers
         /// 就业信息审核界面
         /// </summary>
         /// <returns></returns>
-        public ActionResult EmplExam(int id=0)
+        public ActionResult EmplExam(int id = 0)
         {
             if (Session["Id"] != null)
             {
@@ -1949,7 +2004,7 @@ namespace Graduation.Controllers
                     temp.upload = item;
                     if (db.ESchoolInfoTb.Find(item.StudentNumber) != null)
                         temp.eSchoolInfo = db.ESchoolInfoTb.Find(item.StudentNumber);
-                   // list.InfoList.Add(temp);
+                    // list.InfoList.Add(temp);
                 }
                 list.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
                 Session["table"] = list;
@@ -1961,7 +2016,7 @@ namespace Graduation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EmplExam(EmplExamListViewModel av,int id=0)
+        public ActionResult EmplExam(EmplExamListViewModel av, int id = 0)
         {
             var user = db.UserTb.Find(Session["Id"]);
             ViewBag.type = user.TypeCode;
@@ -2041,7 +2096,7 @@ namespace Graduation.Controllers
             display.upload = new UploadModel();
             display.InfoList = new List<ESchoolInfoViewModel>();
             display.upload = av.upload;
-           // var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
+            // var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
             var upload = db.UploadTb.Include("eSchoolInfoModel").Where(m => m.Department == user.DepartName);
             if (Session["Type"].ToString() == "1")
             { upload = db.UploadTb.Include("eSchoolInfoModel").Where(m => m.Department == user.DepartName); }
@@ -2070,7 +2125,7 @@ namespace Graduation.Controllers
                 upload = upload.Where(m => m.Department == depTemp.Name);
                 display.upload.Department = depTemp.Id.ToString();
             }
-            if (av.upload.Major != null&av.upload.Major!="0")//专业
+            if (av.upload.Major != null & av.upload.Major != "0")//专业
             {
                 int Id = Convert.ToInt16(av.upload.Major);
                 var majorTemp = db.MajorTb.Find(Id);
@@ -2092,7 +2147,7 @@ namespace Graduation.Controllers
             if (av != null)
             {
                 if (av.IsCheckEd == "0")
-                   // display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsChecked == av.IsCheckEd || m.eSchoolInfo.IsChecked == null).ToList();
+                    // display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsChecked == av.IsCheckEd || m.eSchoolInfo.IsChecked == null).ToList();
                     display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.eSchoolInfoModel.IsChecked == av.IsCheckEd || m.applInfoModel.IsQiuChecked == null).ToPagedList(id, 10);
                 else if (av.IsCheckEd == "1")
                     //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsChecked == av.IsCheckEd).ToList();
@@ -2128,7 +2183,7 @@ namespace Graduation.Controllers
                     //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.EmploymentCode == "10").ToList();
                     display.uploadPagedList = upload.OrderBy(m => m.StudentNumber).Where(m => m.eSchoolInfoModel.EmploymentCode == "10").ToPagedList(id, 10);
             }
-            Session["table"]=display;
+            Session["table"] = display;
             return View(display);
             #endregion
 
@@ -2261,12 +2316,27 @@ namespace Graduation.Controllers
             };
             ViewBag.zhiwei = zhiwei;
 
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
+
+
+
             //隶属部门
             var belong = db.belongDepTb.ToList();
             List<SelectListItem> belongDep = new List<SelectListItem> { };
             foreach (var item in belong)
             {
-                var belongDepList= new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
                 belongDep.Add(belongDepList);
             }
             ViewBag.belong = belongDep;
@@ -2338,6 +2408,10 @@ namespace Graduation.Controllers
                 //就业形式
                 students.eSchoolInfo.Employment = "签学校三方协议就业";
                 students.eSchoolInfo.EmploymentCode = "10";
+
+                //单位所在地
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;
 
 
                 //如果基本信息表中已经有基本，则为更新
@@ -2458,6 +2532,19 @@ namespace Graduation.Controllers
             }
             ViewBag.belong = belongDep;
 
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
+
             #endregion
             if (Session["adminStuNum"] != null)
             {
@@ -2525,6 +2612,10 @@ namespace Graduation.Controllers
                 //就业形式
                 students.eSchoolInfo.Employment = "签合同就业";
                 students.eSchoolInfo.EmploymentCode = "11";
+
+                //单位所在地
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;
 
 
                 //如果基本信息表中已经有基本，则为更新
@@ -2650,6 +2741,20 @@ namespace Graduation.Controllers
             };
             ViewBag.hangyefenlei = hangyefenlei;
 
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
+
+
             #endregion
 
             var students = new ESchoolInfoViewModel()
@@ -2694,9 +2799,9 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.ComIndustry = students.eSchoolInfo.ComIndustry.Substring(2);
                 students.eSchoolInfo.ComIndustryCode = students.eSchoolInfo.ComIndustry.Substring(0, 2);
 
-
-
-
+                //单位所在地
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -2718,6 +2823,19 @@ namespace Graduation.Controllers
         #region  灵活就业
         public ActionResult EmplFlexibleExam()
         {
+
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
             {
@@ -2757,6 +2875,9 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
+                //单位所在地
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -2896,6 +3017,18 @@ namespace Graduation.Controllers
         #region 国家基层项目
         public ActionResult EmplCountry()
         {
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
             {
@@ -2935,6 +3068,9 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
+                //单位所在地
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -2957,6 +3093,19 @@ namespace Graduation.Controllers
         #region  科研助理
         public ActionResult EmplScience()
         {
+
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
             {
@@ -2996,6 +3145,10 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
+                //单位所在地
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;
+
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -3018,6 +3171,18 @@ namespace Graduation.Controllers
         #region 地方基层项目
         public ActionResult EmplPlace()
         {
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
             {
@@ -3056,6 +3221,10 @@ namespace Graduation.Controllers
                 string employment = students.eSchoolInfo.Employment;
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
+
+                //单位所在地
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;
 
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -3222,8 +3391,9 @@ namespace Graduation.Controllers
                 #region 下载表格
                 if (type == 1)
                 {
-                    AdminGradViewModel s1 = (AdminGradViewModel)Session["table"];
-                    string[] excelHead = { "xysbh", "xh", "是否签约", "dwmc", "dwlsbm", "dwszd", "dwszddm", "单位所在地地区代码", "dwlxr", "lxrdh", "联系人邮编", "联系人通信地址", "dwxzdm", "dwxz", "dazjdwdz", "档案转寄邮政", "户口迁移地址", "特殊地区", "专业是否对口", "备注", "单位行业", "单位组织机构代码", "毕业去向", "联系人职务", "是否专业对口", "单位所属集团或系统", "《就业报到证》开具单位名称", "升学专业", "升学院校", "出国国家", "工作职务", "工作职务代码", "姓名", "性别", "院", "系", "专业代码", "专业", "班级" };
+                    EmplExamListViewModel s1 = (EmplExamListViewModel)Session["table"];
+                    string[] excelHead = { "xysbh", "xh","", "dwmc", "dwlsbm", "dwszd", "dwszddm", "", "dwlxr", "lxrdh", "联系人邮编", "联系人通信地址", "dwxzdm", "dwxz", "dazjdwdz", "dazjdwyb", "hkqzdz", "", "专业是否对口", "备注", "dwhy", "zzjgdm", "毕业去向", "lxrzw", "dwzzjgdm", "bdzqwdwmc1", "升学专业", "升学院校", "出国国家", "工作职务", "工作职务代码", "xm", "xb", "szxy", "szyx", "zydm", "zy", "bj" };
+                   // string[] excelHead = { "xysbh", "xh", "", "dwmc", "dwlsbm", "dwszd", "dwszddm", "", "dwlxr", "lxrdh", "联系人邮编", "联系人通信地址", "dwxzdm", "dwxz", "dazjdwdz", "档案转寄邮政", "户口迁移地址", "", "专业是否对口", "备注", "单位行业", "单位组织机构代码", "毕业去向", "联系人职务", "单位所属集团或系统", "《就业报到证》开具单位名称", "升学专业", "升学院校", "出国国家", "工作职务", "工作职务代码", "姓名", "性别", "院", "系", "专业代码", "专业", "班级" };
                     var workbook = new HSSFWorkbook();
 
                     var sheet = workbook.CreateSheet("签约登记");
@@ -3249,8 +3419,8 @@ namespace Graduation.Controllers
                         row.CreateCell(3).SetCellValue(item.eSchoolInfoModel.CompanyName);
                         row.CreateCell(4).SetCellValue(item.eSchoolInfoModel.ComBelongDep);
                         row.CreateCell(5).SetCellValue(item.eSchoolInfoModel.ComLocation);
-                        // row.CreateCell(6).SetCellValue(item.eSchoolInfoModel.ComCity);//单位所在地城市代码，需要改
-                        // row.CreateCell(7).SetCellValue(item.eSchoolInfoModel.);//单位所在地地区代码，需要改
+                        row.CreateCell(6).SetCellValue(item.eSchoolInfoModel.ComLocationCode);
+                        // row.CreateCell(7).SetCellValue(item.eSchoolInfoModel.);//单位所在地地区代
                         row.CreateCell(8).SetCellValue(item.eSchoolInfoModel.Contacts);
                         row.CreateCell(9).SetCellValue(item.eSchoolInfoModel.ConTel);
                         row.CreateCell(10).SetCellValue(item.eSchoolInfoModel.ContactsCode);
@@ -3265,7 +3435,7 @@ namespace Graduation.Controllers
                         row.CreateCell(19).SetCellValue(item.eSchoolInfoModel.Note);
                         row.CreateCell(20).SetCellValue(item.eSchoolInfoModel.ComIndustry);
                         row.CreateCell(21).SetCellValue(item.eSchoolInfoModel.CompanyCode);
-                        // row.CreateCell(22).SetCellValue(item.eSchoolInfoModel.);//毕业去向
+                        row.CreateCell(22).SetCellValue(item.eSchoolInfoModel.Employment);
                         row.CreateCell(23).SetCellValue(item.eSchoolInfoModel.ConPost);
                         //专业是否对口重复
                         row.CreateCell(24).SetCellValue(item.eSchoolInfoModel.ComBelongGroup);
