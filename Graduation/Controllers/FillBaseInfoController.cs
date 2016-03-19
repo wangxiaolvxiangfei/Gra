@@ -41,17 +41,9 @@ namespace Graduation.Controllers
             return Json(CityList, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetAllCity()
-        {
-            var city = db.LocationTb.ToList();
-            List<LocationModel> cityList = new List<LocationModel>();
-            foreach (var item in city)
-            {
-                cityList.Add(new LocationModel() { code = item.code, name = item.name });
-            }
-            return Json(cityList, JsonRequestBehavior.AllowGet);
-        }
+      
         #endregion
+
 
         #region 基本信息管理界面
 
@@ -113,6 +105,8 @@ namespace Graduation.Controllers
             };
             
             ViewBag.type = type;
+
+            //生源所在地
             List<SelectListItem> cityList = new List<SelectListItem>();
             var st = db.BaseInfoTb.Find(Session["number"]);
             if (st.OriginCode != null)
@@ -124,6 +118,19 @@ namespace Graduation.Controllers
                     cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
             }
             ViewBag.city = cityList;
+
+            //家庭户口所在地
+            List<SelectListItem> familyCityList = new List<SelectListItem>();
+            var fcl = db.BaseInfoTb.Find(Session["number"]);
+            if (st.ResLocationCode != null)
+                familyCityList.Add(new SelectListItem { Text = st.ResLocation, Value = st.ResLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.familyCityList = familyCityList;
             #endregion
 
             if (Session["number"] != null)
@@ -164,7 +171,9 @@ namespace Graduation.Controllers
                 var orig = db.LocationTb.Find(students.baseInfo.OriginCode);//保存生源地
                 students.baseInfo.OriginCity = orig.name;
                 students.baseInfo.OriginProvince = db.BaseInfoTb.Find(students.baseInfo.StudentNumber).OriginProvince;
-                //如果基本信息表中已经有基本，则为更新
+                var familyLocation = db.LocationTb.Find(students.baseInfo.ResLocationCode);
+                students.baseInfo.ResLocation = familyLocation.name;
+                    //如果基本信息表中已经有基本，则为更新
                 if (db.BaseInfoTb.Find(students.baseInfo.StudentNumber) != null)
                 {
                     FillBaseInfoModel temp = db.BaseInfoTb.Find(Session["number"].ToString());
@@ -502,6 +511,21 @@ namespace Graduation.Controllers
             }
             ViewBag.belongDep = belongDep;
 
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["number"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
+
+
+
             #endregion
             if (Session["number"] != null)
             {
@@ -530,7 +554,8 @@ namespace Graduation.Controllers
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
                 student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
-                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDepCode + student.eSchoolInfo.ComBelongDep;//所属部门               
+                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDepCode + student.eSchoolInfo.ComBelongDep;//所属部门   
+                
                 ViewBag.clocked = student.eSchoolInfo.IsClock;
                 return View(student);
             }
@@ -575,6 +600,9 @@ namespace Graduation.Controllers
 
                 students.eSchoolInfo.Employment = "签学校三方协议就业";
                 students.eSchoolInfo.EmploymentCode = "10";
+
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;//单位所在地
 
                 //如果基本信息表中已经有基本，则为更新
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -696,6 +724,19 @@ namespace Graduation.Controllers
             }
             ViewBag.belongDep = belongDep;
 
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["number"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
+
             #endregion
             if (Session["number"] != null)
             {
@@ -768,6 +809,9 @@ namespace Graduation.Controllers
                 //就业形式
                 students.eSchoolInfo.Employment = "签合同就业";
                 students.eSchoolInfo.EmploymentCode = "11";
+
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;//单位所在地
 
 
                 //如果基本信息表中已经有基本，则为更新
@@ -893,6 +937,19 @@ namespace Graduation.Controllers
             };
             ViewBag.hangyefenlei = hangyefenlei;
 
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["number"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
+
             #endregion
             if (Session["number"] != null)
             {
@@ -942,6 +999,9 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.ComIndustry = students.eSchoolInfo.ComIndustry.Substring(2);
                 students.eSchoolInfo.ComIndustryCode = students.eSchoolInfo.ComIndustry.Substring(0, 2);
 
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;//单位所在地
+
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
                     ESchoolInfoModel temp = db.ESchoolInfoTb.Find(Session["number"].ToString());
@@ -968,6 +1028,19 @@ namespace Graduation.Controllers
         /// <returns></returns>
         public ActionResult FillEOtherFlexibleInfo()
         {
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["number"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
+
             if (Session["number"] != null)
             {
                 var students = new ESchoolInfoViewModel()
@@ -1012,6 +1085,8 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;//单位所在地
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -1177,6 +1252,19 @@ namespace Graduation.Controllers
 
         public ActionResult FillEOtherCountry()
         {
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["number"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
+
             if (Session["number"] != null)
             {
                 var students = new ESchoolInfoViewModel()
@@ -1222,6 +1310,10 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
+                //单位所在地
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;
+
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -1243,6 +1335,19 @@ namespace Graduation.Controllers
         #region 科研助理
         public ActionResult FillEOtherSciene()
         {
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["number"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
+
             if (Session["number"] != null)
             {
                 var students = new ESchoolInfoViewModel()
@@ -1288,6 +1393,9 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
+                //单位所在地
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -1311,6 +1419,20 @@ namespace Graduation.Controllers
 
         public ActionResult FillEOtherPlace()
         {
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["number"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            else
+            {
+                var list = db.LocationTb.ToList();
+                foreach (var item in list)
+                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            }
+            ViewBag.city = cityList;
+
+
             if (Session["number"] != null)
             {
                 var students = new ESchoolInfoViewModel()
@@ -1356,6 +1478,9 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
+                //单位所在地
+                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
+                students.eSchoolInfo.ComLocation = location.name;
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {

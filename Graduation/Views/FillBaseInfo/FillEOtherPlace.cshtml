@@ -8,7 +8,7 @@
 {
     ViewBag.clocked = "disabled";
 }
-
+<script src="~/Scripts/City.js"></script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,8 +139,8 @@
                                 <td><span>家庭所在地：</span><span>@ViewBag.FL</span></td>
                             </tr>
                             <tr>
-                                <td colspan="3"><span>通信地址：</span><span>@ViewBag.ADDR</span></td>
-                                <td><span>邮政编码</span><span>@ViewBag.C</span></td>
+                                <td colspan="3" class="input-width"><p>通信地址：</p><span>@ViewBag.ADDR</span></td>
+                                <td><p>邮政编码</p><span>@ViewBag.C</span></td>
                             </tr>
                             <tr>
                                 <td colspan="4" style="text-align:center"><span><b>毕业去向</b></span></td>
@@ -151,23 +151,22 @@
 
 
                                     <a href="/FillBaseInfo/FillEOtherArmyInfo"> @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "46应征入伍") 应征入伍</a>
-                                    @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "西部就业计划") 西部就业计划
+                                  
                                     <a href="/FillBaseInfo/FillEOtherSelfInfo">  @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "75自主创业") 自主创业</a>
                                     <a href="/FillBaseInfo/FillEOtherFlexibleInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "76灵活就业", new { @checked = true }) 灵活就业</a>
                                     <a href="/FillBaseInfo/FillEOtherSchoolInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "80升学") 升学</a>
                                     <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "85出国") 出国</a>
-                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "50国家基层项目") 国家基层项目</a>
-                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "27科研助理") 科研助理</a>
-                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "51地方基层项目", new { @checked = true }) 地方基层项目</a>
+                                    <a href="/FillBaseInfo/FillEOtherCountry">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "50国家基层项目") 国家基层项目</a>
+                                    <a href="/FillBaseInfo/FillEOtherSciene">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "27科研助理") 科研助理</a>
+                                    <a href="/FillBaseInfo/FillEOtherPlace">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "51地方基层项目", new { @checked = true }) 地方基层项目</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2"><span>项目名称：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ProjectName)</td>
+                                <td colspan="2"><p>项目名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ProjectName)</td>
                                 <td colspan="2">
                                     <p>项目所在地：</p>
-                                    <select class="province"></select>
-                                    <select class="city"></select>
-                                    <select class="country"></select>
+                                    @Html.TextBoxFor(m => m.eSchoolInfo.ComLocation, new { id = "originPro", onkeyup = "GetCity()" })
+                                    @Html.DropDownListFor(m => m.eSchoolInfo.ComLocationCode, ViewBag.city as List<SelectListItem>, new { id = "originList" })
                                 </td>
                             </tr>
                             <tr>

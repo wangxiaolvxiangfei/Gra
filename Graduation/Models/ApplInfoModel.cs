@@ -186,12 +186,12 @@ namespace Graduation.Models
         /// <summary>
         /// 学生编辑的时间
         /// </summary>
-        public DateTime StudentEditTime { get; set; }
+        public DateTime? StudentEditTime { get; set; }
 
         /// <summary>
         /// 老师编辑的时间
         /// </summary>
-        public DateTime TeacherEditTime { get; set; }
+        public DateTime? TeacherEditTime { get; set; }
 
         public virtual UploadModel uploadModel { get; set; }
     }

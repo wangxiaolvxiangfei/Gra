@@ -776,15 +776,19 @@ table img{
 
 .radio input[type="radio"]{
 	display: inline-block;
-	margin-left: 0px;
+	margin-right: 0px;
 }
 .checkbox input[type="checkbox"]{
 	display: inline-block;
-	margin-left: 0px;
+	margin-right: 0px;
 }
-.radio b,.checkbox b{
-	margin-left: 20px;
+.radio span {
+    display:inline-block;
+    width:60px;
 }
+/*.radio b,.checkbox b{
+	margin-left: 30px;
+}*/
 input[type='checkbox']{
 	display: inline-block;
 }
@@ -1072,4 +1076,7 @@ input[type=radio]{
 
 .validation-summary-valid {
     display: none;
+}
+.input-width input{
+    width:90%;
 }

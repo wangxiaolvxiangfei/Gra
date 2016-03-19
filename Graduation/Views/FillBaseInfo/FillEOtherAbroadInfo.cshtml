@@ -142,8 +142,8 @@
                                 <td><span>家庭所在地：</span><span>@ViewBag.FL</span></td>
                             </tr>
                             <tr>
-                                <td colspan="3"><span>通信地址：</span><span>@ViewBag.ADDR</span></td>
-                                <td><span>邮政编码</span><span>@ViewBag.C</span></td>
+                                <td colspan="3" class="input-width"><p>通信地址：</p><span>@ViewBag.ADDR</span></td>
+                                <td><p>邮政编码</p><span>@ViewBag.C</span></td>
                             </tr>
                             <tr>
                                 <td colspan="4" style="text-align:center"><span><b>毕业去向</b></span></td>
@@ -159,15 +159,15 @@
                                     <a href="/FillBaseInfo/FillEOtherFlexibleInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "76灵活就业") 灵活就业</a>
                                     <a href="/FillBaseInfo/FillEOtherSchoolInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "80升学") 升学</a>
                                     <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "85出国", new { @checked = true }) 出国</a>
-                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "50国家基层项目") 国家基层项目</a>
-                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "27科研助理") 科研助理</a>
-                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "51地方基层项目") 地方基层项目</a>
+                                    <a href="/FillBaseInfo/FillEOtherCountry">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "50国家基层项目") 国家基层项目</a>
+                                    <a href="/FillBaseInfo/FillEOtherSciene">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "27科研助理") 科研助理</a>
+                                    <a href="/FillBaseInfo/FillEOtherPlace">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "51地方基层项目") 地方基层项目</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td><span>留学院校名称：</span>@Html.TextBoxFor(model => model.eSchoolInfo.OutSchool)</td>
-                                <td><span>留学专业：</span>@Html.TextBoxFor(model => model.eSchoolInfo.OutMajor)</td>
-                                <td><span>出国国家：</span>@Html.TextBoxFor(model => model.eSchoolInfo.OutCountry)</td>
+                                <td><p>留学院校名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.OutSchool)</td>
+                                <td><p>留学专业：</p>@Html.TextBoxFor(model => model.eSchoolInfo.OutMajor)</td>
+                                <td><p>出国国家：</p>@Html.TextBoxFor(model => model.eSchoolInfo.OutCountry)</td>
                                 <td></td>
                             </tr>
                             <tr>

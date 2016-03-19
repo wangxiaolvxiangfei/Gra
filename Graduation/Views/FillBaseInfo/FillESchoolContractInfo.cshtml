@@ -15,6 +15,7 @@
     <title>本科生就业信息管理</title>
     <meta name="description" content="">
     <meta name="author" content="templatemo">
+    <script src="~/Scripts/City.js"></script>
 </head>
 <body>
     <!-- Left column -->
@@ -128,14 +129,14 @@
                                 <td><span>健康状况：</span><span>@ViewBag.H</span></td>
                                 <td><span>手机号码：</span><span>@ViewBag.T</span></td>
                                 <td><span>邮政编码：</span><span>@ViewBag.C </span></td>
-                                <td><span></span><span></span></td>
+                                <td><p></p><span></span></td>
                             </tr>
                             <tr>
-                                <td colspan="2"><span>通信地址：</span><span>@ViewBag.ADDR</span></td>
-                                <td colspan="2"><span>家庭所在地：</span><span>@ViewBag.FL</span></td>
+                                <td colspan="2" class="input-width"><p>通信地址：</p><span>@ViewBag.ADDR</span></td>
+                                <td colspan="2" class="input-width"><p>家庭所在地：</p><span>@ViewBag.FL</span></td>
                             </tr>
                             <tr>
-                                <td colspan="2"><span>协议书编号：</span>@Html.TextBoxFor(model => model.eSchoolInfo.AgreementID)*唯一</td>
+                                <td colspan="2" class="input-width"><p>协议书编号：</p>@Html.TextBoxFor(model => model.eSchoolInfo.AgreementID)*唯一</td>
                             </tr>
                             <tr>
                                 <td>
@@ -165,20 +166,19 @@
                                     <p>工作职务</p>
                                     @Html.DropDownListFor(model => model.eSchoolInfo.JobTitle, ViewBag.zhiwei as List<SelectListItem>)
                                 </td>
-                                <td colspan="2">
+                                <td colspan="2" class="input-width">
                                     <p>《就业报到证》开具单位名称</p>
                                     @Html.TextBoxFor(model => model.eSchoolInfo.SCompanyName)
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2">
+                                <td colspan="2" class="input-width">
                                     <p>单位所在地</p>
-                                    <select class="province"></select>
-                                    <select class="city"></select>
-                                    <select class="country"></select>
+                                    @Html.TextBoxFor(m => m.eSchoolInfo.ComLocation, new { id = "originPro", onkeyup = "GetCity()" })
+                                    @Html.DropDownListFor(m => m.eSchoolInfo.ComLocationCode, ViewBag.city as List<SelectListItem>, new { id = "originList" })
                                 </td>
                                 <td colspan="2">
-                                    <span>单位性质：</span>
+                                    <p>单位性质：</p>
                                     @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "10机关")机关
                                     @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "20科研设计单位")科研设计单位
                                     @Html.RadioButtonFor(model => model.eSchoolInfo.ComType, "21高等教育单位")高等教育单位
@@ -196,35 +196,35 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span>联系人：</span>@Html.TextBoxFor(model => model.eSchoolInfo.Contacts)
+                                    <p>联系人：</p>@Html.TextBoxFor(model => model.eSchoolInfo.Contacts)
                                 </td>
                                 <td>
-                                    <span>联系人邮编(6位数字)：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ContactsCode)
+                                    <p>联系人邮编(6位数字)：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ContactsCode)
                                 </td>
-                                <td colspan="2">
-                                    <span>联系人通信地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConCommAddress)
+                                <td colspan="2" class="input-width">
+                                    <p>联系人通信地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConCommAddress)
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <span>联系人职务：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConPost)
+                                    <p>联系人职务：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConPost)
                                 </td>
                                 <td>
-                                    <span>联系人电话：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConTel)
+                                    <p>联系人电话：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConTel)
                                 </td>
-                                <td colspan="2">
-                                    <span>户口迁移地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd)
+                                <td colspan="2" class="input-width">
+                                    <p>户口迁移地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd)
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2">
-                                    <span>档案转寄详细地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)
+                                <td colspan="2" class="input-width">
+                                    <p>档案转寄详细地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)
                                 </td>
                                 <td>
-                                    <span>邮政编码(6位数字)：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)
+                                    <p>邮政编码(6位数字)：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)
                                 </td>
                                 <td>
-                                    <span>是否专业对口：</span>
+                                    <p>是否专业对口：</p>
                                     @Html.RadioButtonFor(model => model.eSchoolInfo.IsMajorFit, "1") 是
                                     @Html.RadioButtonFor(mdoel => mdoel.eSchoolInfo.IsMajorFit, "0") 否
                                 </td>

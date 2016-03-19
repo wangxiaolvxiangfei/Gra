@@ -32,49 +32,49 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><span>学号：</span><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
-                            <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
-                            <td><span>性别：</span><span>@Html.ValueFor(model => model.upload.Sex)</span></td>
-                            <td><span>出生年月：</span><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
+                            <td><p>学号：</p><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
+                            <td><p>姓名：</p><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                            <td><p>性别：</p><span>@Html.ValueFor(model => model.upload.Sex)</span></td>
+                            <td><p>出生年月：</p><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
                         </tr>
                         <tr>
-                            <td><span>政治面貌：</span><span>@ViewBag.P</span></td>
-                            <td><span>专业：</span><span>@Html.ValueFor(model => model.upload.Major)</span></td>
-                            <td><span>培养方式：</span><span>@Html.ValueFor(model => model.upload.TrainType)</span></td>
-                            <td><span>学历：</span><span>@Html.ValueFor(model => model.upload.Education)</span></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>学制：</span><span>@Html.ValueFor(model => model.upload.LengthOfSch)</span>
-                            </td>
-                            <td>
-                                <span>毕业时间：</span><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
-                            </td>
-                            <td>
-                                <span>生源地区：</span><span>@ViewBag.L</span>
-                            </td>
-                            <td>
-                                <span>身份证号：</span><span>@Html.ValueFor(model => model.upload.IDNumber)</span>
-                            </td>
+                            <td><p>政治面貌：</p><span>@ViewBag.P</span></td>
+                            <td><p>专业：</p><span>@Html.ValueFor(model => model.upload.Major)</span></td>
+                            <td><p>培养方式：</p><span>@Html.ValueFor(model => model.upload.TrainType)</span></td>
+                            <td><p>学历：</p><span>@Html.ValueFor(model => model.upload.Education)</span></td>
                         </tr>
                         <tr>
                             <td>
-                                <span>健康状况：</span><span>@ViewBag.H</span>
+                                <p>学制：</p><span>@Html.ValueFor(model => model.upload.LengthOfSch)</span>
                             </td>
                             <td>
-                                <span>手机号码：</span><span>@ViewBag.T</span>
+                                <p>毕业时间：</p><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
                             </td>
                             <td>
-                                <span>邮政编码：</span><span>@ViewBag.C</span>
+                                <p>生源地区：</p><span>@ViewBag.L</span>
+                            </td>
+                            <td>
+                                <p>身份证号：</p><span>@Html.ValueFor(model => model.upload.IDNumber)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>健康状况：</p><span>@ViewBag.H</span>
+                            </td>
+                            <td>
+                                <p>手机号码：</p><span>@ViewBag.T</span>
+                            </td>
+                            <td>
+                                <p>邮政编码：</p><span>@ViewBag.C</span>
                             </td>
                             <td></td>
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <span>通信地址：</span><span>@ViewBag.ADDR</span>
+                                <p>通信地址：</p><span>@ViewBag.ADDR</span>
                             </td>
                             <td colspan="2">
-                                <span>家庭所在地</span><span>@ViewBag.FL</span>
+                                <p>家庭所在地</p><span>@ViewBag.FL</span>
                             </td>
 
                         </tr>
@@ -96,25 +96,25 @@
                     </tr>
                     <tr class="hide1">
                         <td colspan="3">
-                            <spa>困难原因</spa>
+                            <span>困难原因</span>
                             @Html.TextBoxFor(model => model.eSchoolInfo.JobDiffCause, new { style = "width:70%" })
                         </td>
                     </tr>
                     <tr class="hide2" style="display:none">
                         <td colspan="3">
-                            <spa>备注</spa>
+                            <span>备注</span>
                             @Html.TextBoxFor(model => model.eSchoolInfo.Note, new { style = "width:70%" })
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <span>档案转寄地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)
+                            <p>档案转寄地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)
                         </td>
                         <td>
-                            <span>档案转寄邮编：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)
+                            <p>档案转寄邮编：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)
                         </td>
                         <td>
-                            <span>户口迁移地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd)
+                            <p>户口迁移地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd)
                         </td>
                     </tr>
 

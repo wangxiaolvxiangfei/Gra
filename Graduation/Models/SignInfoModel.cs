@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -14,7 +15,7 @@ namespace Graduation.Models
         /// <summary>
         /// 学号，唯一标识
         /// </summary>
-        [Key]
+        [Key, ForeignKey("uploadModel")]
         public string StudentNumber { get; set; }
 
         /// <summary>
@@ -82,6 +83,10 @@ namespace Graduation.Models
         /// </summary>
         public string AgreementID { get; set; }
 
+        /// <summary>
+        /// 连接upload
+        /// </summary>
+        public UploadModel uploadModel { get; set; }
 
         /// <summary>
         /// 是否审核

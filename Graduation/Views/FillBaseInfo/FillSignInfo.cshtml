@@ -111,16 +111,16 @@
                                 <td><span>班级：</span><span>@Html.ValueFor(model => model.upload.Class)</span></td>
                             </tr>
                             <tr>
-                                <td><span>登记日期：</span>@Html.TextBoxFor(model=>model.signInfo.SignTime)</td>
-                                <td colspan="2"><span>单位名称：</span>@Html.TextBoxFor(model=>model.signInfo.CompanyName)</td>
+                                <td><span>登记日期：</span>@Html.TextBoxFor(model => model.signInfo.SignTime)</td>
+                                <td colspan="2"><span>单位名称：</span>@Html.TextBoxFor(model => model.signInfo.CompanyName)</td>
                             </tr>
                             <tr>
                                 <td>
-                                    <span>所属集团或系统：</span>
+                                    <p>所属集团或系统：</p>
                                     @Html.DropDownListFor(model => model.signInfo.ComBelongGroup, ViewBag.Group as List<SelectListItem>)
                                 </td>
                                 <td colspan="2">
-                                    <span>隶属部门：</span>
+                                    <p>隶属部门：</p>
                                     @Html.DropDownListFor(model => model.signInfo.ComBelongDep, ViewBag.belong as List<SelectListItem>)
                                 </td>
                             </tr>
