@@ -27,10 +27,8 @@
                         <td><p>学号：</p>@Html.ValueFor(model => model.upload.StudentNumber)</td>
                         <td><p>姓名：</p>@Html.ValueFor(model => model.upload.Name)</td>
                         <td>
-                            <p>性别：</p>
-                            @Html.RadioButtonFor(model => model.upload.Sex, "1")男
-
-                            @Html.RadioButtonFor(model => model.upload.Sex, "2")女
+                            <p>性别：</p>                         
+                            @Html.ValueFor(model=>model.upload.Sex)
 
                         </td>
                     </tr>
@@ -39,7 +37,7 @@
                         <td><p>身份证号：</p>@Html.ValueFor(model => model.upload.IDNumber)</td>
                         <td>
                             <p>民族：</p>
-                            @Html.DropDownListFor(model=>model.upload.NationCode,ViewBag.nation as List<SelectListItem>)
+                            @Html.ValueFor(model=>model.upload.Nation)
                         </td>
                     </tr>
                     <tr>
@@ -184,8 +182,8 @@
                     <tr>
                         <td>是否锁定</td>
                         <td colspan="2">
-                            @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "是")是
-                            @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "否")否
+                            @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "锁定")是
+                            @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "可编辑")否
                         </td>
                     </tr>
                     <tr>
