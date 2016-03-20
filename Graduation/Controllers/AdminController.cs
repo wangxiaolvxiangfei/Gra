@@ -1102,7 +1102,7 @@ namespace Graduation.Controllers
                         row.CreateCell(97).SetCellValue(item.eSchoolInfoModel.UpMajor);
                         row.CreateCell(98).SetCellValue(item.eSchoolInfoModel.OutCountry);
                         row.CreateCell(99).SetCellValue(item.eSchoolInfoModel.CompanyCode);
-                        row.CreateCell(100).SetCellValue(item.eSchoolInfoModel.Employment)
+                        row.CreateCell(100).SetCellValue(item.eSchoolInfoModel.Employment);
                         a++;
 
                     }
@@ -2336,7 +2336,7 @@ namespace Graduation.Controllers
             List<SelectListItem> belongDep = new List<SelectListItem> { };
             foreach (var item in belong)
             {
-                var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value =item.ComBelongDepCode };
                 belongDep.Add(belongDepList);
             }
             ViewBag.belong = belongDep;
@@ -2368,8 +2368,7 @@ namespace Graduation.Controllers
                 }
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
-                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
-                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDep + student.eSchoolInfo.ComBelongDepCode;//隶属部门
+                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质          
                 return View(student);
             }
             else
@@ -2401,9 +2400,8 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.JobTitleCode = jobTitle.Substring(0, 2);
 
                 //隶属部门
-                string belong = students.eSchoolInfo.ComBelongDep;
-                students.eSchoolInfo.ComBelongDep = belong.Substring(3);
-                students.eSchoolInfo.ComBelongDepCode = belong.Substring(0, 3);
+                var belong = db.belongDepTb.Where(m => m.ComBelongDepCode == students.eSchoolInfo.ComBelongDepCode).FirstOrDefault();
+                students.eSchoolInfo.ComBelongDep = belong.ComBelongDep;
 
                 //就业形式
                 students.eSchoolInfo.Employment = "签学校三方协议就业";
@@ -2527,7 +2525,7 @@ namespace Graduation.Controllers
             List<SelectListItem> belongDep = new List<SelectListItem> { };
             foreach (var item in belong)
             {
-                var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode  };
                 belongDep.Add(belongDepList);
             }
             ViewBag.belong = belongDep;
@@ -2572,8 +2570,7 @@ namespace Graduation.Controllers
                 }
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
-                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
-                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDep + student.eSchoolInfo.ComBelongDepCode;//隶属部门
+                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质             
                 return View(student);
             }
             else
@@ -2605,9 +2602,8 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.JobTitleCode = jobTitle.Substring(0, 2);
 
                 //隶属部门
-                string belong = students.eSchoolInfo.ComBelongDep;
-                students.eSchoolInfo.ComBelongDep = belong.Substring(3);
-                students.eSchoolInfo.ComBelongDepCode = belong.Substring(0, 3);
+                var belong = db.belongDepTb.Where(m => m.ComBelongDepCode == students.eSchoolInfo.ComBelongDepCode).FirstOrDefault();
+                students.eSchoolInfo.ComBelongDep = belong.ComBelongDep;
 
                 //就业形式
                 students.eSchoolInfo.Employment = "签合同就业";
@@ -3613,11 +3609,21 @@ namespace Graduation.Controllers
         /// 显示公告列表
         /// </summary>
         /// <returns></returns>
-        public ActionResult Announce()
+        public ActionResult Announce(int id=0,string type=null)
         {
             var title = db.AnnounceTb.ToList();
+            if (type == "1")
+            {
+                AnnounceModel announce = db.AnnounceTb.Find(id);
+                db.AnnounceTb.Remove(announce);
+                db.SaveChanges();
+                return RedirectToAction("Announce");      
+            }
             return View(title);
         }
+
+       
+
         /// <summary>
         /// 显示公告详细信息
         /// </summary>
@@ -3628,7 +3634,10 @@ namespace Graduation.Controllers
             var detail = db.AnnounceTb.Find(AnnounceId);
             return View(detail);
         }
-
+        /// <summary>
+        /// 发布公告
+        /// </summary>
+        /// <returns></returns>
         public ActionResult AnnouncePost()
         {
             AnnounceModel am = new AnnounceModel();
@@ -3659,6 +3668,7 @@ namespace Graduation.Controllers
         );
                 //取得doc文件中的文本
                 string outText = doc.Content.Text;
+                
                 //关闭文件
                 doc.Close(ref nullobj, ref nullobj, ref nullobj);
                 //关闭COM

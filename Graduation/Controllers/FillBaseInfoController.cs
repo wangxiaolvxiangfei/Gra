@@ -506,7 +506,7 @@ namespace Graduation.Controllers
             List<SelectListItem> belongDep = new List<SelectListItem> { };
             foreach (var item in belong)
             {
-                var listitem = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                var listitem = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode  };
                 belongDep.Add(listitem);
             }
             ViewBag.belongDep = belongDep;
@@ -553,9 +553,7 @@ namespace Graduation.Controllers
                 }
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
-                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
-                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDepCode + student.eSchoolInfo.ComBelongDep;//所属部门   
-                
+                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质         
                 ViewBag.clocked = student.eSchoolInfo.IsClock;
                 return View(student);
             }
@@ -591,10 +589,9 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.JobTitle = jobTitle.Substring(2);
                 students.eSchoolInfo.JobTitleCode = jobTitle.Substring(0, 2);
 
-                //所属单位
-                string belongDep = students.eSchoolInfo.ComBelongDep;
-                students.eSchoolInfo.ComBelongDep = belongDep.Substring(3);
-                students.eSchoolInfo.ComBelongDepCode = belongDep.Substring(0, 3);
+                //所属部门
+                var belong = db.belongDepTb.Where(m => m.ComBelongDepCode == students.eSchoolInfo.ComBelongDepCode).FirstOrDefault();
+                students.eSchoolInfo.ComBelongDep = belong.ComBelongDep;
 
                 //就业形式
 
@@ -719,7 +716,7 @@ namespace Graduation.Controllers
             List<SelectListItem> belongDep = new List<SelectListItem> { };
             foreach (var item in belong)
             {
-                var listitem = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
+                var listitem = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode };
                 belongDep.Add(listitem);
             }
             ViewBag.belongDep = belongDep;
@@ -765,7 +762,6 @@ namespace Graduation.Controllers
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
                 student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
-                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDepCode + student.eSchoolInfo.ComBelongDep;//所属部门              
                 ViewBag.clocked = student.eSchoolInfo.IsClock;
                 return View(student);
             }
@@ -812,6 +808,11 @@ namespace Graduation.Controllers
 
                 var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
                 students.eSchoolInfo.ComLocation = location.name;//单位所在地
+
+                //所属部门
+                var belong= db.belongDepTb.Where(m=>m.ComBelongDepCode==students.eSchoolInfo.ComBelongDepCode).FirstOrDefault();
+                students.eSchoolInfo.ComBelongDep = belong.ComBelongDep;
+
 
 
                 //如果基本信息表中已经有基本，则为更新
