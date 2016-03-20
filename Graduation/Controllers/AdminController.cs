@@ -843,6 +843,7 @@ namespace Graduation.Controllers
                     signInfo = db.SingInfoTb.Find(studentNumber),
                     upload = db.UploadTb.Find(studentNumber)
                 };
+                student.signInfo.ComType = student.signInfo.ComTypeCode + student.signInfo.ComType;
                 if (student.signInfo == null)
                 {
                     student.signInfo = new SignInfoModel();
@@ -1386,13 +1387,21 @@ namespace Graduation.Controllers
                     upLoadModel.SchoolCode = "10079";
                     upLoadModel.SchoolBeCode = "360";
                     upLoadModel.SchoolAddCode = "130600";
+                    upLoadModel.Pwd = "123";
+                    if (upLoadModel.Sex != null)
+                    {
+                        if (upLoadModel.Sex == "男")
+                            upLoadModel.SexCode = "1";
+                        else
+                            upLoadModel.SexCode = "2";
+                    }
                     upLoadModel.fillBaseInfoModel.StudentNumber = upLoadModel.StudentNumber;
                     var nation = upLoadModel.Nation;
                     upLoadModel.Nation = nation.Substring(2);
                     upLoadModel.NationCode = upLoadModel.Nation.Substring(0, 2);
                     var orig = db.LocationTb.Find(upLoadModel.fillBaseInfoModel.OriginCode);//保存生源地
                     upLoadModel.fillBaseInfoModel.OriginCity = orig.name;
-                    upLoadModel.fillBaseInfoModel.OriginProvince = db.BaseInfoTb.Find(upLoadModel.fillBaseInfoModel.StudentNumber).OriginProvince;
+                   
                     var familyLocation = db.LocationTb.Find(upLoadModel.fillBaseInfoModel.ResLocationCode);
                     upLoadModel.fillBaseInfoModel.ResLocation = familyLocation.name;
                     db.UploadTb.Add(upLoadModel);
@@ -1559,7 +1568,7 @@ namespace Graduation.Controllers
                     db.SaveChanges();
 
                 }
-                return RedirectToAction("AdminEditGradInfo", new { studentNumber=fillBaseInfoViewModel.upload.StudentNumber});
+                return RedirectToAction("AdminEditGradInfo", new { studentNumber = fillBaseInfoViewModel.baseInfo.StudentNumber });
             }
 
             return View(fillBaseInfoViewModel);
@@ -1882,7 +1891,7 @@ namespace Graduation.Controllers
                 //如果基本信息表中已经有基本，则为更新
                 if (db.ApplInfoTb.Find(students.applInfo.StudentNumber) != null)
                 {
-                    ApplInfoModel temp = db.ApplInfoTb.Find(students.upload.StudentNumber);
+                    ApplInfoModel temp = db.ApplInfoTb.Find(students.applInfo.StudentNumber);
                     //db.Entry(students.baseInfo).State = EntityState.Modified;
                     if (students.applInfo.RankType == "1")
                         students.applInfo.Rank = "班级排名";
@@ -1903,7 +1912,7 @@ namespace Graduation.Controllers
                     db.SaveChanges();
                 }
 
-                return RedirectToAction("FillApplInfo");
+                return RedirectToAction("EditApplExam", new { studentNumber =students.applInfo.StudentNumber});
             }
             return View(students);
         }

@@ -40,6 +40,11 @@
                             <select></select>
                             <select></select>
                         </td>
+                        <td>
+                           <p>学生类型</p>
+                            @Html.RadioButtonFor(model=>model.StudentType,"0")本科生
+                            @Html.RadioButtonFor(model=>model.StudentType,"1")研究生
+                        </td>
                     </tr>
                     <tr>
                         <td><p>学号：</p>@Html.TextBoxFor(model => model.StudentNumber)</td>
