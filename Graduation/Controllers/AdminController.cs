@@ -596,8 +596,8 @@ namespace Graduation.Controllers
             //不为空则为更新
             if (temp != null)
             {
-                int AcademyId = Convert.ToInt32(model.Major.AcademyId);
-                int DepartId = Convert.ToInt32(model.Major.DepartId);
+                int AcademyId = Convert.ToInt32(temp.AcademyId);
+                int DepartId = Convert.ToInt32(temp.DepartId);
                 //添加所属学院名字
                 model.Major.AcademyName = (db.AcademyTb.Find(AcademyId)).Name;
                 model.Major.DepartmentName = db.DepartmentTb.Find(DepartId).Name;
@@ -611,6 +611,7 @@ namespace Graduation.Controllers
                 int DepartId = Convert.ToInt32(model.Major.DepartId);
                 model.Major.AcademyName = (db.AcademyTb.Find(AcademyId)).Name;
                 model.Major.DepartmentName = db.DepartmentTb.Find(DepartId).Name;
+                model.Major.DepartmentCode = db.DepartmentTb.Find(DepartId).Code;
                 db.MajorTb.Add(model.Major);
                 db.SaveChanges();
             }
@@ -2298,7 +2299,7 @@ namespace Graduation.Controllers
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
                 student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
-                student.eSchoolInfo.ComBelongDep=student.eSchoolInfo.ComBelongDep+student.eSchoolInfo.ComBelongDepCode//隶属部门
+                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDep + student.eSchoolInfo.ComBelongDepCode;//隶属部门
                 return View(student);
             }
             else
@@ -3311,33 +3312,621 @@ namespace Graduation.Controllers
         #region 就业统计
         public ActionResult jiuyetongji()
         {
-            List<jieyeListViewModel> display = new List<jieyeListViewModel>();
-            var acaList = db.AcademyTb.ToList();
-            foreach (var itemaca in acaList)
+            AddNumberModel model = new AddNumberModel();
+            model.acaList = db.AcademyTb.ToList();
+            model.depList = new List<DepartmentModel>();
+            model.BmajorList = new List<MajorModel>();
+            model.YmajorList = new List<MajorModel>();
+            model.YnumberList = new List<NumberModel>();
+            model.BnumberList = new List<NumberModel>();
+            foreach (var acaTemp in model.acaList)
             {
-                foreach (var itemdep in db.DepartmentTb.Where(m => m.BelongId == itemaca.Id))
+                var depList = db.DepartmentTb.Where(m => m.BelongId == acaTemp.Id).ToList();
+                foreach (var depTemp in depList)
                 {
-                    string depId = itemdep.Id.ToString();//系的Id
-                    foreach (var itemMajor in db.MajorTb.Where(m => m.DepartId == depId))
+                    string depId = depTemp.Id.ToString();
+                    model.depList.Add(depTemp);
+                    var BmajorList = db.MajorTb.Where(m => m.DepartId == depId&&m.Edu=="本科").ToList();
+                    var YmajorList = db.MajorTb.Where(m => m.DepartId == depId&&m.Edu=="研究生").ToList();
+                    #region 本科生列表总人数显示
+                    foreach (var majorTemp in BmajorList)
                     {
-                        int acanum = db.UploadTb.Where(m => m.Major == itemMajor.Name).Count();//这个专业的总人数
-                        //  int sign = db.ESchoolInfoTb.Where()
-                        jieyeListViewModel model = new jieyeListViewModel
+                        model.BmajorList.Add(majorTemp);
+                        var mNumber = db.numberTb.Where(m => m.belongId == majorTemp.Id).FirstOrDefault();
+                        if (mNumber == null)
                         {
-                            aca = itemaca.Name,
-                            dep = itemdep.Name,
-                            major = itemMajor.Name
+                            mNumber = new NumberModel();
+                            var temp = new NumberModel()
+                            {
+                                id = majorTemp.Id,
+                                belongId = majorTemp.Id,
+                                name = majorTemp.Name,
+                            };
+                            model.BnumberList.Add(temp);
+                        }
+                        else
+                        {
+                            var temp = new NumberModel();
+                            temp = mNumber;
+                            temp.id = majorTemp.Id;
+                            temp.name = majorTemp.Name;
+                            model.BnumberList.Add(temp);
+                        }
+                    }
+                    var a = db.numberTb.Where(m => m.belongId == (depTemp.Id + 100)).ToList();
+                    if (a.Count() != 0)
+                    {
+                        model.BnumberList.Add(db.numberTb.Where(m => m.belongId == (depTemp.Id + 100)).FirstOrDefault());
+                    }
+                    else
+                    {
+                        var temp = new NumberModel();
+                        model.BnumberList.Add(temp);
+                    }
+                    #endregion
 
-                        };
+                    #region 研究生列表总人数
+                    foreach (var majorTemp in YmajorList)
+                    {
+                        model.YmajorList.Add(majorTemp);
+                        var mNumber = db.numberTb.Where(m => m.belongId == majorTemp.Id).FirstOrDefault();
+                        if (mNumber == null)
+                        {
+                            mNumber = new NumberModel();
+                            var temp = new NumberModel()
+                            {
+                                id = majorTemp.Id,
+                                belongId = majorTemp.Id,
+                                name = majorTemp.Name,
+                            };
+                            model.YnumberList.Add(temp);
+                        }
+                        else
+                        {
+                            var temp = new NumberModel();
+                            temp = mNumber;
+                            temp.id = majorTemp.Id;
+                            temp.name = majorTemp.Name;
+                            model.YnumberList.Add(temp);
+                        }
+                    }
+                    a = db.numberTb.Where(m => m.belongId == (depTemp.Id + 1000)).ToList();
+                    if (a.Count() != 0)
+                    {
+                        model.YnumberList.Add(db.numberTb.Where(m => m.belongId == (depTemp.Id + 1000)).FirstOrDefault());
+                    }
+                    else
+                    {
+                        var temp = new NumberModel();
+                        model.YnumberList.Add(temp);
+                    }
+                    #endregion
+
+                }
+            }
+
+            #region 本科生研究生统计显示
+            //本科生
+            foreach (var item in model.BmajorList)
+            {
+                var mNumber = db.numberTb.Where(m => m.belongId == item.Id).FirstOrDefault();
+                if (mNumber == null)
+                {
+                    mNumber = new NumberModel();
+                    var temp = new NumberModel()
+                    {
+                        id = item.Id,
+                        belongId = item.Id,
+                        name = item.Name,
+                    };
+                    model.BnumberList.Add(temp);
+                }
+                else
+                {
+                    var temp = new NumberModel();
+                    temp = mNumber;
+                    temp.id = item.Id;
+                    temp.name = item.Name;
+                    model.BnumberList.Add(temp);
+                }
+            }
+            foreach (var item in model.depList)
+            {
+                if (db.numberTb.Where(m => m.belongId == (item.Id + 100))!=null)
+                {
+                    model.BnumberList.Add(db.numberTb.Where(m => m.belongId == (item.Id + 100)).FirstOrDefault());
+                }
+            }
+            //研究生
+            foreach (var item in model.YmajorList)
+            {
+                var mNumber = db.numberTb.Where(m => m.belongId == item.Id).FirstOrDefault();
+                if (mNumber == null)
+                {
+                    mNumber = new NumberModel();
+                    var temp = new NumberModel()
+                    {
+                        id = item.Id,
+                        belongId = item.Id,
+                        name = item.Name,
+                    };
+                    model.YnumberList.Add(temp);
+                }
+                else
+                {
+                    var temp = new NumberModel();
+                    temp = mNumber;
+                    temp.id = item.Id;
+                    temp.name = item.Name;
+                    model.YnumberList.Add(temp);
+                }
+            }
+            foreach (var item in model.depList)
+            {
+                if (db.numberTb.Where(m => m.belongId == (item.Id + 1000)) != null)
+                {
+                    model.YnumberList.Add(db.numberTb.Where(m => m.belongId == (item.Id + 1000)).FirstOrDefault());
+                }
+            }
+            #endregion
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult jiuyetongji(AddNumberModel model,string tijiao)
+        {
+            #region 本科生和研究生人数上传
+            if (tijiao == "benke")
+            {
+                //本科生人数上传
+                foreach (var item in model.BnumberList)
+                {
+                    var temp = db.numberTb.Where(m=>m.belongId==item.id).FirstOrDefault();
+                    if (temp == null && item.id != 0 && item.belongId < 100)
+                    {
+                        db.numberTb.Add(item);
+                        db.SaveChanges();
+                    }
+                    else if(temp!=null)
+                    {
+                        temp.number = item.number;
+                        db.Entry(temp).CurrentValues.SetValues(temp);
+                        db.SaveChanges();
                     }
                 }
             }
-            return View();
+            if (tijiao == "yanjiu")
+            {
+                //本科生人数上传
+                foreach (var item in model.YnumberList)
+                {
+                    var temp = db.numberTb.Where(m => m.belongId == item.id).FirstOrDefault();
+                    if (temp == null && item.id != 0 && item.belongId < 1000)
+                    {
+                        db.numberTb.Add(item);
+                        db.SaveChanges();
+                    }
+                    else if (temp != null)
+                    {
+                        temp.number = item.number;
+                        db.Entry(temp).CurrentValues.SetValues(temp);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            #endregion
+
+            #region 本科生和研究生重置
+            if (tijiao == "Bchongzhi")
+            {
+                var majorList = db.MajorTb.Where(m => m.Edu == "本科");
+                foreach (var item in majorList)
+                {
+                    var number = db.numberTb.Where(m => m.belongId == item.Id).FirstOrDefault();
+                    var temp = number;
+                    temp.signNumber = 0;
+                    temp.signP = 0;
+                    temp.baoyan = 0;
+                    temp.baoyanP = 0;
+                    temp.signAbaoyan = 0;
+                    temp.signAbaoyanP = 0;
+                    temp.kaoyan = 0;
+                    temp.kanyanP = 0;
+                    temp.yixiang = 0;
+                    temp.yixiangP = 0;
+                    temp.qita = 0;
+                    temp.qitaP = 0;
+                    temp.zonghe = 0;
+                    temp.zongheP = 0;
+                    temp.shengyu = 0;
+                    temp.shengyuP = 0;
+                    db.Entry(number).CurrentValues.SetValues(temp);
+                    db.SaveChanges();
+                }
+            }
+            #endregion
+            return RedirectToAction("jiuyetongji");
         }
 
-        public ActionResult jiyeYX()
+        public ActionResult jiuyeYX()
         {
-            return View();
+            if (Session["Id"] != null)
+            {
+                AddNumberModel model = new AddNumberModel();
+                model.BmajorList = db.MajorTb.Where(m => m.Edu == "本科").ToList();
+                model.YmajorList = db.MajorTb.Where(m => m.Edu == "研究生").ToList();
+                ViewBag.type = Session["Type"];
+                var user = db.UserTb.Find(Session["Id"]);
+                var dep = db.DepartmentTb.Where(m=>m.Id==user.DepartId).ToList();
+                var acaId = dep.FirstOrDefault().BelongId;
+                var aca = db.AcademyTb.Where(m => m.Id == acaId).ToList();
+                string depId = user.DepartId.ToString();
+                model.acaList = aca;
+                model.depList = dep;
+                model.BmajorList = db.MajorTb.Where(m => m.Edu == "本科"&&m.DepartId==depId).ToList();
+                model.BnumberList = new List<NumberModel>();
+                model.YnumberList = new List<NumberModel>();
+                #region 本科生
+                foreach (var item in model.BmajorList)
+                {
+                    var mNumber = db.numberTb.Where(m=>m.belongId==item.Id).FirstOrDefault();
+                    if (mNumber == null)
+                        mNumber = new NumberModel();
+                    var temp = new NumberModel()
+                    {
+                        id = mNumber.id,
+                        belongId=item.Id,
+                        name = item.Name,
+                        number = mNumber.number,
+                        signNumber = mNumber.signNumber,
+                        signP = mNumber.signP,
+                        baoyan = mNumber.baoyan,
+                        baoyanP = mNumber.baoyanP,
+                        signAbaoyan = mNumber.signAbaoyan,
+                        signAbaoyanP = mNumber.signAbaoyanP,
+                        kaoyan = mNumber.kaoyan,
+                        kanyanP = mNumber.kanyanP,
+                        yixiang = mNumber.yixiang,
+                        yixiangP = mNumber.yixiangP,
+                        qita = mNumber.qita,
+                        qitaP = mNumber.qitaP,
+                        zonghe = mNumber.zonghe,
+                        zongheP = mNumber.zongheP,
+                        shengyu = mNumber.shengyu,
+                        shengyuP = mNumber.shengyuP
+                    };
+                    model.BnumberList.Add(temp);
+                }
+                #endregion
+
+                #region 研究生
+                foreach (var item in model.YmajorList)
+                {
+                    var mNumber = db.numberTb.Where(m => m.belongId == item.Id).FirstOrDefault();
+                    if (mNumber == null)
+                        mNumber = new NumberModel();
+                    var temp = new NumberModel()
+                    {
+                        id = mNumber.id,
+                        belongId = item.Id,
+                        name = item.Name,
+                        number = mNumber.number,
+                        signNumber = mNumber.signNumber,
+                        signP = mNumber.signP,
+                        baoyan = mNumber.baoyan,
+                        baoyanP = mNumber.baoyanP,
+                        signAbaoyan = mNumber.signAbaoyan,
+                        signAbaoyanP = mNumber.signAbaoyanP,
+                        kaoyan = mNumber.kaoyan,
+                        kanyanP = mNumber.kanyanP,
+                        yixiang = mNumber.yixiang,
+                        yixiangP = mNumber.yixiangP,
+                        qita = mNumber.qita,
+                        qitaP = mNumber.qitaP,
+                        zonghe = mNumber.zonghe,
+                        zongheP = mNumber.zongheP,
+                        shengyu = mNumber.shengyu,
+                        shengyuP = mNumber.shengyuP
+                    };
+                    model.YnumberList.Add(temp);
+                }
+                #endregion
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+        }
+        [HttpPost]
+        public ActionResult jiuyeYX(AddNumberModel model,string tijiao)
+        {
+            #region 本科生和研究生人数上传
+            if (tijiao == "benke")
+            {
+                #region 本科生人数上传
+                foreach (var item in model.BnumberList)
+                {
+                    NumberModel temp = db.numberTb.Find(item.id);
+                    //添加
+                    if (temp == null)
+                    {
+                        temp = new NumberModel();
+                        temp = item;
+                        temp.belongId = item.belongId;
+                        db.numberTb.Add(temp);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        var tempc = new NumberModel();
+                        tempc = temp;
+                        if (temp.number != 0)
+                        {
+                            temp.belongId = item.belongId;
+                            temp.name = item.name;
+                            temp.number = item.number;
+                            temp.signNumber = item.signNumber;
+                            temp.signP = (double)item.signNumber / (double)temp.number;
+                            temp.baoyan = item.baoyan;
+                            temp.baoyanP = (double)item.baoyan / (double)temp.number;
+                            temp.signAbaoyan =item.signNumber +item.baoyan;
+                            temp.signAbaoyanP = (double)temp.signAbaoyan / (double)temp.number;
+                            temp.kaoyan = item.kaoyan;
+                            temp.kanyanP = (double)item.kaoyan / (double)temp.number;
+                            temp.yixiang = item.yixiang;
+                            temp.yixiangP = (double)item.yixiang / (double)temp.number;
+                            temp.qita = item.qita;
+                            temp.qitaP = (double)item.qita / (double)temp.number;
+                            temp.zonghe = item.zonghe;
+                            temp.zongheP = (double)item.zonghe / (double)temp.number;
+                            temp.shengyu = item.shengyu;
+                            temp.shengyuP = (double)item.shengyu / (double)temp.number;
+                        }
+                        else
+                        {
+                            temp = item;
+                            temp.name = item.name;
+                            temp.number = item.number;
+                            temp.signP = 0;
+                            temp.baoyanP = 0;
+                            temp.signAbaoyan = 0;
+                            temp.signAbaoyanP = 0;
+                            temp.kanyanP = 0;
+                            temp.yixiangP = 0;
+                            temp.qitaP = 0;
+                            temp.zongheP = 0;
+                            temp.shengyuP = 0;
+                        }
+                        db.Entry(tempc).CurrentValues.SetValues(temp);
+                        db.SaveChanges();
+                    }
+                }
+                var user=db.UserTb.Find(Session["Id"]);
+                var dep = db.DepartmentTb.Find(user.DepartId);
+                string depId = dep.Id.ToString();
+                var majorList = db.MajorTb.Where(m => m.DepartId == depId).ToList();
+                var addnumber = db.numberTb.Where(m => m.belongId == (dep.Id + 100)).FirstOrDefault();
+                if (addnumber == null)
+                {
+                    addnumber = new NumberModel();
+                    foreach (var item in majorList)
+                    {
+                        var numberList = db.numberTb.Where(m => m.belongId == item.Id).ToList();
+                        foreach (var numberItem in numberList)
+                        {
+                            addnumber.number = addnumber.number + numberItem.number;
+                            addnumber.signNumber = addnumber.signNumber + numberItem.signNumber;
+                            addnumber.baoyan = addnumber.baoyan + numberItem.baoyan;
+                            addnumber.signAbaoyan = addnumber.signAbaoyan + numberItem.signAbaoyan;
+                            addnumber.kaoyan = addnumber.kaoyan + numberItem.kaoyan;
+                            addnumber.yixiang = addnumber.yixiang + numberItem.yixiang;
+                            addnumber.qita = addnumber.qita + numberItem.qita;
+                            addnumber.zonghe = addnumber.zonghe + numberItem.zonghe;
+                            addnumber.shengyu = addnumber.shengyu + numberItem.shengyu;
+                        }
+                    }
+                    addnumber.signP = (double)addnumber.signNumber / (double)addnumber.number;
+                    addnumber.baoyanP = (double)addnumber.baoyan / (double)addnumber.number;
+                    addnumber.signAbaoyanP = (double)addnumber.signAbaoyan / (double)addnumber.number;
+                    addnumber.kanyanP = (double)addnumber.kaoyan / (double)addnumber.number;
+                    addnumber.yixiangP = (double)addnumber.yixiang / (double)addnumber.number;
+                    addnumber.qitaP = (double)addnumber.qita / (double)addnumber.number;
+                    addnumber.zongheP = (double)addnumber.zonghe / (double)addnumber.number;
+                    addnumber.shengyuP = (double)addnumber.shengyu / (double)addnumber.number;
+                    addnumber.belongId = dep.Id + 100;
+                    addnumber.name = "总计";
+                    db.numberTb.Add(addnumber);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    var temp = addnumber;
+                    addnumber.number = 0;
+                    addnumber.signNumber = 0;
+                    addnumber.baoyan = 0;
+                    addnumber.signAbaoyan = 0;
+                    addnumber.kaoyan = 0;
+                    addnumber.yixiang = 0;
+                    addnumber.qita = 0;
+                    addnumber.zonghe = 0;
+                    addnumber.shengyu = 0;
+                    foreach (var item in majorList)
+                    {
+                        var numberList = db.numberTb.Where(m => m.belongId == item.Id).ToList();
+                        foreach (var numberItem in numberList)
+                        {
+                            addnumber.number = addnumber.number + numberItem.number;
+                            addnumber.signNumber = addnumber.signNumber + numberItem.signNumber;
+                            addnumber.baoyan = addnumber.baoyan + numberItem.baoyan;
+                            addnumber.signAbaoyan = addnumber.signAbaoyan + numberItem.signAbaoyan;
+                            addnumber.kaoyan = addnumber.kaoyan + numberItem.kaoyan;
+                            addnumber.yixiang = addnumber.yixiang + numberItem.yixiang;
+                            addnumber.qita = addnumber.qita + numberItem.qita;
+                            addnumber.zonghe = addnumber.zonghe + numberItem.zonghe;
+                            addnumber.shengyu = addnumber.shengyu + numberItem.shengyu;
+                        }
+                    }
+                    addnumber.signP = (double)addnumber.signNumber / (double)addnumber.number;
+                    addnumber.baoyanP = (double)addnumber.baoyan / (double)addnumber.number;
+                    addnumber.signAbaoyanP = (double)addnumber.signAbaoyan / (double)addnumber.number;
+                    addnumber.kanyanP = (double)addnumber.kaoyan / (double)addnumber.number;
+                    addnumber.yixiangP = (double)addnumber.yixiang / (double)addnumber.number;
+                    addnumber.qitaP = (double)addnumber.qita / (double)addnumber.number;
+                    addnumber.zongheP = (double)addnumber.zonghe / (double)addnumber.number;
+                    addnumber.shengyuP = (double)addnumber.shengyu / (double)addnumber.number;
+                    addnumber.belongId = dep.Id + 100;
+                    addnumber.name = "总计";
+                    db.Entry(temp).CurrentValues.SetValues(addnumber);
+                    db.SaveChanges();
+                }
+
+                #endregion
+            }
+            if (tijiao == "yanjiu")
+            {
+                #region 研究生人数上传
+                foreach (var item in model.YnumberList)
+                {
+                    NumberModel temp = db.numberTb.Find(item.id);
+                    //添加
+                    if (temp == null)
+                    {
+                        temp = new NumberModel();
+                        temp = item;
+                        temp.belongId = item.belongId;
+                        db.numberTb.Add(temp);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        var tempc = new NumberModel();
+                        tempc = temp;
+                        if (temp.number != 0)
+                        {
+                            temp.belongId = item.belongId;
+                            temp.name = item.name;
+                            temp.number = item.number;
+                            temp.signNumber = item.signNumber;
+                            temp.signP = (double)item.signNumber / (double)temp.number;
+                            temp.baoyan = item.baoyan;
+                            temp.baoyanP = (double)item.baoyan / (double)temp.number;
+                            temp.signAbaoyan = item.signNumber + item.baoyan;
+                            temp.signAbaoyanP = (double)temp.signAbaoyan / (double)temp.number;
+                            temp.kaoyan = item.kaoyan;
+                            temp.kanyanP = (double)item.kaoyan / (double)temp.number;
+                            temp.yixiang = item.yixiang;
+                            temp.yixiangP = (double)item.yixiang / (double)temp.number;
+                            temp.qita = item.qita;
+                            temp.qitaP = (double)item.qita / (double)temp.number;
+                            temp.zonghe = item.zonghe;
+                            temp.zongheP = (double)item.zonghe / (double)temp.number;
+                            temp.shengyu = item.shengyu;
+                            temp.shengyuP = (double)item.shengyu / (double)temp.number;
+                        }
+                        else
+                        {
+                            temp = item;
+                            temp.name = item.name;
+                            temp.number = item.number;
+                            temp.signP = 0;
+                            temp.baoyanP = 0;
+                            temp.signAbaoyan = 0;
+                            temp.signAbaoyanP = 0;
+                            temp.kanyanP = 0;
+                            temp.yixiangP = 0;
+                            temp.qitaP = 0;
+                            temp.zongheP = 0;
+                            temp.shengyuP = 0;
+                        }
+                        db.Entry(tempc).CurrentValues.SetValues(temp);
+                        db.SaveChanges();
+                    }
+                }
+                var user = db.UserTb.Find(Session["Id"]);
+                var dep = db.DepartmentTb.Find(user.DepartId);
+                string depId = dep.Id.ToString();
+                var majorList = db.MajorTb.Where(m => m.DepartId == depId).ToList();
+                var addnumber = db.numberTb.Where(m => m.belongId == (dep.Id + 1000)).FirstOrDefault();
+                if (addnumber == null)
+                {
+                    addnumber = new NumberModel();
+                    foreach (var item in majorList)
+                    {
+                        var numberList = db.numberTb.Where(m => m.belongId == item.Id).ToList();
+                        foreach (var numberItem in numberList)
+                        {
+                            addnumber.number = addnumber.number + numberItem.number;
+                            addnumber.signNumber = addnumber.signNumber + numberItem.signNumber;
+                            addnumber.baoyan = addnumber.baoyan + numberItem.baoyan;
+                            addnumber.signAbaoyan = addnumber.signAbaoyan + numberItem.signAbaoyan;
+                            addnumber.kaoyan = addnumber.kaoyan + numberItem.kaoyan;
+                            addnumber.yixiang = addnumber.yixiang + numberItem.yixiang;
+                            addnumber.qita = addnumber.qita + numberItem.qita;
+                            addnumber.zonghe = addnumber.zonghe + numberItem.zonghe;
+                            addnumber.shengyu = addnumber.shengyu + numberItem.shengyu;
+                        }
+                    }
+                    addnumber.signP = (double)addnumber.signNumber / (double)addnumber.number;
+                    addnumber.baoyanP = (double)addnumber.baoyan / (double)addnumber.number;
+                    addnumber.signAbaoyanP = (double)addnumber.signAbaoyan / (double)addnumber.number;
+                    addnumber.kanyanP = (double)addnumber.kaoyan / (double)addnumber.number;
+                    addnumber.yixiangP = (double)addnumber.yixiang / (double)addnumber.number;
+                    addnumber.qitaP = (double)addnumber.qita / (double)addnumber.number;
+                    addnumber.zongheP = (double)addnumber.zonghe / (double)addnumber.number;
+                    addnumber.shengyuP = (double)addnumber.shengyu / (double)addnumber.number;
+                    addnumber.belongId = dep.Id + 100;
+                    addnumber.name = "总计";
+                    db.numberTb.Add(addnumber);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    var temp = addnumber;
+                    addnumber.number = 0;
+                    addnumber.signNumber = 0;
+                    addnumber.baoyan = 0;
+                    addnumber.signAbaoyan = 0;
+                    addnumber.kaoyan = 0;
+                    addnumber.yixiang = 0;
+                    addnumber.qita = 0;
+                    addnumber.zonghe = 0;
+                    addnumber.shengyu = 0;
+                    foreach (var item in majorList)
+                    {
+                        var numberList = db.numberTb.Where(m => m.belongId == item.Id).ToList();
+                        foreach (var numberItem in numberList)
+                        {
+                            addnumber.number = addnumber.number + numberItem.number;
+                            addnumber.signNumber = addnumber.signNumber + numberItem.signNumber;
+                            addnumber.baoyan = addnumber.baoyan + numberItem.baoyan;
+                            addnumber.signAbaoyan = addnumber.signAbaoyan + numberItem.signAbaoyan;
+                            addnumber.kaoyan = addnumber.kaoyan + numberItem.kaoyan;
+                            addnumber.yixiang = addnumber.yixiang + numberItem.yixiang;
+                            addnumber.qita = addnumber.qita + numberItem.qita;
+                            addnumber.zonghe = addnumber.zonghe + numberItem.zonghe;
+                            addnumber.shengyu = addnumber.shengyu + numberItem.shengyu;
+                        }
+                    }
+                    addnumber.signP = (double)addnumber.signNumber / (double)addnumber.number;
+                    addnumber.baoyanP = (double)addnumber.baoyan / (double)addnumber.number;
+                    addnumber.signAbaoyanP = (double)addnumber.signAbaoyan / (double)addnumber.number;
+                    addnumber.kanyanP = (double)addnumber.kaoyan / (double)addnumber.number;
+                    addnumber.yixiangP = (double)addnumber.yixiang / (double)addnumber.number;
+                    addnumber.qitaP = (double)addnumber.qita / (double)addnumber.number;
+                    addnumber.zongheP = (double)addnumber.zonghe / (double)addnumber.number;
+                    addnumber.shengyuP = (double)addnumber.shengyu / (double)addnumber.number;
+                    addnumber.belongId = dep.Id + 100;
+                    addnumber.name = "总计";
+                    db.Entry(temp).CurrentValues.SetValues(addnumber);
+                    db.SaveChanges();
+                }
+
+                #endregion
+            }
+            #endregion
+            return RedirectToAction("jiuyeYX");
         }
         #endregion
 
