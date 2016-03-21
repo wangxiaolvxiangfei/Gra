@@ -7,7 +7,7 @@
 {
     ViewBag.type = "display:none";
 }
-
+<script src="~/Scripts/City.js"></script>
 <div class="templatemo-content col-1 light-gray-bg">
     <div class="templatemo-top-nav-container">
         <h2>求职与就业信息管理系统</h2>
@@ -24,15 +24,7 @@
                 @Html.HiddenFor(model => model.eSchoolInfo.StudentNumber)
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
-                <p class="a">
-
-
-                    <a href="/Admin/EmplESchoolExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "有协议就业/合同就业", new { @checked = true }) 有协议就业/合同就业</a>
-                    <a href="/Admin/EmplArmyExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "其他形式就业") 其他形式就业</a>
-                    <a href="/Admin/EmplNotJobExam">@Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "暂未就业") 暂未就业</a>
-
-
-                </p>
+              
 
                 <table class="table">
                     <thead>
@@ -42,49 +34,49 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><span>学号：</span><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
-                            <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
-                            <td><span>性别：</span><span>@Html.ValueFor(model => model.upload.Sex)</span></td>
-                            <td><span>出生年月：</span><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
+                            <td><p>学号：</p><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
+                            <td><p>姓名：</p><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                            <td><p>性别：</p><span>@Html.ValueFor(model => model.upload.Sex)</span></td>
+                            <td><p>出生年月：</p><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
                         </tr>
                         <tr>
-                            <td><span>政治面貌：</span><span>@ViewBag.P</span></td>
-                            <td><span>专业：</span><span>@Html.ValueFor(model => model.upload.Major)</span></td>
-                            <td><span>培养方式：</span><span>@Html.ValueFor(model => model.upload.TrainType)</span></td>
-                            <td><span>学历：</span><span>@Html.ValueFor(model => model.upload.Education)</span></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>学制：</span><span>@Html.ValueFor(model => model.upload.LengthOfSch)</span>
-                            </td>
-                            <td>
-                                <span>毕业时间：</span><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
-                            </td>
-                            <td>
-                                <span>生源地区：</span><span>@ViewBag.L</span>
-                            </td>
-                            <td>
-                                <span>身份证号：</span><span>@Html.ValueFor(model => model.upload.IDNumber)</span>
-                            </td>
+                            <td><p>政治面貌：</p><span>@ViewBag.P</span></td>
+                            <td><p>专业：</p><span>@Html.ValueFor(model => model.upload.Major)</span></td>
+                            <td><p>培养方式：</p><span>@Html.ValueFor(model => model.upload.TrainType)</span></td>
+                            <td><p>学历：</p><span>@Html.ValueFor(model => model.upload.Education)</span></td>
                         </tr>
                         <tr>
                             <td>
-                                <span>健康状况：</span><span>@ViewBag.H</span>
+                                <p>学制：</p><span>@Html.ValueFor(model => model.upload.LengthOfSch)</span>
                             </td>
                             <td>
-                                <span>手机号码：</span><span>@ViewBag.T</span>
+                                <p>毕业时间：</p><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
                             </td>
                             <td>
-                                <span>邮政编码：</span><span>@ViewBag.C</span>
+                                <p>生源地区：</p><span>@ViewBag.L</span>
+                            </td>
+                            <td>
+                                <p>身份证号：</p><span>@Html.ValueFor(model => model.upload.IDNumber)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>健康状况：</p><span>@ViewBag.H</span>
+                            </td>
+                            <td>
+                                <p>手机号码：</p><span>@ViewBag.T</span>
+                            </td>
+                            <td>
+                                <p>邮政编码：</p><span>@ViewBag.C</span>
                             </td>
                             <td></td>
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <span>通信地址：</span><span>@ViewBag.ADDR</span>
+                                <p>通信地址：</p><span>@ViewBag.ADDR</span>
                             </td>
                             <td colspan="2">
-                                <span>家庭所在地</span><span>@ViewBag.FL</span>
+                                <p>家庭所在地</p><span>@ViewBag.FL</span>
                             </td>
 
                         </tr>
@@ -110,7 +102,7 @@
                         </td>
                         <td>
                             <p>单位上级隶属部门</p>
-                            @Html.DropDownListFor(model => model.eSchoolInfo.ComBelongDep, ViewBag.belong as List<SelectListItem>)
+                            @Html.DropDownListFor(model => model.eSchoolInfo.ComBelongDepCode, ViewBag.belong as List<SelectListItem>)
                         </td>
                     </tr>
                     <tr>
@@ -130,9 +122,8 @@
                     <tr>
                         <td colspan="2">
                             <p>单位所在地</p>
-                            <select class="province"></select>
-                            <select class="city"></select>
-                            <select class="country"></select>
+                            @Html.TextBoxFor(m => m.eSchoolInfo.ComLocation, new { id = "originPro", onkeyup = "GetCity()" })
+                            @Html.DropDownListFor(m => m.eSchoolInfo.ComLocationCode, ViewBag.city as List<SelectListItem>, new { id = "originList" })
                         </td>
                         <td colspan="2">
                             <span>单位性质：</span>
@@ -153,35 +144,35 @@
                     </tr>
                     <tr>
                         <td>
-                            <span>联系人：</span>@Html.TextBoxFor(model => model.eSchoolInfo.Contacts)
+                            <p>联系人：</p>@Html.TextBoxFor(model => model.eSchoolInfo.Contacts)
                         </td>
                         <td>
-                            <span>联系人邮编(6位数字)：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ContactsCode)
+                            <p>联系人邮编(6位数字)：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ContactsCode)
                         </td>
-                        <td colspan="2">
-                            <span>联系人通信地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConCommAddress)
+                        <td colspan="2" class="input-width">
+                            <p>联系人通信地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConCommAddress)
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <span>联系人职务：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConPost)
+                            <p>联系人职务：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConPost)
                         </td>
                         <td>
-                            <span>联系人电话：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ConTel)
+                            <p>联系人电话：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConTel)
                         </td>
-                        <td colspan="2">
-                            <span>户口迁移地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd)
+                        <td colspan="2" class="input-width">
+                            <p>户口迁移地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd)
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">
-                            <span>档案转寄详细地址：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)
+                        <td colspan="2" class="input-width">
+                            <p>档案转寄详细地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)
                         </td>
                         <td>
-                            <span>邮政编码(6位数字)：</span>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)
+                            <p>邮政编码(6位数字)：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)
                         </td>
                         <td>
-                            <span>是否专业对口：</span>
+                            <p>是否专业对口：</p>
                             @Html.RadioButtonFor(model => model.eSchoolInfo.IsMajorFit, "1") 是
                             @Html.RadioButtonFor(mdoel => mdoel.eSchoolInfo.IsMajorFit, "0") 否
                         </td>

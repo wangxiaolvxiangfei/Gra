@@ -272,6 +272,7 @@
     <Content Include="Images\sunset-big.jpg" />
     <Content Include="Images\sunset.jpg" />
     <Content Include="Scripts\bootstrap-filestyle.js" />
+    <Content Include="Scripts\City.js" />
     <Content Include="Scripts\jquery-1.11.2.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />

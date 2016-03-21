@@ -133,8 +133,8 @@
                     <td><span>出生年月：</span><span>@Html.ValueFor(model=>model.upload.BirthTime)</span></td>
                 </tr>
                 <tr>
-                    <td><span>联系电话：</span><span>@ViewBag.T</span></td>
-                    <td colspan="2"><span>家庭所在地：</span><span>@ViewBag.FL</span></td>
+                    <td><p>联系电话：</p><span>@ViewBag.T</span></td>
+                    <td colspan="2" class="input-width"><p>家庭所在地：</p><span>@ViewBag.FL</span></td>
                 </tr>
                 <tr>
                     <td colspan="3" style="text-align:center"><span><b>就业去向</b></span></td>
@@ -165,13 +165,13 @@
 
                 <tr>
                     <td>
-                        <span>档案转寄地址：</span>@Html.TextBoxFor(model=>model.eSchoolInfo.FileChangedAdd)
+                        <p>档案转寄地址：</p>@Html.TextBoxFor(model=>model.eSchoolInfo.FileChangedAdd)
                     </td>
                     <td>
-                        <span>档案转寄邮编：</span>@Html.TextBoxFor(model=>model.eSchoolInfo.FileZipCode)
+                        <p>档案转寄邮编：</p>@Html.TextBoxFor(model=>model.eSchoolInfo.FileZipCode)
                     </td>
                     <td>
-                        <span>户口迁移地址：</span>@Html.TextBoxFor(model=>model.eSchoolInfo.ResChangedAdd)
+                        <p>户口迁移地址：</p>@Html.TextBoxFor(model=>model.eSchoolInfo.ResChangedAdd)
                     </td>
                 </tr>
                 <tr>

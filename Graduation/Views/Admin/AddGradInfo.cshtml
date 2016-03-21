@@ -6,6 +6,7 @@
 {
     ViewBag.type = "display:none";
 }
+<script src="~/Scripts/City.js"></script>
 
 @using (@Html.BeginForm())
 {
@@ -39,6 +40,11 @@
                             <select></select>
                             <select></select>
                         </td>
+                        <td>
+                           <p>学生类型</p>
+                            @Html.RadioButtonFor(model=>model.StudentType,"0")本科生
+                            @Html.RadioButtonFor(model=>model.StudentType,"1")研究生
+                        </td>
                     </tr>
                     <tr>
                         <td><p>学号：</p>@Html.TextBoxFor(model => model.StudentNumber)</td>
@@ -50,10 +56,10 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><span>出生年月：</span>@Html.TextBoxFor(model => model.BirthTime)</td>
-                        <td><span>身份证号：</span>@Html.TextBoxFor(model => model.IDNumber)</td>
+                        <td><p>出生年月：</p>@Html.TextBoxFor(model => model.BirthTime)</td>
+                        <td><p>身份证号：</p>@Html.TextBoxFor(model => model.IDNumber)</td>
                         <td>
-                            <span>民族：</span>
+                            <p>民族：</p>
                             @Html.DropDownListFor(model => model.Nation, ViewBag.nation as List<SelectListItem>)
                         </td>
                     </tr>
@@ -73,7 +79,7 @@
                             @Html.DropDownListFor(model => model.fillBaseInfoModel.PoliticalStatus, ViewBag.Political as List<SelectListItem>)
                         </td>
                         <td>
-                            <span>宿舍#宿舍号</span>
+                            <p>宿舍#宿舍号</p>
                             @Html.DropDownListFor(model => model.fillBaseInfoModel.Dormitory, ViewBag.dor as List<SelectListItem>)
                             @Html.TextBoxFor(model => model.fillBaseInfoModel.RoomNumber)
                         </td>
@@ -81,21 +87,21 @@
                     </tr>
                     <tr>
                         <td>
-                            <span>档案是否转入学校：</span>
+                            <p>档案是否转入学校：</p>
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.IsArchivesToSch, "1")是
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.IsArchivesToSch, "0", new { @checked = true })否
                         </td>
                         <td><span>入学前所在地派出所：</span>@Html.TextBoxFor(model => model.fillBaseInfoModel.PoliceBefore)</td>
                         <td>
-                            <span>婚否：</span>
+                            <p>婚否：</p>
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.IsMargery, "1") 是
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.IsMargery, "0", new { @checked = true }) 否
                         </td>
                     </tr>
                     <tr>
-                        <td><span>手机号：</span>@Html.TextBoxFor(model => model.fillBaseInfoModel.TelNumber)</td>
-                        <td><span>email：</span>@Html.TextBoxFor(model => model.fillBaseInfoModel.Email)</td>
-                        <td><span>qq号：</span>@Html.TextBoxFor(model => model.fillBaseInfoModel.QQ)</td>
+                        <td><p>手机号：</p>@Html.TextBoxFor(model => model.fillBaseInfoModel.TelNumber)</td>
+                        <td><p>email：</p>@Html.TextBoxFor(model => model.fillBaseInfoModel.Email)</td>
+                        <td><p>qq号：</p>@Html.TextBoxFor(model => model.fillBaseInfoModel.QQ)</td>
                     </tr>
                     <tr>
                         <td>
@@ -104,7 +110,7 @@
                             @Html.RadioButtonFor(mdoel => Model.fillBaseInfoModel.IsOnlyChild, "0", new { @checked = true })否
                         </td>
                         <td>
-                            <span>困难生级别：</span>
+                            <p>困难生级别：</p>
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.DiffLevelCode, "0", new { @checked = true })非困难生
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.DiffLevelCode, "1")就业困难
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.DiffLevelCode, "2")家庭困难
@@ -120,7 +126,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <span>生源地是否发生过变动：</span>
+                            <p>生源地是否发生过变动：</p>
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.IsChangeOrigin, "1", new { @checked = true }) 是
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.IsChangeOrigin, "0") 否
                         </td>
@@ -132,59 +138,57 @@
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.FDiffLevel, "3")一般贫困
                         </td>
                         <td>
-                            <span>家庭户口所在地类型：</span>
-                            @Html.DropDownListFor(model => model.fillBaseInfoModel.ResLocationType, ViewBag.type as List<SelectListItem>)
+                            <p>家庭户口所在地类型：</p>
+                            @Html.DropDownListFor(model => model.fillBaseInfoModel.ResLocationType, ViewBag.ftype as List<SelectListItem>)
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <p>生源所在地：</p>
-                            <select></select>
-                            <select></select>
-                            <select></select>
+                            @Html.TextBoxFor(m => m.fillBaseInfoModel.OriginCity, new { id = "originPro", onkeyup = "GetCity()" })
+                            @Html.DropDownListFor(m => m.fillBaseInfoModel.OriginCode, ViewBag.city as List<SelectListItem>, new { id = "originList" })
                         </td>
                         <td>
                             <p>家庭户口所在地：</p>
-                            <select></select>
-                            <select></select>
-                            <select></select>
+                            @Html.TextBoxFor(m => m.fillBaseInfoModel.ResLocation, new { id = "familyPro", onkeyup = "GetCityFamily()" })
+                            @Html.DropDownListFor(m => m.fillBaseInfoModel.ResLocationCode, ViewBag.familyCityList as List<SelectListItem>, new { id = "familyList" })
                         </td>
                         <td>
-                            <span>家庭户口类型：</span>
+                            <p>家庭户口类型：</p>
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.ResType, "1") 城市户口
                             @Html.RadioButtonFor(model => model.fillBaseInfoModel.ResType, "2") 农村户口
                         </td>
                     </tr>
                     <tr>
-                        <td><span>现任职务：</span>@Html.TextBoxFor(model => model.fillBaseInfoModel.Post)</td>
-                        <td><span>家庭电话：</span>@Html.TextBoxFor(model => model.fillBaseInfoModel.FamilyTel)</td>
+                        <td><p>现任职务：</p>@Html.TextBoxFor(model => model.fillBaseInfoModel.Post)</td>
+                        <td><p>家庭电话：</p>@Html.TextBoxFor(model => model.fillBaseInfoModel.FamilyTel)</td>
                         <td><p>其他联系方式：</p>@Html.TextBoxFor(model => model.fillBaseInfoModel.OtherTel)</td>
                     </tr>
                     <tr>
-                        <td><span>通讯编码：</span>@Html.TextBoxFor(model => model.fillBaseInfoModel.CommCode)</td>
-                        <td colspan="2">
-                            <span>通讯地址：</span>
+                        <td><p>通讯编码：</p>@Html.TextBoxFor(model => model.fillBaseInfoModel.CommCode)</td>
+                        <td colspan="2" class="input-width">
+                            <p>通讯地址：</p>
                             @Html.TextBoxFor(model => model.fillBaseInfoModel.CommAddress)
                         </td>
                     </tr>
                     <tr>
-                        <td><span>家庭邮编：</span>@Html.TextBoxFor(model => model.fillBaseInfoModel.FamilyZipCode)</td>
-                        <td colspan="2">
-                            <span>家庭详细地址(具体到门牌号农村的行政村级)：</span>
+                        <td><p>家庭邮编：</p>@Html.TextBoxFor(model => model.fillBaseInfoModel.FamilyZipCode)</td>
+                        <td colspan="2" class="input-width">
+                            <p>家庭详细地址(具体到门牌号农村的行政村级)：</p>
                             @Html.TextBoxFor(model => model.fillBaseInfoModel.FamilyLocation)
                         </td>
                     </tr>
                     <tr>
-                        <td><span>父亲姓名：</span>@Html.TextBoxFor(model => model.fillBaseInfoModel.FatherName)</td>
-                        <td colspan="2">
-                            <span>父亲工作地址：</span>
+                        <td><p>父亲姓名：</p>@Html.TextBoxFor(model => model.fillBaseInfoModel.FatherName)</td>
+                        <td colspan="2" class="input-width">
+                            <p>父亲工作地址：</p>
                             @Html.TextBoxFor(model => model.fillBaseInfoModel.FatherWorkUnit)
                         </td>
                     </tr>
                     <tr>
-                        <td><span>母亲姓名：</span>@Html.TextBoxFor(model => model.fillBaseInfoModel.MotherName)</td>
-                        <td colspan="2">
-                            <span>母亲工作地址：</span>
+                        <td><p>母亲姓名：</p>@Html.TextBoxFor(model => model.fillBaseInfoModel.MotherName)</td>
+                        <td colspan="2" class="input-width">
+                            <p>母亲工作地址：</p>
                             @Html.TextBoxFor(model => model.fillBaseInfoModel.MotherWorkUnit)
                         </td>
                     </tr>

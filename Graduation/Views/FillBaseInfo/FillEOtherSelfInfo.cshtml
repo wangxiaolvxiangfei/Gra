@@ -27,6 +27,7 @@
     <link href="css/templatemo-style.css" rel="stylesheet">
     <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="js/ly.js"></script>
+    <script src="~/Scripts/City.js"></script>
 </head>
 <body>
     <!-- Left column -->
@@ -106,7 +107,7 @@
             <div class="templatemo-content-container now-position ly-tab">
                 <span>当前位置：</span><span>毕业生登录>></span><span>本科转生求职与就业管理>></span><span><a href="StudentJobInformation.html">就业签约管理>></a></span><span>无协议书就业</span>
                 @using (@Html.BeginForm())
-                    {
+                {
                     @Html.HiddenFor(model => model.eSchoolInfo.StudentNumber)
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
@@ -142,8 +143,8 @@
                                 <td><span>家庭所在地：</span><span>@ViewBag.FL</span></td>
                             </tr>
                             <tr>
-                                <td colspan="3"><span>通信地址：</span><span>@ViewBag.ADDR</span></td>
-                                <td><span>邮政编码</span><span>@ViewBag.C</span></td>
+                                <td colspan="3" class="input-width"><p>通信地址：</p><span>@ViewBag.ADDR</span></td>
+                                <td><p>邮政编码</p><span>@ViewBag.C</span></td>
                             </tr>
                             <tr>
                                 <td colspan="4" style="text-align:center"><span><b>毕业去向</b></span></td>
@@ -159,23 +160,22 @@
                                     <a href="/FillBaseInfo/FillEOtherFlexibleInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "76灵活就业") 灵活就业</a>
                                     <a href="/FillBaseInfo/FillEOtherSchoolInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "80升学") 升学</a>
                                     <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "85出国") 出国</a>
-                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "50国家基层项目") 国家基层项目</a>
-                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "27科研助理") 科研助理</a>
-                                    <a href="/FillBaseInfo/FillEOtherAbroadInfo">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "51地方基层项目") 地方基层项目</a>
+                                    <a href="/FillBaseInfo/FillEOtherCountry">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "50国家基层项目") 国家基层项目</a>
+                                    <a href="/FillBaseInfo/FillEOtherSciene">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "27科研助理") 科研助理</a>
+                                    <a href="/FillBaseInfo/FillEOtherPlace">   @Html.RadioButtonFor(model => model.eSchoolInfo.Employment, "51地方基层项目") 地方基层项目</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2"><span>单位名称：</span>@Html.TextBoxFor(model => model.eSchoolInfo.CompanyName)</td>
-                                <td colspan="2">
+                                <td colspan="2" class="input-width"><p>单位名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.CompanyName)</td>
+                                <td colspan="2" class="input-width">
                                     <p>单位所在地：</p>
-                                    <select class="province"></select>
-                                    <select class="city"></select>
-                                    <select class="country"></select>
+                                    @Html.TextBoxFor(m => m.eSchoolInfo.ComLocation, new { id = "originPro", onkeyup = "GetCity()" })
+                                    @Html.DropDownListFor(m => m.eSchoolInfo.ComLocationCode, ViewBag.city as List<SelectListItem>, new { id = "originList" })
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="3">
-                                    <span>单位行业分类：</span>
+                                    <p>单位行业分类：</p>
                                     @Html.DropDownListFor(model => model.eSchoolInfo.ComIndustry, ViewBag.hangyefenlei as List<SelectListItem>)
                                 </td>
                             </tr>
@@ -191,11 +191,11 @@
                                 </td>
                             </tr>
                         </table>
-                        
+
                     </div>
-                    }
-                </div>
+                }
             </div>
         </div>
-    </body>
+    </div>
+</body>
 </html>

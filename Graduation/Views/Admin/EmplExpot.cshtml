@@ -122,7 +122,7 @@ else
     <div class="templatemo-content-container now-position ly-tab">
         <span>当前位置：</span><span>本科专生/研究生>></span><span>就业信息管理>></span><span>就业信息导出</span>
         <br />
-        @using (@Html.BeginForm("EmplExpot", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
+        @using (@Html.BeginForm("EmplExpot", "Admin", FormMethod.Post, new { @class = "form-horizontal", Style = "margin-top:20px" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary()

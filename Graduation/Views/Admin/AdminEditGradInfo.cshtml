@@ -7,6 +7,7 @@
 {
     ViewBag.type = "display:none";
 }
+<script src="~/Scripts/City.js"></script>
 <div class="templatemo-content col-1 light-gray-bg">
     <div class="templatemo-top-nav-container">
         <h2>求职与就业信息管理系统</h2>
@@ -16,299 +17,182 @@
     </div>
     <div class="templatemo-content-container now-position">
         <div class="panel panel-default table-responsive clear">
-            <table class="table table-striped table-bordered templatemo-user-table table-hover .houtai-table">
-                <tr>
-                    <td><span>学号：</span>@Html.TextBoxFor(model => model.upload.StudentNumber)</td>
-                    <td><span>姓名：</span>@Html.TextBoxFor(model => model.upload.Name)</td>
-                    <td>
-                        <span>性别：</span>
-                        @Html.RadioButtonFor(model => model.upload.Sex, "1")男
+            @using (@Html.BeginForm())
+            {
+                @Html.HiddenFor(model => model.baseInfo.StudentNumber)
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <table class="table table-striped table-bordered templatemo-user-table table-hover .houtai-table">
+                    <tr>
+                        <td><p>学号：</p>@Html.ValueFor(model => model.upload.StudentNumber)</td>
+                        <td><p>姓名：</p>@Html.ValueFor(model => model.upload.Name)</td>
+                        <td>
+                            <p>性别：</p>                         
+                            @Html.ValueFor(model=>model.upload.Sex)
 
-                        @Html.RadioButtonFor(model => model.upload.Sex, "2")女
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p>出生年月：</p>@Html.ValueFor(model => model.upload.BirthTime)</td>
+                        <td><p>身份证号：</p>@Html.ValueFor(model => model.upload.IDNumber)</td>
+                        <td>
+                            <p>民族：</p>
+                            @Html.ValueFor(model=>model.upload.Nation)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p>健康状况：</p>@Html.TextBoxFor(model => model.baseInfo.Health)</td>
+                        <td>
+                            <p>院、系、专业</p>
+                            <select></select>
+                            <select></select>
+                            <select></select>
+                        </td>
+                        <td><p>校区：</p></td>
+                    </tr>
+                    <tr>
+                        <td><p>所在班级：</p>@Html.ValueFor(model => model.upload.Class)</td>
+                        <td><p>所在教学班：</p>@Html.ValueFor(model => model.upload.TeachingClass)</td>
+                        <td>班主任：@Html.TextBoxFor(model => model.baseInfo.ClassTeacher)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>政治面貌：</p>
+                            @Html.DropDownListFor(model => model.baseInfo.PoliticalStatus, ViewBag.Political as List<SelectListItem>)
+                        </td>
+                        <td>
+                            <p>宿舍#宿舍号</p>
+                            @Html.DropDownListFor(model => model.baseInfo.Dormitory, ViewBag.dor as List<SelectListItem>)
+                            @Html.TextBoxFor(model => model.baseInfo.RoomNumber)
+                        </td>
+                        <td><p>宿舍电话：</p></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>档案是否转入学校：</p>
 
-                    </td>
-                </tr>
-                <tr>
-                    <td><span>出生年月：</span>@Html.TextBoxFor(model => model.upload.BirthTime)</td>
-                    <td><span>身份证号：</span>@Html.TextBoxFor(model => model.upload.IDNumber)</td>
-                    <td>
-                        <span>民族：</span>
-                        <select>
-                            <option value="">---</option>
-                            <option value="01">汉族</option>
-                            <option value="02">蒙古族</option>
-                            <option value="03">回族</option>
-                            <option value="04">藏族</option>
-                            <option value="05">维吾尔族</option>
-                            <option value="06">苗族</option>
-                            <option value="07">彝族</option>
-                            <option value="08">壮族</option>
-                            <option value="09">布依族</option>
-                            <option value="10">朝鲜族</option>
-                            <option value="11">满族</option>
-                            <option value="12">侗族</option>
-                            <option value="13">瑶族</option>
-                            <option value="14">白族</option>
-                            <option value="15">土家族</option>
-                            <option value="16">哈尼族</option>
-                            <option value="17">哈萨克族</option>
-                            <option value="18">傣族</option>
-                            <option value="19">黎族</option>
-                            <option value="20">傈僳族</option>
-                            <option value="21">佤族</option>
-                            <option value="22">畲族</option>
-                            <option value="23">高山族</option>
-                            <option value="24">拉祜族</option>
-                            <option value="25">水族</option>
-                            <option value="26">东乡族</option>
-                            <option value="27">纳西族</option>
-                            <option value="28">景颇族</option>
-                            <option value="29">柯尔克孜族</option>
-                            <option value="30">土族</option>
-                            <option value="31">达斡尔族</option>
-                            <option value="32">仫佬族</option>
-                            <option value="33">羌族</option>
-                            <option value="34">布朗族</option>
-                            <option value="35">撒拉族</option>
-                            <option value="36">毛难族</option>
-                            <option value="37">仡佬族</option>
-                            <option value="38">锡伯族</option>
-                            <option value="39">阿昌族</option>
-                            <option value="40">普米族</option>
-                            <option value="41">塔吉克族</option>
-                            <option value="42">怒族</option>
-                            <option value="43">乌孜别克族</option>
-                            <option value="44">俄罗斯族</option>
-                            <option value="45">鄂温克族</option>
-                            <option value="46">崩龙族</option>
-                            <option value="47">保安族</option>
-                            <option value="48">裕固族</option>
-                            <option value="49">京族</option>
-                            <option value="50">塔塔尔族</option>
-                            <option value="51">独龙族</option>
-                            <option value="52">鄂伦春族</option>
-                            <option value="53">赫哲族</option>
-                            <option value="54">门巴族</option>
-                            <option value="55">珞巴族</option>
-                            <option value="56">基诺族</option>
-                            <option value="97">其他</option>
-                            <option value="98">外国血统中国籍人士</option>
-                            <option value="01">汉族</option>
-                            <option value="02">蒙古族</option>
-                            <option value="03">回族</option>
-                            <option value="04">藏族</option>
-                            <option value="05">维吾尔族</option>
-                            <option value="06">苗族</option>
-                            <option value="07">彝族</option>
-                            <option value="08">壮族</option>
-                            <option value="09">布依族</option>
-                            <option value="10">朝鲜族</option>
-                            <option value="11">满族</option>
-                            <option value="12">侗族</option>
-                            <option value="13">瑶族</option>
-                            <option value="14">白族</option>
-                            <option value="15">土家族</option>
-                            <option value="16">哈尼族</option>
-                            <option value="17">哈萨克族</option>
-                            <option value="18">傣族</option>
-                            <option value="19">黎族</option>
-                            <option value="20">傈僳族</option>
-                            <option value="21">佤族</option>
-                            <option value="22">畲族</option>
-                            <option value="23">高山族</option>
-                            <option value="24">拉祜族</option>
-                            <option value="25">水族</option>
-                            <option value="26">东乡族</option>
-                            <option value="27">纳西族</option>
-                            <option value="28">景颇族</option>
-                            <option value="29">柯尔克孜族</option>
-                            <option value="30">土族</option>
-                            <option value="31">达斡尔族</option>
-                            <option value="32">仫佬族</option>
-                            <option value="33">羌族</option>
-                            <option value="34">布朗族</option>
-                            <option value="35">撒拉族</option>
-                            <option value="36">毛难族</option>
-                            <option value="37">仡佬族</option>
-                            <option value="38">锡伯族</option>
-                            <option value="39">阿昌族</option>
-                            <option value="40">普米族</option>
-                            <option value="41">塔吉克族</option>
-                            <option value="42">怒族</option>
-                            <option value="43">乌孜别克族</option>
-                            <option value="44">俄罗斯族</option>
-                            <option value="45">鄂温克族</option>
-                            <option value="46">崩龙族</option>
-                            <option value="47">保安族</option>
-                            <option value="48">裕固族</option>
-                            <option value="49">京族</option>
-                            <option value="50">塔塔尔族</option>
-                            <option value="51">独龙族</option>
-                            <option value="52">鄂伦春族</option>
-                            <option value="53">赫哲族</option>
-                            <option value="54">门巴族</option>
-                            <option value="55">珞巴族</option>
-                            <option value="56">基诺族</option>
-                            <option value="97">其他</option>
-                            <option value="98">外国血统中国籍人士</option>
+                            @Html.RadioButtonFor(model => model.baseInfo.IsArchivesToSch, "1")是
+                            @Html.RadioButtonFor(model => model.baseInfo.IsArchivesToSch, "0")否
+                        </td>
+                        <td><p>入学前所在地派出所：</p>@Html.TextBoxFor(model => model.baseInfo.PoliceBefore)</td>
+                        <td>
+                            <p>婚否：</p>
 
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><p>健康状况：</p>@Html.TextBoxFor(model => model.baseInfo.Health)</td>
-                    <td>
-                        <p>院、系、专业</p>
-                        <select></select>
-                        <select></select>
-                        <select></select>
-                    </td>
-                    <td><p>校区：</p></td>
-                </tr>
-                <tr>
-                    <td><span>所在班级：</span>@Html.TextBoxFor(model => model.upload.Class)</td>
-                    <td><span>所在教学班：</span>@Html.TextBoxFor(model => model.upload.TeachingClass)</td>
-                    <td>班主任：@Html.TextBoxFor(model => model.baseInfo.ClassTeacher)</td>
-                </tr>
-                <tr>
-                    <td>
-                        <span>政治面貌：</span>
-                        @Html.DropDownListFor(model => model.baseInfo.PoliticalStatus, ViewBag.Political as List<SelectListItem>)
-                    </td>
-                    <td>
-                        <span>宿舍#宿舍号</span>
-                        @Html.DropDownListFor(model => model.baseInfo.Dormitory, ViewBag.dor as List<SelectListItem>)
-                        @Html.TextBoxFor(model => model.baseInfo.RoomNumber)
-                    </td>
-                    <td><span>宿舍电话：</span></td>
-                </tr>
-                <tr>
-                    <td>
-                        <span>档案是否转入学校：</span>
+                            @Html.RadioButtonFor(model => model.baseInfo.IsMargery, "1")是
+                            @Html.RadioButtonFor(model => model.baseInfo.IsMargery, "0")否
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p>手机号：</p>@Html.TextBoxFor(model => model.baseInfo.TelNumber)</td>
+                        <td><p>Email：</p>@Html.TextBoxFor(model => model.baseInfo.Email)</td>
+                        <td><p>qq号：</p>@Html.TextBoxFor(model => model.baseInfo.QQ)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>独生子女标识：</p>
 
-                        @Html.RadioButtonFor(model => model.baseInfo.IsArchivesToSch, "1")是
-                        @Html.RadioButtonFor(model => model.baseInfo.IsArchivesToSch, "0")否
-                    </td>
-                    <td><span>入学前所在地派出所：</span>@Html.TextBoxFor(model => model.baseInfo.PoliceBefore)</td>
-                    <td>
-                        <span>婚否：</span>
+                            @Html.RadioButtonFor(model => model.baseInfo.IsOnlyChild, "1")是
+                            @Html.RadioButtonFor(model => model.baseInfo.IsOnlyChild, "0")否
 
-                        @Html.RadioButtonFor(model => model.baseInfo.IsMargery, "1")是
-                        @Html.RadioButtonFor(model => model.baseInfo.IsMargery, "0")否
-                    </td>
-                </tr>
-                <tr>
-                    <td><span>手机号：</span>@Html.TextBoxFor(model => model.baseInfo.TelNumber)</td>
-                    <td><span>Email：</span>@Html.TextBoxFor(model => model.baseInfo.Email)</td>
-                    <td><span>qq号：</span>@Html.TextBoxFor(model => model.baseInfo.QQ)</td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>独生子女标识：</p>
+                        </td>
+                        <td>
+                            <p>困难升级别：</p>
 
-                        @Html.RadioButtonFor(model => model.baseInfo.IsOnlyChild, "1")是
-                        @Html.RadioButtonFor(model => model.baseInfo.IsOnlyChild, "0")否
-
-                    </td>
-                    <td>
-                        <p>困难升级别：</p>
-
-                        @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "0")非困难生
-                        @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "1")就业困难
-                        @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "2")家庭困难
-                        @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "3")残疾
-                    </td>
-                    <td>
-                        <p>是否曾转专业：（若曾转系，请填写转系之前的专业）</p>
-                        @Html.RadioButtonFor(model => model.baseInfo.IsChangeMaj, "1")是
-                        @Html.RadioButtonFor(model => model.baseInfo.IsChangeMaj, "0")否
-                        <span>(若曾转系请填写转系之前的专业)</span>
-                        @Html.TextBoxFor(model => model.baseInfo.BeforeMajor, new { placeholder = "转专业请填写之前专业" })
-                </tr>
-                <tr>
-                    <td>
-                        <p>生源地是否发生过变动：</p>
-                        @Html.RadioButtonFor(model => model.baseInfo.IsChangeOrigin, "1")是
-                        @Html.RadioButtonFor(model => model.baseInfo.IsChangeOrigin, "0")否
-                    </td>
-                    <td>
-                        <p>家庭困难级别：</p>
-                        @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "0")不贫困
-                        @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "1")特困
-                        @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "2")贫困
-                        @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "3")一般贫困
-                    </td>
-                    <td>
-                        <p>家庭户口所在地类型：</p>
-                        @Html.DropDownListFor(model => model.baseInfo.ResLocationType, ViewBag.ftype as List<SelectListItem>)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>生源所在地：</p>
-                        <select></select>
-                        <select></select>
-                        <select></select>
-                    </td>
-                    <td>
-                        <p>家庭户口所在地：</p>
-                        <select></select>
-                        <select></select>
-                        <select></select>
-                    </td>
-                    <td>
-                        <p>家庭户口类型：</p>
-                        @Html.RadioButtonFor(model => model.baseInfo.ResType, "1") 城市户口
-                        @Html.RadioButtonFor(model => model.baseInfo.ResType, "2") 农村户口
-                    </td>
-                </tr>
-                <tr>
-                    <td><span>现任职务：</span>@Html.TextBoxFor(model => model.baseInfo.Post)</td>
-                    <td><span>家庭电话：</span>@Html.TextBoxFor(model => model.baseInfo.FamilyTel)</td>
-                    <td><span>其他联系方式：</span>@Html.TextBoxFor(model => model.baseInfo.OtherTel)</td>
-                </tr>
-                <tr>
-                    <td><span>通讯编码：</span>@Html.TextBoxFor(model => model.baseInfo.CommCode)</td>
-                    <td colspan="2"><span>通讯地址：</span>@Html.TextBoxFor(model => model.baseInfo.CommAddress)</td>
-                </tr>
-                <tr>
-                    <td><span>家庭邮编：</span>@Html.TextBoxFor(model => model.baseInfo.FamilyZipCode)</td>
-                    <td colspan="2"><span>家庭详细地址：</span>@Html.TextBoxFor(model => model.baseInfo.FamilyLocation)</td>
-                </tr>
-                <tr>
-                    <td><span>父亲姓名：</span>@Html.TextBoxFor(model => model.baseInfo.FatherName)</td>
-                    <td colspan="2"><span>父亲工作单位：</span>@Html.TextBoxFor(model => model.baseInfo.FatherWorkUnit)</td>
-                </tr>
-                <tr>
-                    <td><span>母亲姓名：</span>@Html.TextBoxFor(model => model.baseInfo.MotherName)</td>
-                    <td colspan="2"><span>母亲工作单位：</span>@Html.TextBoxFor(model => model.baseInfo.MotherWorkUnit)</td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        <p>基本信息备注：</p>
-                        @Html.TextAreaFor(model => model.baseInfo.BaseNote)
-                    </td>
-                </tr>
-                <tr>
-                    <td>审核是否通过</td>
-                    <td colspan="2">
-                        @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "是")是
-                        @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "否")否
-                    </td>
-                </tr>
-                <tr>                   
-                    <td>是否锁定</td>
-                    <td colspan="2">
-                        @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "是")是
-                        @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "否")否
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" align="center">
-                        <button class="btn">提交或编辑</button>
-                    </td>
-                </tr>
-            </table>
+                            @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "0")非困难生
+                            @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "1")就业困难
+                            @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "2")家庭困难
+                            @Html.RadioButtonFor(model => model.baseInfo.DiffLevelCode, "3")残疾
+                        </td>
+                        <td>
+                            <p>是否曾转专业：（若曾转系，请填写转系之前的专业）</p>
+                            @Html.RadioButtonFor(model => model.baseInfo.IsChangeMaj, "1")是
+                            @Html.RadioButtonFor(model => model.baseInfo.IsChangeMaj, "0")否
+                            <span>(若曾转系请填写转系之前的专业)</span>
+                            @Html.TextBoxFor(model => model.baseInfo.BeforeMajor, new { placeholder = "转专业请填写之前专业" })
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>生源地是否发生过变动：</p>
+                            @Html.RadioButtonFor(model => model.baseInfo.IsChangeOrigin, "1")是
+                            @Html.RadioButtonFor(model => model.baseInfo.IsChangeOrigin, "0")否
+                        </td>
+                        <td>
+                            <p>家庭困难级别：</p>
+                            @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "0")不贫困
+                            @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "1")特困
+                            @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "2")贫困
+                            @Html.RadioButtonFor(model => model.baseInfo.FDiffLevel, "3")一般贫困
+                        </td>
+                        <td>
+                            <p>家庭户口所在地类型：</p>
+                            @Html.DropDownListFor(model => model.baseInfo.ResLocationType, ViewBag.ftype as List<SelectListItem>)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>生源所在地：</p>
+                            @Html.TextBoxFor(m => m.baseInfo.OriginCity, new { id = "originPro", onkeyup = "GetCity()" })
+                            @Html.DropDownListFor(m => m.baseInfo.OriginCode, ViewBag.city as List<SelectListItem>, new { id = "originList" })
+                        </td>
+                        <td>
+                            <p>家庭户口所在地：</p>
+                            @Html.TextBoxFor(m => m.baseInfo.ResLocation, new { id = "familyPro", onkeyup = "GetCityFamily()" })
+                            @Html.DropDownListFor(m => m.baseInfo.ResLocationCode, ViewBag.familyCityList as List<SelectListItem>, new { id = "familyList" })
+                        </td>
+                        <td>
+                            <p>家庭户口类型：</p>
+                            @Html.RadioButtonFor(model => model.baseInfo.ResType, "1") 城市户口
+                            @Html.RadioButtonFor(model => model.baseInfo.ResType, "2") 农村户口
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p>现任职务：</p>@Html.TextBoxFor(model => model.baseInfo.Post)</td>
+                        <td><p>家庭电话：</p>@Html.TextBoxFor(model => model.baseInfo.FamilyTel)</td>
+                        <td><p>其他联系方式：</p>@Html.TextBoxFor(model => model.baseInfo.OtherTel)</td>
+                    </tr>
+                    <tr>
+                        <td><p>通讯编码：</p>@Html.TextBoxFor(model => model.baseInfo.CommCode)</td>
+                        <td colspan="2" class="input-width"><p>通讯地址：</p>@Html.TextBoxFor(model => model.baseInfo.CommAddress)</td>
+                    </tr>
+                    <tr>
+                        <td><p>家庭邮编：</p>@Html.TextBoxFor(model => model.baseInfo.FamilyZipCode)</td>
+                        <td colspan="2" class="input-width"><p>家庭详细地址：</p>@Html.TextBoxFor(model => model.baseInfo.FamilyLocation)</td>
+                    </tr>
+                    <tr>
+                        <td><p>父亲姓名：</p>@Html.TextBoxFor(model => model.baseInfo.FatherName)</td>
+                        <td colspan="2" class="input-width"><p>父亲工作单位：</p>@Html.TextBoxFor(model => model.baseInfo.FatherWorkUnit)</td>
+                    </tr>
+                    <tr>
+                        <td><p>母亲姓名：</p>@Html.TextBoxFor(model => model.baseInfo.MotherName)</td>
+                        <td colspan="2" class="input-width"><p>母亲工作单位：</p>@Html.TextBoxFor(model => model.baseInfo.MotherWorkUnit)</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <p>基本信息备注：</p>
+                            @Html.TextAreaFor(model => model.baseInfo.BaseNote)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>审核是否通过</td>
+                        <td colspan="2">
+                            @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "是")是
+                            @Html.RadioButtonFor(model => model.baseInfo.IsBaseChecked, "否")否
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>是否锁定</td>
+                        <td colspan="2">
+                            @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "锁定")是
+                            @Html.RadioButtonFor(model => model.baseInfo.IsClocked, "可编辑")否
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <input type="submit" value="提交或修改" class="btn btn-info" />
+                        </td>
+                    </tr>
+                </table>
+            }
         </div>
         <div>
         </div>

@@ -78,6 +78,11 @@ namespace Graduation.Models
         public string ComLocation { get; set; }
 
         /// <summary>
+        /// 单位所在地代码
+        /// </summary>
+        public string ComLocationCode { get; set; }
+
+        /// <summary>
         /// 单位所在地省
         /// </summary>
         public string ComProvince { get; set; }
@@ -91,6 +96,7 @@ namespace Graduation.Models
         /// 单位所在地县
         /// </summary>
         public string ComCounty { get; set; }
+
 
         /// <summary>
         /// 单位性质

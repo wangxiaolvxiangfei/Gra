@@ -23,8 +23,10 @@
             @foreach (var item in Model)
             {
                 <p> @Html.ActionLink(@item.Title, "AnnounceDetails", new { AnnounceId = @item.AnnounceId }); </p>
+                  @Html.ActionLink("删除", "Announce", new { id = item.AnnounceId ,type="1"})
             }
         </div>
+      
         <footer class="text-right"></footer>
     </div>
 </div>
