@@ -1,4 +1,4 @@
-﻿@model  Graduation.Models.AdminGradViewModel
+﻿@model  Graduation.Models.EmplExamListViewModel
 
 @using Graduation.Models;
 
@@ -122,20 +122,6 @@ else
     <div class="templatemo-content-container now-position ly-tab">
         <span>当前位置：</span><span>本科专生/研究生>></span><span>就业信息管理>></span><span>就业信息导出</span>
         <br />
-        <!-- <div class="index1"> -->
-        <h1 class="ly-title tab-h1 tab-active"><a href="employmentInformationAudit.html">本专科生</a></h1>
-        <!-- <div class="borderLeft"></div>
-        <div class="borderRight"></div>
-        <div class="borderTop"></div>
-        <div class="borderBottom"></div> -->
-        <!-- </div> -->
-        <!-- <div class="index2"> -->
-        <h1 class="ly-title tab-h1 tab-notactive"><a href="employmentInformationAudit2.html">研究生</a></h1>
-        <!--  <div class="borderLeft"></div>
-         <div class="borderRight"></div>
-         <div class="borderTop"></div>
-         <div class="borderBottom"></div> -->
-        <!--    </div> -->
         @using (@Html.BeginForm("EmplExpot", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
         {
             @Html.AntiForgeryToken()
@@ -152,6 +138,18 @@ else
                 <label for="inputPassword3" class="col-sm-1 control-label">学号</label>
                 <div class="col-sm-3">
                     @Html.TextBoxFor(model => model.upload.StudentNumber, new { placeholder = "学号", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-1 control-label">毕业年份</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(model => model.upload.GraduationTime, new { placeholder = "毕业年份", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-1 control-label">审核时间</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(model => model.upload.eSchoolInfoModel.CheckTime, new { placeholder = "审核时间", @class = "form-control" })
                 </div>
             </div>
 
@@ -247,7 +245,7 @@ else
                             <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ConTel)</td>
                             <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.ResChangedAdd)</td>
                             <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.FileChangedAdd)</td>
-                            <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.FileZipCode)</td>v
+                            <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.FileZipCode)</td>
                             <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.IsMajorFit)</td>
                             <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.UPSchool)</td>
                             <td>@Html.ValueFor(modelItem => item.eSchoolInfoModel.UpMajor)</td>

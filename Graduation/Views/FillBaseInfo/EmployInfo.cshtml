@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@model Graduation.Models.ESchoolInfoModel
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -80,7 +83,7 @@
             <div class="templatemo-top-nav-container">
                 <h2>求职与就业信息管理系统</h2>
                 <div class="right">
-                    <span>用户信息：</span><span>学号：</span><span>&nbsp;&nbsp;</span><span class="admin">ViewBag.number</span>
+                    <span>用户信息：</span><span>学号：</span><span>&nbsp;&nbsp;</span><span class="admin">@ViewBag.number</span>
                 </div>
             </div>
             <div class="templatemo-content-container now-position ly-tab">
@@ -88,14 +91,64 @@
                 <div class="content">
                     <h4>请选择入口：</h4>
                     <ul>
-                        <li><a href="/FillBaseInfo/FillESchoolInfo">签学校三方协议就业</a></li>
-                        <li><a href="/FillBaseInfo/FillESchoolInfo">签合同就业</a></li>                      
-                       <li><a href="/FillBaseInfo/FillEOtherArmyInfo">其他录用形式就业</a></li>
-                        <li><a href="/FillBaseInfo/FillNotJobInfo">暂未就业</a></li>
+                        <li><a href="/FillBaseInfo/FillESchoolInfo">@Html.RadioButtonFor(model => model.Employment, "10签学校三方协议就业", new { @class="eschool"})签学校三方协议就业</a></li>
+                        <li><a href="/FillBaseInfo/FillESchoolContractInfo">@Html.RadioButtonFor(model => model.Employment, "11签合同就业", new { @class="eschoolContract"})签合同就业</a></li>
+                        <li>
+                            <label>
+                                @Html.RadioButtonFor(model => model.Employment, "12其他录用形式就业", new { @class = "other" })其他录用形式就业
+                            </label>
+                        </li>
+                        <li><a href="/FillBaseInfo/FillNotJobInfo">@Html.RadioButtonFor(model => model.Employment, "70暂未就业", new { @class="notjob"})暂未就业 </a></li>
                     </ul>
                 </div>
+                @Html.HiddenFor(model => model.Employment, new { @class="xianshi"})
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $(function () {
+            if ($(".xianshi").val() == "10签学校三方协议就业") {
+                $(".eschool").attr("checked", true)
+            }
+           else if ($(".xianshi").val() == "11签合同就业") {
+                $(".eschoolContract").attr("checked", true)
+            }
+           else if ($(".xianshi").val() == "70暂未就业") {
+               $(".notjob").attr("checked", true)
+           }
+           else { $(".other").attr("checked", true) }
+            $(".other").click(function () {
+                if ($(".xianshi").val() == "46应征入伍")
+                {
+                    window.location.href = "/FillBaseInfo/FillEOtherArmyInfo";
+                }
+               else if ($(".xianshi").val() == "75自主创业")
+                {
+                    window.location.href = "/FillBaseInfo/FillEOtherSelfInfo";
+                }
+               else if ($(".xianshi").val() == "76灵活就业") {
+                    window.location.href = "/FillBaseInfo/FillEOtherFlexibleInfo";
+                }
+               else if ($(".xianshi").val() == "80升学") {
+                    window.location.href = "/FillBaseInfo/FillEOtherSchoolInfo";
+                }
+               else if ($(".xianshi").val() == "85出国") {
+                    window.location.href = "/FillBaseInfo/FillEOtherAbroadInfo";
+                }
+               else if ($(".xianshi").val() == "50国家基层项目") {
+                    window.location.href = "/FillBaseInfo/FillEOtherAbroadInfo";
+                }
+               else if ($(".xianshi").val() == "27科研助理") {
+                    window.location.href = "/FillBaseInfo/FillEOtherAbroadInfo";
+                }
+               else if ($(".xianshi").val() == "51地方基层项目") {
+                   window.location.href = "/FillBaseInfo/FillEOtherAbroadInfo";
+               }
+               else { window.location.href = "/FillBaseInfo/FillEOtherArmyInfo"; }
+            })
+        })
+
+    </script>
 </body>
+
 </html>
