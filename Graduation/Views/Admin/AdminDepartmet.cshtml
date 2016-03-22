@@ -1,4 +1,11 @@
 ﻿@model Graduation.Models.DepartmentViewModel
+@{
+    Layout = "~/Views/Shared/Guide.cshtml";
+}
+@if (ViewBag.type == "1")
+{
+    ViewBag.type = "display:none";
+}
 <script type="text/javascript">
     $(function () {
         GetTbale();

@@ -59,7 +59,6 @@ namespace Graduation.Controllers
         }
         #endregion
 
-
         #region 重置密码
         //
         // GET: /Admin/
@@ -3798,6 +3797,33 @@ namespace Graduation.Controllers
                     db.SaveChanges();
                 }
             }
+            else if (tijiao == "Ychongzhi")
+            {
+                var majorList = db.MajorTb.Where(m => m.Edu == "研究生");
+                foreach (var item in majorList)
+                {
+                    var number = db.numberTb.Where(m => m.belongId == item.Id).FirstOrDefault();
+                    var temp = number;
+                    temp.signNumber = 0;
+                    temp.signP = 0;
+                    temp.baoyan = 0;
+                    temp.baoyanP = 0;
+                    temp.signAbaoyan = 0;
+                    temp.signAbaoyanP = 0;
+                    temp.kaoyan = 0;
+                    temp.kanyanP = 0;
+                    temp.yixiang = 0;
+                    temp.yixiangP = 0;
+                    temp.qita = 0;
+                    temp.qitaP = 0;
+                    temp.zonghe = 0;
+                    temp.zongheP = 0;
+                    temp.shengyu = 0;
+                    temp.shengyuP = 0;
+                    db.Entry(number).CurrentValues.SetValues(temp);
+                    db.SaveChanges();
+                }
+            }
             #endregion
             return RedirectToAction("jiuyetongji");
         }
@@ -4490,6 +4516,11 @@ namespace Graduation.Controllers
                         jiuyeTemp.abroadNumber = chuguo.Count();//出国人数
                         jiuyeTemp.abroadP = (double)jiuyeTemp.abroadNumber / (double)jiuyeTemp.totalNumber;
                         jiuyeTemp.abroadP = Math.Round(jiuyeTemp.abroadP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "80").ToList();
+                        jiuyeTemp.upschoolNumber = chuguo.Count();//升学人数
+                        jiuyeTemp.upschoolP = (double)jiuyeTemp.upschoolNumber / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.upschoolP = Math.Round(jiuyeTemp.upschoolP, 4) * 100;
 
                         chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "75").ToList();
                         jiuyeTemp.zizhuNumber = chuguo.Count();//自主创业人数
