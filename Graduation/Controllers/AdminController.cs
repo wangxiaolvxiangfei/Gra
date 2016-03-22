@@ -626,7 +626,7 @@ namespace Graduation.Controllers
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public ActionResult Sign(int type = 0, int id = 0)
+        public ActionResult Sign(int type = 0,int id=0)
         {
             if (Session["Id"] != null)
             {
@@ -640,20 +640,19 @@ namespace Graduation.Controllers
                     ViewBag.style = "1";
                     var userDep = db.DepartmentTb.Find(user.DepartId);
                     upload = db.UploadTb.Where(m => m.Department == user.DepartName);
-
+                   
                 }
                 else if (Session["Type"].ToString() == "2")//管理员登陆
                 {
                     upload = db.UploadTb;
-                    ViewBag.style = "2";
+                    ViewBag.style = "2";                
                 }
 
                 #region 下载excel表格
                 if (type == 1)
                 {
                     SignListViewModel sl = (SignListViewModel)Session["table"];
-                    //string[] excelHead = { "学号", "姓名", "学历", "院", "系", "班级", "单位名称", "隶属部门", "隶属部门代码", "单位性质", "单位性质代码", "单位地址", "单位联系人", "单位电话", "个人联系方式", "签约方式", "协议书编号", "所属集团或系统", "所属集团代码", "登记日期" };
-                    string[] excelHead = { "xh", "xm", "xl", "szxy", "szyx", "bj", "dwmc", "dwlsbm", "dwlsbmdm", "dwxz", "dwxzdm", "dwdz", "dwlxr", "lxrdh", "mobilephon", "签约方式", "xysbh", "dwzzjgdm", "所属集团代码", "登记日期" };
+                    string[] excelHead = { "学号", "姓名", "学历", "院", "系", "班级", "登记日期", "单位名称", "隶属部门", "隶属部门代码", "单位性质", "单位性质代码", "单位地址", "单位联系人", "单位电话", "个人联系方式", "签约方式", "协议书编号", "所属集团或系统" };
                     var workbook = new HSSFWorkbook();
                     //表格显示的名字
                     var sheet = workbook.CreateSheet("签约登记");
@@ -666,31 +665,30 @@ namespace Graduation.Controllers
                     }
                     int a = 1;
                     //遍历表数据
-                    foreach (var item in sl.uploadPagedList)
+                    foreach (var item in sl.SignList)
                     {
                         var row = sheet.CreateRow(a);
-                        row.CreateCell(0).SetCellValue(item.StudentNumber);
-                        row.CreateCell(1).SetCellValue(item.Name);
-                        row.CreateCell(2).SetCellValue(item.Education);
-                        row.CreateCell(3).SetCellValue(item.Academy);
-                        row.CreateCell(4).SetCellValue(item.Department);
-                        row.CreateCell(5).SetCellValue(item.Class);
-                        if (item.signInfoModel != null)
+                        row.CreateCell(0).SetCellValue(item.upload.StudentNumber);
+                        row.CreateCell(1).SetCellValue(item.upload.Name);
+                        row.CreateCell(2).SetCellValue(item.upload.Education);
+                        row.CreateCell(3).SetCellValue(item.upload.Academy);
+                        row.CreateCell(4).SetCellValue(item.upload.Department);
+                        row.CreateCell(5).SetCellValue(item.upload.Class);
+                        if (item.signInfo != null)
                         {
-                            row.CreateCell(6).SetCellValue(item.signInfoModel.CompanyName);
-                            row.CreateCell(7).SetCellValue(item.signInfoModel.ComBelongDep);
-                            row.CreateCell(8).SetCellValue(item.signInfoModel.ComBelongDepCode);
-                            row.CreateCell(9).SetCellValue(item.signInfoModel.ComType);
-                            row.CreateCell(10).SetCellValue(item.signInfoModel.ComTypeCode);
-                            row.CreateCell(11).SetCellValue(item.signInfoModel.CompanyAddress);
-                            row.CreateCell(12).SetCellValue(item.signInfoModel.CompanyConn);
-                            row.CreateCell(13).SetCellValue(item.signInfoModel.CompanyTel);
-                            row.CreateCell(14).SetCellValue(item.signInfoModel.PerTelType);
-                            row.CreateCell(15).SetCellValue(item.signInfoModel.SignType);
-                            row.CreateCell(16).SetCellValue(item.signInfoModel.AgreementID);
-                            row.CreateCell(17).SetCellValue(item.signInfoModel.ComBelongDep);
-                            row.CreateCell(18).SetCellValue(item.signInfoModel.ComBelongDepCode);
-                            row.CreateCell(19).SetCellValue(item.signInfoModel.SignTime);
+                            row.CreateCell(6).SetCellValue(item.signInfo.CompanyName);
+                            row.CreateCell(7).SetCellValue(item.signInfo.ComBelongDep);
+                            row.CreateCell(8).SetCellValue(item.signInfo.ComBelongDepCode);
+                            row.CreateCell(9).SetCellValue(item.signInfo.ComType);
+                            row.CreateCell(10).SetCellValue(item.signInfo.ComTypeCode);
+                            row.CreateCell(11).SetCellValue(item.signInfo.CompanyAddress);
+                            row.CreateCell(12).SetCellValue(item.signInfo.CompanyConn);
+                            row.CreateCell(13).SetCellValue(item.signInfo.CompanyTel);
+                            row.CreateCell(14).SetCellValue(item.signInfo.PerTelType);
+                            row.CreateCell(15).SetCellValue(item.signInfo.SignType);
+                            row.CreateCell(16).SetCellValue(item.signInfo.AgreementID);
+                            row.CreateCell(17).SetCellValue(item.signInfo.ComBelongDep);
+                            row.CreateCell(18).SetCellValue(item.signInfo.ComBelongDepCode);
                         }
                         a++;
                     }
@@ -731,7 +729,7 @@ namespace Graduation.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Sign(SignListViewModel sl, int id = 0)
+        public ActionResult Sign(SignListViewModel sl,int id=0)
         {
             var UserId = Session["Id"];//用户Id
             var user = db.UserTb.Find(UserId);//查询出该用户
@@ -832,7 +830,7 @@ namespace Graduation.Controllers
                 List<SelectListItem> belongDep = new List<SelectListItem> { };
                 foreach (var item in belong)
                 {
-                    var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode};
+                    var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
                     belongDep.Add(belongDepList);
                 }
                 ViewBag.belong = belongDep;
@@ -844,13 +842,13 @@ namespace Graduation.Controllers
                     signInfo = db.SingInfoTb.Find(studentNumber),
                     upload = db.UploadTb.Find(studentNumber)
                 };
-                student.signInfo.ComType = student.signInfo.ComTypeCode + student.signInfo.ComType;
                 if (student.signInfo == null)
                 {
                     student.signInfo = new SignInfoModel();
                     student.signInfo.StudentNumber = studentNumber.ToString();
                 }
-             
+                student.signInfo.ComType = student.signInfo.ComTypeCode + student.signInfo.ComType;
+                student.signInfo.ComBelongDep = student.signInfo.ComBelongDep + student.signInfo.ComBelongDepCode;
                 return View(student);
             }
             else
@@ -867,9 +865,10 @@ namespace Graduation.Controllers
                 string comType = students.signInfo.ComType;
                 students.signInfo.ComType = comType.Substring(2);
                 students.signInfo.ComTypeCode = comType.Substring(0, 2);
-            
-                var belongDep = db.belongDepTb.Where(m => m.ComBelongDepCode == students.signInfo.ComBelongDepCode).FirstOrDefault();
-                students.signInfo.ComBelongDep = belongDep.ComBelongDep;
+
+                string belongDep = students.signInfo.ComBelongDep;
+                students.signInfo.ComBelongDep = belongDep.Substring(3);
+                students.signInfo.ComBelongDepCode = belongDep.Substring(0, 3);
                 //如果基本信息表中已经有基本，则为更新
                 if (db.SingInfoTb.Find(students.signInfo.StudentNumber) != null)
                 {
@@ -890,7 +889,7 @@ namespace Graduation.Controllers
 
         #region 毕业生列表
 
-        public ActionResult AdminGradList(string Idd = null, int type = 0, int id = 0)
+        public ActionResult AdminGradList(string Idd = null, int type = 0,int id=0)
         {
             if (Session["Id"] != null)
             {
@@ -984,8 +983,7 @@ namespace Graduation.Controllers
                 if (type == 3)
                 {
                     AdminGradViewModel s1 = (AdminGradViewModel)Session["table"];
-                    string[] excelHead = { "xh", "xm", "xb", "xbdm", "mz", "mzdm", "csrq", "sfzh", "原考生号", "ksh", "sfslbdm", "学籍变动代码", "yxmc", "yxdm", "院校隶属部门代码", "yxszsdm", "szxy", "szyx", "bj", "jxb", "专业名称", "zy", "zyfx", "zzmm", "zzmmdm", "健康状况", "是否曾转专业", "转系前专业", "宿舍楼号", "宿舍号", "bzr", "syszdgkkq", "生源所在地级市", "生源所在地级市的区或县级市或县", "syszd", "syszddm", "基本信息是否审核", "基本信息是否锁定", "就业信息是否审核", "就业信息是否锁定", "jthkszd", "家庭户口所在地代码", "jthklx", "dsznbz", "knslbdm", "jtknjb", "dasfzrxx", "rxqhkszdpcs", "fqxm", "mqxm", "mqgzdw", "fqgzdw", "jtdz", "jtyb", "jtdh", "mobilephon", "qq", "Email", "xl", "xldm", "xz", "pyfs", "pyfsdm", "dxhwpdw", "入学年份", "rxsj", "bysj", "在校任职情况代码", "综合排名", "排名方式", "英语通过级别", "四级成绩", "六级成绩", "计算机级别", "获奖1", "获奖2", "获奖3", "在校期间其他荣誉及奖励", "求职备注", "xysbh", "dwmc", "dwzzjgdm", "单位上级隶属部门", "dwhy", "工作职务", "dwmc", "dwxz", "dwlxr", "dwyb", "dwdz", "lxrzw", "lxrdh", "hkqzdz", "dazjdwdz", "dwyb", "是否专业对口", "升学院校", "升学专业", "出国国家", "zzjgdm", "byqxdm" };
-                   // string[] excelHead = { "学号", "姓名", "性别", "性别代码", "民族", "民族代码", "出生日期", "身份证号", "原考生号", "考生号", "师范生类别代码", "学籍变动代码", "院校名称", "院校代码", "院校隶属部门代码", "院校所在地代码", "学院", "系", "班级", "教学班", "专业名称", "专业代码", "专业方向", "政治面貌", "政治面貌代码", "健康状况", "是否曾转专业", "转系前专业", "宿舍楼号", "宿舍号", "班主任", "生源所在地省", "生源所在地级市", "生源所在地级市的区或县级市或县", "生源所在地", "生源所在地代码", "基本信息是否审核", "基本信息是否锁定", "就业信息是否审核", "就业信息是否锁定", "家庭户口所在地", "家庭户口所在地代码", "家庭户口类型", "独生子女标志", "困难生类别代码", "家庭困难级别", "档案是否转入学校", "入学前户口所在地派出所", "父亲姓名", "母亲姓名", "父亲工作单位", "母亲工作单位", "家庭详细通信住址", "家庭所在地邮编", "家庭电话", "个人手机", "QQ号码", "Email", "学历", "学历代码", "学制", "培养方式", "培养方式代码", "定向或委培单位", "入学年份", "入学时间", "毕业时间", "在校任职情况代码", "综合排名", "排名方式", "英语通过级别", "四级成绩", "六级成绩", "计算机级别", "获奖1", "获奖2", "获奖3", "在校期间其他荣誉及奖励", "求职备注", "协议书编号", "单位名称", "单位所属集团或系统", "单位上级隶属部门", "单位行业", "工作职务", "开具单位名称", "单位性质", "联系人", "联系人邮编", "联系人通信地址", "联系人职务", "联系人电话", "户口迁移地址", "档案转寄详细地址", "邮政编码", "是否专业对口", "升学院校", "升学专业", "出国国家", "单位组织机构代码", "毕业去向" };
+                    string[] excelHead = { "学号", "姓名", "性别", "性别代码", "民族", "民族代码", "出生日期", "身份证号", "原考生号", "考生号", "师范生类别代码", "学籍变动代码", "院校名称", "院校代码", "院校隶属部门代码", "院校所在地代码", "学院", "系", "班级", "教学班", "专业名称", "专业代码", "专业方向", "政治面貌", "政治面貌代码", "健康状况", "是否曾转专业", "转系前专业", "宿舍楼号", "宿舍号", "班主任", "生源所在地省", "生源所在地级市", "生源所在地级市的区或县级市或县", "生源所在地", "生源所在地代码", "基本信息是否审核", "基本信息状态", "就业信息是否审核", "就业信息状态", "家庭户口所在地", "家庭户口所在地代码", "家庭户口类型", "独生子女标志", "困难生类别代码", "家庭困难级别", "档案是否转入学校", "入学前户口所在地派出所", "父亲姓名", "母亲姓名", "父亲工作单位", "母亲工作单位", "家庭详细通信住址", "家庭所在地邮编", "家庭电话", "个人手机", "QQ号码", "Email", "学历", "学历代码", "学制", "培养方式", "培养方式代码", "定向或委培单位", "入学年份", "入学时间", "毕业时间", "在校任职情况代码", "综合排名", "排名方式", "外语语种", "英语通过级别", "四级成绩", "六级成绩", "计算机级别", "获奖1", "获奖2", "获奖3", "在校期间其他荣誉及奖励", "求职备注", "毕业去向", "协议书编号", "单位名称", "单位所属集团或系统", "单位组织机构代码", "单位上级隶属部门", "单位行业", "工作职务", "开具单位名称", "单位性质", "联系人", "联系人邮编", "联系人通信地址", "联系人职务", "联系人电话", "户口迁移地址", "档案转寄详细地址", "邮政编码", "是否专业对口", "升学院校", "升学专业", "出国国家" };
                     var workhood = new HSSFWorkbook();
                     var sheet = workhood.CreateSheet("基本信息表");
                     var col = sheet.CreateRow(0);
@@ -998,10 +996,6 @@ namespace Graduation.Controllers
                     {
                         if (item.fillBaseInfoModel == null)
                             item.fillBaseInfoModel = new FillBaseInfoModel();
-                        if (item.applInfoModel == null)
-                            item.applInfoModel = new ApplInfoModel();
-                        if (item.eSchoolInfoModel == null)
-                            item.eSchoolInfoModel = new ESchoolInfoModel();
                         var row = sheet.CreateRow(a);
                         row.CreateCell(0).SetCellValue(item.StudentNumber);
                         row.CreateCell(1).SetCellValue(item.Name);
@@ -1040,9 +1034,9 @@ namespace Graduation.Controllers
                         row.CreateCell(34).SetCellValue(item.fillBaseInfoModel.Origin);
                         row.CreateCell(35).SetCellValue(item.fillBaseInfoModel.OriginCode);
                         row.CreateCell(36).SetCellValue(item.fillBaseInfoModel.IsBaseChecked);
-                         row.CreateCell(37).SetCellValue(item.fillBaseInfoModel.IsClocked);
-                         row.CreateCell(38).SetCellValue(item.eSchoolInfoModel.IsChecked);
-                         row.CreateCell(39).SetCellValue(item.eSchoolInfoModel.IsClock);
+                        row.CreateCell(37).SetCellValue(item.fillBaseInfoModel.IsClocked);
+                        row.CreateCell(38).SetCellValue(item.eSchoolInfoModel.IsChecked);
+                        row.CreateCell(39).SetCellValue(item.eSchoolInfoModel.IsClock);
                         row.CreateCell(40).SetCellValue(item.fillBaseInfoModel.ResLocation);
                         row.CreateCell(41).SetCellValue(item.fillBaseInfoModel.ResLocationCode);
                         row.CreateCell(42).SetCellValue(item.fillBaseInfoModel.ResLocationType);
@@ -1083,6 +1077,7 @@ namespace Graduation.Controllers
                         row.CreateCell(76).SetCellValue(item.applInfoModel.ThirdYearPrize);
                         row.CreateCell(77).SetCellValue(item.applInfoModel.BriefPrize);
                         row.CreateCell(78).SetCellValue(item.applInfoModel.ApplNote);
+                        //少毕业去向
                         row.CreateCell(79).SetCellValue(item.eSchoolInfoModel.AgreementID);
                         row.CreateCell(80).SetCellValue(item.eSchoolInfoModel.CompanyName);
                         row.CreateCell(81).SetCellValue(item.eSchoolInfoModel.ComBelongGroup);
@@ -1103,22 +1098,21 @@ namespace Graduation.Controllers
                         row.CreateCell(96).SetCellValue(item.eSchoolInfoModel.UPSchool);
                         row.CreateCell(97).SetCellValue(item.eSchoolInfoModel.UpMajor);
                         row.CreateCell(98).SetCellValue(item.eSchoolInfoModel.OutCountry);
-                        row.CreateCell(99).SetCellValue(item.eSchoolInfoModel.CompanyCode);
-                        row.CreateCell(100).SetCellValue(item.eSchoolInfoModel.Employment);
                         a++;
 
                     }
                     MemoryStream ms = new MemoryStream();
                     workhood.Write(ms);
-                    ms.Seek(0, SeekOrigin.Begin);
+                    ms.Seek(a, SeekOrigin.Begin);
                     return File(ms, "application/vnd.ms-excel", "毕业生信息.xls");
                 }
                 #endregion
 
                 //table表格中显示的内容
-                var list = new AdminGradViewModel();
+                var list = new BaseInfoListViewModel();
                 list.upload = new UploadModel();
-             
+                list.uploadList = new List<FillBaseInfoViewModel>();
+
                 foreach (var item in upload.ToList())
                 {
                     FillBaseInfoViewModel temp = new FillBaseInfoViewModel();
@@ -1142,7 +1136,7 @@ namespace Graduation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AdminGradList(AdminGradViewModel av, string action, int id = 0)
+        public ActionResult AdminGradList(BaseInfoListViewModel av, string action,int id=0)
         {
             var user = db.UserTb.Find(Session["Id"]);
             ViewBag.type = user.TypeCode;
@@ -1219,14 +1213,15 @@ namespace Graduation.Controllers
             #region 查询
             if (action == "查询")
             {
-                AdminGradViewModel disPlay = new AdminGradViewModel();
-     
-               disPlay.upload = new UploadModel();
-               var upload = db.UploadTb.Include("fillBaseInfoModel").Include("eSchoolInfoModel").Include("applInfoModel").Include("signInfoModel").Where(m => m.Department == user.DepartName);
+                BaseInfoListViewModel disPlay = new BaseInfoListViewModel();
+                disPlay.uploadList = new List<FillBaseInfoViewModel>();
+                disPlay.upload = new UploadModel();
+                disPlay.upload = av.upload;
+                var upload = db.UploadTb.Include("fillBaseInfoModel").Where(m => m.Department == user.DepartName);
                 if (Session["Type"].ToString() == "1")
-                { upload = db.UploadTb.Include("fillBaseInfoModel").Include("eSchoolInfoModel").Include("applInfoModel").Include("signInfoModel").Where(m => m.Department == user.DepartName); }
+                { upload = db.UploadTb.Include("fillBaseInfoModel").Where(m => m.Department == user.DepartName); }
                 else
-                { upload = db.UploadTb.Include("fillBaseInfoModel").Include("eSchoolInfoModel").Include("applInfoModel").Include("signInfoModel"); }
+                { upload = db.UploadTb.Include("fillBaseInfoModel"); }
                 if (av.upload.Name != null)//姓名
                     upload = upload.Where(m => m.Name.Contains(av.upload.Name));
                 if (av.upload.StudentNumber != null)//学号
@@ -1235,21 +1230,21 @@ namespace Graduation.Controllers
                     upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear);
                 if (av.upload.GraduationTime != null)//毕业时间
                     upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime);
-                if (av.upload.Academy != null && av.upload.Academy != "0")
+                if (av.upload.Academy!=null&&av.upload.Academy != "0")
                 {
                     int Id = Convert.ToInt32(av.upload.Academy);
                     var acaTemp = db.AcademyTb.Find(Id);
                     upload = upload.Where(m => m.Academy == acaTemp.Name);
                     disPlay.upload.Academy = acaTemp.Id.ToString();
                 }
-                if (av.upload.Department != null && av.upload.Department != "0")
+                if (av.upload.Department !=null&& av.upload.Department != "0")
                 {
                     int Id = Convert.ToInt32(av.upload.Department);
                     var depTemp = db.DepartmentTb.Find(Id);
                     upload = upload.Where(m => m.Department == depTemp.Name);
                     disPlay.upload.Department = depTemp.Id.ToString();
                 }
-                if (av.upload.Major != null && av.upload.Major != "0")//专业
+                if (av.upload.Major!=null&&av.upload.Major != "0")//专业
                 {
                     int Id = Convert.ToInt16(av.upload.Major);
                     var majorTemp = db.MajorTb.Find(Id);
@@ -1268,7 +1263,25 @@ namespace Graduation.Controllers
                         temp.baseInfo = db.BaseInfoTb.Find(item.StudentNumber);
                     //disPlay.uploadList.Add(temp);
                 }
-                disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);             
+                disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
+                if (av.isChecked != null)
+                {
+                    if (av.isChecked == "0")
+                        // disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsBaseChecked == av.isChecked || m.baseInfo.IsBaseChecked == null).ToList();
+                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsBaseChecked == av.isChecked || m.fillBaseInfoModel.IsBaseChecked == null).ToPagedList(id, 10);
+                    else if (av.isChecked == "1")
+                        //disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsBaseChecked == av.isChecked).ToList();
+                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsBaseChecked == av.isChecked).ToPagedList(id, 10);
+                }
+                if (av.isClocked != null)
+                {
+                    if (av.isClocked == "0")
+                        //disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsClocked == av.isClocked || m.baseInfo.IsClocked == null).ToList();
+                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsClocked == av.isClocked || m.fillBaseInfoModel.IsClocked == null).ToPagedList(id, 10);
+                    else if (av.isClocked == "1")
+                        //disPlay.uploadList = disPlay.uploadList.Where(m => m.baseInfo.IsClocked == av.isClocked).ToList();
+                        disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.fillBaseInfoModel.IsClocked == av.isClocked || m.fillBaseInfoModel.IsClocked == null).ToPagedList(id, 10);
+                }
                 Session["table"] = disPlay;
                 return View(disPlay);
             }
@@ -1287,9 +1300,12 @@ namespace Graduation.Controllers
         #region 添加毕业生信息
         public ActionResult AddGradInfo()
         {
-            #region 初始化数据
+            if (Session["Id"] != null)
+            {
+                ViewBag.type = Session["Type"];
+                #region 初始化数据
 
-            List<SelectListItem> Political = new List<SelectListItem> {
+                List<SelectListItem> Political = new List<SelectListItem> {
                 new SelectListItem{Text="共产党员",Value="01共产党员",Selected=false},
                 new SelectListItem{Text="中共预备党员",Value="02中共预备党员",Selected=false},
                 new SelectListItem{Text="共青团员",Value="03共青团员",Selected=false},
@@ -1304,10 +1320,10 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="无党派民主人士",Value="12无党派民主人士",Selected=false},
                 new SelectListItem{Text="群众",Value="13群众",Selected=true},
             };
-            ViewBag.Political = Political;
+                ViewBag.Political = Political;
 
 
-            List<SelectListItem> dor = new List<SelectListItem> {
+                List<SelectListItem> dor = new List<SelectListItem> {
                 new SelectListItem{Text="学1舍",Value="学1舍",Selected=false},
                 new SelectListItem{Text="学2舍",Value="学2舍",Selected=false},
                 new SelectListItem{Text="学3舍",Value="学3舍",Selected=false},
@@ -1328,48 +1344,29 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="学18舍",Value="学18舍",Selected=false},
                 new SelectListItem{Text="研究生公寓",Value="研究生公寓",Selected=true},
             };
-            ViewBag.dor = dor;
+                ViewBag.dor = dor;
 
-            ///家庭户口类型
-            List<SelectListItem> type = new List<SelectListItem> {
+                ///家庭户口类型
+                List<SelectListItem> type = new List<SelectListItem> {
                 new SelectListItem{Text="省会及直辖市",Value="1",Selected=false},
                 new SelectListItem{Text="地级市",Value="2",Selected=false},
                 new SelectListItem{Text="县或县级市",Value="3",Selected=false},
                 new SelectListItem{Text="乡镇村",Value="4",Selected=false}
             };
-            ViewBag.ftype = type;
+                ViewBag.type = type;
+                
+                //民族
+                var nation = db.nationTb.ToList();
+                List<SelectListItem> nationlist = new List<SelectListItem> { };
+                foreach(var item in nation )
+                {
+                    var listItem = new SelectListItem { Text = item.NationName, Value = item.NationCode + item.NationName };
+                    nationlist.Add(listItem);
+                }
+                ViewBag.nation = nationlist;
 
-            //民族
-            var nation = db.nationTb.ToList();
-            List<SelectListItem> nationlist = new List<SelectListItem> { };
-            foreach (var item in nation)
-            {
-                var listItem = new SelectListItem { Text = item.NationName, Value = item.NationCode + item.NationName };
-                nationlist.Add(listItem);
-            }
-            ViewBag.nation = nationlist;
 
-            //生源所在地
-            List<SelectListItem> cityList = new List<SelectListItem>();
-            var list = db.LocationTb.ToList();
-            foreach (var item in list)
-                cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-
-            ViewBag.city = cityList;
-
-            //家庭户口所在地
-            List<SelectListItem> familyCityList = new List<SelectListItem>();
-
-            foreach (var item in list)
-                familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-
-            ViewBag.familyCityList = familyCityList;
-
-            #endregion
-
-            if (Session["Id"] != null)
-            {
-                ViewBag.type = Session["Type"];
+                #endregion
                 return View();
             }
             else
@@ -1388,23 +1385,13 @@ namespace Graduation.Controllers
                     upLoadModel.SchoolCode = "10079";
                     upLoadModel.SchoolBeCode = "360";
                     upLoadModel.SchoolAddCode = "130600";
-                    upLoadModel.Pwd = "123";
-                    if (upLoadModel.Sex != null)
-                    {
-                        if (upLoadModel.Sex == "男")
-                            upLoadModel.SexCode = "1";
-                        else
-                            upLoadModel.SexCode = "2";
-                    }
                     upLoadModel.fillBaseInfoModel.StudentNumber = upLoadModel.StudentNumber;
                     var nation = upLoadModel.Nation;
                     upLoadModel.Nation = nation.Substring(2);
                     upLoadModel.NationCode = upLoadModel.Nation.Substring(0, 2);
-                    var orig = db.LocationTb.Find(upLoadModel.fillBaseInfoModel.OriginCode);//保存生源地
-                    upLoadModel.fillBaseInfoModel.OriginCity = orig.name;
-                   
-                    var familyLocation = db.LocationTb.Find(upLoadModel.fillBaseInfoModel.ResLocationCode);
-                    upLoadModel.fillBaseInfoModel.ResLocation = familyLocation.name;
+                    //var resLocation = upLoadModel.fillBaseInfoModel.ResLocationCode;
+                    //upLoadModel.fillBaseInfoModel.ResLocation =resLocation. Substring(2);
+                    //upLoadModel.fillBaseInfoModel.ResLocationCode = resLocation.Substring(0, 2);
                     db.UploadTb.Add(upLoadModel);
                     db.SaveChanges();
                 }
@@ -1416,7 +1403,7 @@ namespace Graduation.Controllers
             }
             return RedirectToAction("AddGradInfo");
         }
-        #endregion
+        #endregion  
 
         #region 编辑毕业生信息
         public ActionResult AdminEditGradInfo(string studentNumber)
@@ -1476,6 +1463,7 @@ namespace Graduation.Controllers
             };
                 ViewBag.ftype = type;
 
+
                 //生源所在地
                 List<SelectListItem> cityList = new List<SelectListItem>();
                 var st = db.BaseInfoTb.Find(studentNumber);
@@ -1524,8 +1512,6 @@ namespace Graduation.Controllers
                 }
                 fillBaseInfoViewModel.baseInfo.PoliticalStatus = fillBaseInfoViewModel.baseInfo.PoliticalStatusCode + fillBaseInfoViewModel.baseInfo.PoliticalStatus;
 
-                fillBaseInfoViewModel.upload.Nation = fillBaseInfoViewModel.upload.NationCode + fillBaseInfoViewModel.upload.Nation;
-
                 return View(fillBaseInfoViewModel);
             }
             else
@@ -1543,33 +1529,20 @@ namespace Graduation.Controllers
                 string PoliticalStatus = fillBaseInfoViewModel.baseInfo.PoliticalStatus;
                 fillBaseInfoViewModel.baseInfo.PoliticalStatusCode = PoliticalStatus.Substring(0, 2);
                 fillBaseInfoViewModel.baseInfo.PoliticalStatusCode = PoliticalStatus.Substring(2);
-
-                //存入民族代码
-                var nation = db.nationTb.Where(m=>m.NationCode==fillBaseInfoViewModel.upload.NationCode).FirstOrDefault();
-                fillBaseInfoViewModel.upload.Nation = nation.NationName;
-
-                var orig = db.LocationTb.Find(fillBaseInfoViewModel.baseInfo.OriginCode);//保存生源地
-                fillBaseInfoViewModel.baseInfo.OriginCity = orig.name;
-                fillBaseInfoViewModel.baseInfo.OriginProvince = db.BaseInfoTb.Find(fillBaseInfoViewModel.baseInfo.StudentNumber).OriginProvince;
-                var familyLocation = db.LocationTb.Find(fillBaseInfoViewModel.baseInfo.ResLocationCode);
-                fillBaseInfoViewModel.baseInfo.ResLocation = familyLocation.name;
                 //如果有基本信息表中已经有基本，则为更新
                 if (db.BaseInfoTb.Find(fillBaseInfoViewModel.baseInfo.StudentNumber) != null)
                 {
                     FillBaseInfoModel temp = db.BaseInfoTb.Find(fillBaseInfoViewModel.baseInfo.StudentNumber);
                     db.Entry(temp).CurrentValues.SetValues(fillBaseInfoViewModel.baseInfo);
-                    //UploadModel upload = db.UploadTb.Find(fillBaseInfoViewModel.baseInfo.StudentNumber);
-                    //db.Entry(upload).CurrentValues.SetValues(fillBaseInfoViewModel.baseInfo);
                     db.SaveChanges();
                 }
                 else
                 {
-                    db.UploadTb.Add(fillBaseInfoViewModel.upload);
                     db.BaseInfoTb.Add(fillBaseInfoViewModel.baseInfo);
                     db.SaveChanges();
 
                 }
-                return RedirectToAction("AdminEditGradInfo", new { studentNumber = fillBaseInfoViewModel.baseInfo.StudentNumber });
+                return RedirectToAction("AdminEditGradInfo");
             }
 
             return View(fillBaseInfoViewModel);
@@ -1781,7 +1754,7 @@ namespace Graduation.Controllers
                 upload = upload.Where(m => m.Academy == acaTemp.Name);
                 disPlay.upload.Academy = acaTemp.Id.ToString();
             }
-            if (av.upload.Department != "0" && av.upload.Department != null)
+            if (av.upload.Department != "0"&&av.upload.Department!=null)
             {
                 int Id = Convert.ToInt32(av.upload.Department);
                 var depTemp = db.DepartmentTb.Find(Id);
@@ -1892,7 +1865,7 @@ namespace Graduation.Controllers
                 //如果基本信息表中已经有基本，则为更新
                 if (db.ApplInfoTb.Find(students.applInfo.StudentNumber) != null)
                 {
-                    ApplInfoModel temp = db.ApplInfoTb.Find(students.applInfo.StudentNumber);
+                    ApplInfoModel temp = db.ApplInfoTb.Find(students.upload.StudentNumber);
                     //db.Entry(students.baseInfo).State = EntityState.Modified;
                     if (students.applInfo.RankType == "1")
                         students.applInfo.Rank = "班级排名";
@@ -1913,7 +1886,7 @@ namespace Graduation.Controllers
                     db.SaveChanges();
                 }
 
-                return RedirectToAction("EditApplExam", new { studentNumber =students.applInfo.StudentNumber});
+                return RedirectToAction("FillApplInfo");
             }
             return View(students);
         }
@@ -1924,7 +1897,7 @@ namespace Graduation.Controllers
         /// 就业信息审核界面
         /// </summary>
         /// <returns></returns>
-        public ActionResult EmplExam(int id = 0)
+        public ActionResult EmplExam(int id=0)
         {
             if (Session["Id"] != null)
             {
@@ -2014,7 +1987,7 @@ namespace Graduation.Controllers
                     temp.upload = item;
                     if (db.ESchoolInfoTb.Find(item.StudentNumber) != null)
                         temp.eSchoolInfo = db.ESchoolInfoTb.Find(item.StudentNumber);
-                    // list.InfoList.Add(temp);
+                   // list.InfoList.Add(temp);
                 }
                 list.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
                 Session["table"] = list;
@@ -2026,7 +1999,7 @@ namespace Graduation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EmplExam(EmplExamListViewModel av, int id = 0)
+        public ActionResult EmplExam(EmplExamListViewModel av,int id=0)
         {
             var user = db.UserTb.Find(Session["Id"]);
             ViewBag.type = user.TypeCode;
@@ -2106,7 +2079,7 @@ namespace Graduation.Controllers
             display.upload = new UploadModel();
             display.InfoList = new List<ESchoolInfoViewModel>();
             display.upload = av.upload;
-            // var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
+           // var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
             var upload = db.UploadTb.Include("eSchoolInfoModel").Where(m => m.Department == user.DepartName);
             if (Session["Type"].ToString() == "1")
             { upload = db.UploadTb.Include("eSchoolInfoModel").Where(m => m.Department == user.DepartName); }
@@ -2135,7 +2108,7 @@ namespace Graduation.Controllers
                 upload = upload.Where(m => m.Department == depTemp.Name);
                 display.upload.Department = depTemp.Id.ToString();
             }
-            if (av.upload.Major != null & av.upload.Major != "0")//专业
+            if (av.upload.Major != null&av.upload.Major!="0")//专业
             {
                 int Id = Convert.ToInt16(av.upload.Major);
                 var majorTemp = db.MajorTb.Find(Id);
@@ -2157,7 +2130,7 @@ namespace Graduation.Controllers
             if (av != null)
             {
                 if (av.IsCheckEd == "0")
-                    // display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsChecked == av.IsCheckEd || m.eSchoolInfo.IsChecked == null).ToList();
+                   // display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsChecked == av.IsCheckEd || m.eSchoolInfo.IsChecked == null).ToList();
                     display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).Where(m => m.eSchoolInfoModel.IsChecked == av.IsCheckEd || m.applInfoModel.IsQiuChecked == null).ToPagedList(id, 10);
                 else if (av.IsCheckEd == "1")
                     //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.IsChecked == av.IsCheckEd).ToList();
@@ -2193,7 +2166,7 @@ namespace Graduation.Controllers
                     //display.InfoList = display.InfoList.Where(m => m.eSchoolInfo.EmploymentCode == "10").ToList();
                     display.uploadPagedList = upload.OrderBy(m => m.StudentNumber).Where(m => m.eSchoolInfoModel.EmploymentCode == "10").ToPagedList(id, 10);
             }
-            Session["table"] = display;
+            Session["table"]=display;
             return View(display);
             #endregion
 
@@ -2326,27 +2299,12 @@ namespace Graduation.Controllers
             };
             ViewBag.zhiwei = zhiwei;
 
-            //单位所在地
-            List<SelectListItem> cityList = new List<SelectListItem>();
-            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
-            if (st.ComLocation != null)
-                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
-            ViewBag.city = cityList;
-
-
-
             //隶属部门
             var belong = db.belongDepTb.ToList();
             List<SelectListItem> belongDep = new List<SelectListItem> { };
             foreach (var item in belong)
             {
-                var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value =item.ComBelongDepCode };
+                var belongDepList= new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
                 belongDep.Add(belongDepList);
             }
             ViewBag.belong = belongDep;
@@ -2378,7 +2336,8 @@ namespace Graduation.Controllers
                 }
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
-                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质          
+                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
+                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDep + student.eSchoolInfo.ComBelongDepCode;//隶属部门
                 return View(student);
             }
             else
@@ -2410,16 +2369,13 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.JobTitleCode = jobTitle.Substring(0, 2);
 
                 //隶属部门
-                var belong = db.belongDepTb.Where(m => m.ComBelongDepCode == students.eSchoolInfo.ComBelongDepCode).FirstOrDefault();
-                students.eSchoolInfo.ComBelongDep = belong.ComBelongDep;
+                string belong = students.eSchoolInfo.ComBelongDep;
+                students.eSchoolInfo.ComBelongDep = belong.Substring(3);
+                students.eSchoolInfo.ComBelongDepCode = belong.Substring(0, 3);
 
                 //就业形式
                 students.eSchoolInfo.Employment = "签学校三方协议就业";
                 students.eSchoolInfo.EmploymentCode = "10";
-
-                //单位所在地
-                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
-                students.eSchoolInfo.ComLocation = location.name;
 
 
                 //如果基本信息表中已经有基本，则为更新
@@ -2535,23 +2491,10 @@ namespace Graduation.Controllers
             List<SelectListItem> belongDep = new List<SelectListItem> { };
             foreach (var item in belong)
             {
-                var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode  };
+                var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode + item.ComBelongDep };
                 belongDep.Add(belongDepList);
             }
             ViewBag.belong = belongDep;
-
-            //单位所在地
-            List<SelectListItem> cityList = new List<SelectListItem>();
-            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
-            if (st.ComLocation != null)
-                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
-            ViewBag.city = cityList;
 
             #endregion
             if (Session["adminStuNum"] != null)
@@ -2580,7 +2523,8 @@ namespace Graduation.Controllers
                 }
                 student.eSchoolInfo.JobTitle = student.eSchoolInfo.JobTitleCode + student.eSchoolInfo.JobTitle;//工作职位
                 student.eSchoolInfo.ComIndustry = student.eSchoolInfo.ComIndustryCode + student.eSchoolInfo.ComIndustry;//单位行业
-                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质             
+                student.eSchoolInfo.ComType = student.eSchoolInfo.ComTypeCode + student.eSchoolInfo.ComType;//单位性质
+                student.eSchoolInfo.ComBelongDep = student.eSchoolInfo.ComBelongDep + student.eSchoolInfo.ComBelongDepCode;//隶属部门
                 return View(student);
             }
             else
@@ -2612,16 +2556,13 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.JobTitleCode = jobTitle.Substring(0, 2);
 
                 //隶属部门
-                var belong = db.belongDepTb.Where(m => m.ComBelongDepCode == students.eSchoolInfo.ComBelongDepCode).FirstOrDefault();
-                students.eSchoolInfo.ComBelongDep = belong.ComBelongDep;
+                string belong = students.eSchoolInfo.ComBelongDep;
+                students.eSchoolInfo.ComBelongDep = belong.Substring(3);
+                students.eSchoolInfo.ComBelongDepCode = belong.Substring(0, 3);
 
                 //就业形式
                 students.eSchoolInfo.Employment = "签合同就业";
                 students.eSchoolInfo.EmploymentCode = "11";
-
-                //单位所在地
-                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
-                students.eSchoolInfo.ComLocation = location.name;
 
 
                 //如果基本信息表中已经有基本，则为更新
@@ -2747,6 +2688,7 @@ namespace Graduation.Controllers
             };
             ViewBag.hangyefenlei = hangyefenlei;
 
+
             //单位所在地
             List<SelectListItem> cityList = new List<SelectListItem>();
             var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
@@ -2759,6 +2701,7 @@ namespace Graduation.Controllers
             //        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
             //}
             ViewBag.city = cityList;
+
 
 
             #endregion
@@ -2805,9 +2748,9 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.ComIndustry = students.eSchoolInfo.ComIndustry.Substring(2);
                 students.eSchoolInfo.ComIndustryCode = students.eSchoolInfo.ComIndustry.Substring(0, 2);
 
-                //单位所在地
-                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
-                students.eSchoolInfo.ComLocation = location.name;
+
+
+
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -2829,19 +2772,6 @@ namespace Graduation.Controllers
         #region  灵活就业
         public ActionResult EmplFlexibleExam()
         {
-
-            //单位所在地
-            List<SelectListItem> cityList = new List<SelectListItem>();
-            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
-            if (st.ComLocation != null)
-                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
-            ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
             {
@@ -2881,9 +2811,6 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
-                //单位所在地
-                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
-                students.eSchoolInfo.ComLocation = location.name;
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -3023,18 +2950,6 @@ namespace Graduation.Controllers
         #region 国家基层项目
         public ActionResult EmplCountry()
         {
-            //单位所在地
-            List<SelectListItem> cityList = new List<SelectListItem>();
-            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
-            if (st.ComLocation != null)
-                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
-            ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
             {
@@ -3074,9 +2989,6 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
-                //单位所在地
-                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
-                students.eSchoolInfo.ComLocation = location.name;
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -3099,19 +3011,6 @@ namespace Graduation.Controllers
         #region  科研助理
         public ActionResult EmplScience()
         {
-
-            //单位所在地
-            List<SelectListItem> cityList = new List<SelectListItem>();
-            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
-            if (st.ComLocation != null)
-                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
-            ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
             {
@@ -3151,10 +3050,6 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
-                //单位所在地
-                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
-                students.eSchoolInfo.ComLocation = location.name;
-
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -3177,18 +3072,6 @@ namespace Graduation.Controllers
         #region 地方基层项目
         public ActionResult EmplPlace()
         {
-            //单位所在地
-            List<SelectListItem> cityList = new List<SelectListItem>();
-            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
-            if (st.ComLocation != null)
-                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
-            ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
             {
@@ -3227,10 +3110,6 @@ namespace Graduation.Controllers
                 string employment = students.eSchoolInfo.Employment;
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
-
-                //单位所在地
-                var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
-                students.eSchoolInfo.ComLocation = location.name;
 
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -3397,9 +3276,8 @@ namespace Graduation.Controllers
                 #region 下载表格
                 if (type == 1)
                 {
-                    EmplExamListViewModel s1 = (EmplExamListViewModel)Session["table"];
-                    string[] excelHead = { "xysbh", "xh","", "dwmc", "dwlsbm", "dwszd", "dwszddm", "", "dwlxr", "lxrdh", "联系人邮编", "联系人通信地址", "dwxzdm", "dwxz", "dazjdwdz", "dazjdwyb", "hkqzdz", "", "专业是否对口", "备注", "dwhy", "zzjgdm", "毕业去向", "lxrzw", "dwzzjgdm", "bdzqwdwmc1", "升学专业", "升学院校", "出国国家", "工作职务", "工作职务代码", "xm", "xb", "szxy", "szyx", "zydm", "zy", "bj" };
-                   // string[] excelHead = { "xysbh", "xh", "", "dwmc", "dwlsbm", "dwszd", "dwszddm", "", "dwlxr", "lxrdh", "联系人邮编", "联系人通信地址", "dwxzdm", "dwxz", "dazjdwdz", "档案转寄邮政", "户口迁移地址", "", "专业是否对口", "备注", "单位行业", "单位组织机构代码", "毕业去向", "联系人职务", "单位所属集团或系统", "《就业报到证》开具单位名称", "升学专业", "升学院校", "出国国家", "工作职务", "工作职务代码", "姓名", "性别", "院", "系", "专业代码", "专业", "班级" };
+                    AdminGradViewModel s1 = (AdminGradViewModel)Session["table"];
+                    string[] excelHead = { "xysbh", "xh", "是否签约", "dwmc", "dwlsbm", "dwszd", "dwszddm", "单位所在地地区代码", "dwlxr", "lxrdh", "联系人邮编", "联系人通信地址", "dwxzdm", "dwxz", "dazjdwdz", "档案转寄邮政", "户口迁移地址", "特殊地区", "专业是否对口", "备注", "单位行业", "单位组织机构代码", "毕业去向", "联系人职务", "是否专业对口", "单位所属集团或系统", "《就业报到证》开具单位名称", "升学专业", "升学院校", "出国国家", "工作职务", "工作职务代码", "姓名", "性别", "院", "系", "专业代码", "专业", "班级" };
                     var workbook = new HSSFWorkbook();
 
                     var sheet = workbook.CreateSheet("签约登记");
@@ -3425,8 +3303,8 @@ namespace Graduation.Controllers
                         row.CreateCell(3).SetCellValue(item.eSchoolInfoModel.CompanyName);
                         row.CreateCell(4).SetCellValue(item.eSchoolInfoModel.ComBelongDep);
                         row.CreateCell(5).SetCellValue(item.eSchoolInfoModel.ComLocation);
-                        row.CreateCell(6).SetCellValue(item.eSchoolInfoModel.ComLocationCode);
-                        // row.CreateCell(7).SetCellValue(item.eSchoolInfoModel.);//单位所在地地区代
+                        // row.CreateCell(6).SetCellValue(item.eSchoolInfoModel.ComCity);//单位所在地城市代码，需要改
+                        // row.CreateCell(7).SetCellValue(item.eSchoolInfoModel.);//单位所在地地区代码，需要改
                         row.CreateCell(8).SetCellValue(item.eSchoolInfoModel.Contacts);
                         row.CreateCell(9).SetCellValue(item.eSchoolInfoModel.ConTel);
                         row.CreateCell(10).SetCellValue(item.eSchoolInfoModel.ContactsCode);
@@ -3441,7 +3319,7 @@ namespace Graduation.Controllers
                         row.CreateCell(19).SetCellValue(item.eSchoolInfoModel.Note);
                         row.CreateCell(20).SetCellValue(item.eSchoolInfoModel.ComIndustry);
                         row.CreateCell(21).SetCellValue(item.eSchoolInfoModel.CompanyCode);
-                        row.CreateCell(22).SetCellValue(item.eSchoolInfoModel.Employment);
+                        // row.CreateCell(22).SetCellValue(item.eSchoolInfoModel.);//毕业去向
                         row.CreateCell(23).SetCellValue(item.eSchoolInfoModel.ConPost);
                         //专业是否对口重复
                         row.CreateCell(24).SetCellValue(item.eSchoolInfoModel.ComBelongGroup);
@@ -3619,21 +3497,11 @@ namespace Graduation.Controllers
         /// 显示公告列表
         /// </summary>
         /// <returns></returns>
-        public ActionResult Announce(int id=0,string type=null)
+        public ActionResult Announce()
         {
             var title = db.AnnounceTb.ToList();
-            if (type == "1")
-            {
-                AnnounceModel announce = db.AnnounceTb.Find(id);
-                db.AnnounceTb.Remove(announce);
-                db.SaveChanges();
-                return RedirectToAction("Announce");      
-            }
             return View(title);
         }
-
-       
-
         /// <summary>
         /// 显示公告详细信息
         /// </summary>
@@ -3644,10 +3512,7 @@ namespace Graduation.Controllers
             var detail = db.AnnounceTb.Find(AnnounceId);
             return View(detail);
         }
-        /// <summary>
-        /// 发布公告
-        /// </summary>
-        /// <returns></returns>
+
         public ActionResult AnnouncePost()
         {
             AnnounceModel am = new AnnounceModel();
@@ -3678,7 +3543,6 @@ namespace Graduation.Controllers
         );
                 //取得doc文件中的文本
                 string outText = doc.Content.Text;
-                
                 //关闭文件
                 doc.Close(ref nullobj, ref nullobj, ref nullobj);
                 //关闭COM
@@ -4316,6 +4180,419 @@ namespace Graduation.Controllers
             }
             #endregion
             return RedirectToAction("jiuyeYX");
+        }
+        #endregion
+
+        #region  就业信息就业统计
+        /// <summary>
+        /// 就业统计，本科生，在就业信息列表中
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult jiuyeB()
+        {
+            List<jieyeListViewModel> jiuyeList = new List<jieyeListViewModel>();
+            var aca = db.AcademyTb.ToList();
+            foreach (var acaTemp in aca)
+            {
+                var dep = db.DepartmentTb.Where(m => m.BelongId == acaTemp.Id).ToList();
+                foreach (var depTemp in dep)
+                {
+                    string depId = depTemp.Id.ToString();
+                    var major = db.MajorTb.Where(m => m.DepartId == depId&&m.Edu=="本科").ToList();
+                    foreach (var majorTemp in major)
+                    {
+                        #region  专业统计
+                        //var stud_major=db.UploadTb.Where(m=>m.Major==majorTemp.Name).ToList();//总的该系学生集合
+                        //var stud_sign=db.SingInfoTb.ToList();//签约人列表
+                        //var jiuyeTemp = new jieyeListViewModel();
+                        //jiuyeTemp.aca = acaTemp.Name;
+                        //jiuyeTemp.dep = depTemp.Name;
+                        //jiuyeTemp.major = majorTemp.Name;
+                        //var acaNumber = stud_major.Count();//该专业人数
+                        //jiuyeTemp.totalNumber = acaNumber;
+
+                        //List<string> stud_major_number = new List<string>();
+                        //stud_major.ForEach(item => stud_major_number.Add(item.StudentNumber));
+                        //List<string> stud_sign_number = new List<string>();
+                        //stud_sign.ForEach(item => stud_sign_number.Add(item.StudentNumber));
+                        //jiuyeTemp.signNumber = stud_sign_number.Intersect(stud_major_number).Count();//签约人数
+                        //jiuyeTemp.signP = (double)jiuyeTemp.signNumber / (double)jiuyeTemp.totalNumber;
+                        
+                        //var hetong = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "10" || m.EmploymentCode == "11").ToList();//签学校和合同就业
+                        //List<string> hetongList = new List<string>();
+                        //hetong.ForEach(item => hetongList.Add(item.StudentNumber));
+                        //jiuyeTemp.hetongNumber = hetongList.Intersect(stud_major_number).Count();//合同就业人数
+                        //jiuyeTemp.hetongP = (double)jiuyeTemp.hetongNumber / (double)jiuyeTemp.totalNumber;
+
+                        //var kaoyan = db.ESchoolInfoTb.Where(m => m.UpType == "考研").ToList();
+                        //List<string> kaoyanList = new List<string>();
+                        //kaoyan.ForEach(item => kaoyanList.Add(item.StudentNumber));
+                        //jiuyeTemp.kaoyan = kaoyanList.Intersect(stud_major_number).Count();//考研人数
+                        //jiuyeTemp.kanyanP = (double)jiuyeTemp.kaoyan / (double)jiuyeTemp.totalNumber;
+
+                        //var baoyan = db.ESchoolInfoTb.Where(m => m.UpType == "保研").ToList();
+                        //List<string> baoyanList = new List<string>();
+                        //baoyan.ForEach(item => baoyanList.Add(item.StudentNumber));
+                        //jiuyeTemp.baoyan = kaoyanList.Intersect(stud_major_number).Count();//保研人数
+                        //jiuyeTemp.baoyanP = (double)jiuyeTemp.baoyan / (double)jiuyeTemp.totalNumber;
+
+                        //var chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "85").ToList();
+                        //List<string> chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.abroadNumber = chuguoList.Intersect(stud_major_number).Count();//出国人数
+                        //jiuyeTemp.abroadP = (double)jiuyeTemp.abroadNumber / (double)jiuyeTemp.totalNumber;
+
+                        //chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "75").ToList();
+                        //chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.zizhuNumber = chuguoList.Intersect(stud_major_number).Count();//自主创业人数
+                        //jiuyeTemp.zizhuP = (double)jiuyeTemp.zizhuNumber / (double)jiuyeTemp.totalNumber;
+
+                        //chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "46").ToList();
+                        //chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.ruwu = chuguoList.Intersect(stud_major_number).Count();//应征入伍人数
+                        //jiuyeTemp.ruwuP = (double)jiuyeTemp.ruwu / (double)jiuyeTemp.totalNumber;
+
+                        //chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "50").ToList();
+                        //chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.guojia = chuguoList.Intersect(stud_major_number).Count();//国家基层项目人数
+                        //jiuyeTemp.guojiaP = (double)jiuyeTemp.guojia / (double)jiuyeTemp.totalNumber;
+
+                        //chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "27").ToList();
+                        //chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.keyanzhuli = chuguoList.Intersect(stud_major_number).Count();
+                        //jiuyeTemp.keyanzhuliP = (double)jiuyeTemp.kaoyan / (double)jiuyeTemp.totalNumber;
+
+                        //chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "51").ToList();
+                        //chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.difang = chuguoList.Intersect(stud_major_number).Count();
+                        //jiuyeTemp.difangP = (double)jiuyeTemp.difang / (double)jiuyeTemp.totalNumber;
+
+                        //chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "76").ToList();
+                        //chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.linghuo = chuguoList.Intersect(stud_major_number).Count();
+                        //jiuyeTemp.linghuoP = (double)jiuyeTemp.linghuo / (double)jiuyeTemp.totalNumber;
+
+                        //chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "2").ToList();
+                        //chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.gongwuyuan = chuguoList.Intersect(stud_major_number).Count();//继续考公务员数
+                        //jiuyeTemp.gongwuyuanP = (double)jiuyeTemp.gongwuyuan / (double)jiuyeTemp.totalNumber;
+
+                        //chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "1").ToList();
+                        //chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.jiuyekunnan = chuguoList.Intersect(stud_major_number).Count();//继续考公务员数
+                        //jiuyeTemp.jiuyekunnanP = (double)jiuyeTemp.jiuyekunnan / (double)jiuyeTemp.totalNumber;
+
+                        //chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "4").ToList();
+                        //chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.other = chuguoList.Intersect(stud_major_number).Count();//继续考公务员数
+                        //jiuyeTemp.otherP = (double)jiuyeTemp.other / (double)jiuyeTemp.totalNumber;
+
+                        //chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "4" || m.JobDiffCode == "3" || m.JobDiffCode == "2" || m.JobDiffCode == "1").ToList();
+                        //chuguoList = new List<string>();
+                        //chuguo.ForEach(item => chuguoList.Add(item.StudentNumber));
+                        //jiuyeTemp.weijiuye = chuguoList.Intersect(stud_major_number).Count();//继续考公务员数
+                        //jiuyeTemp.weijiuyyeP = (double)jiuyeTemp.weijiuye / (double)jiuyeTemp.totalNumber;
+
+                        //jiuyeTemp.jiuyeheji = jiuyeTemp.signNumber + jiuyeTemp.hetongNumber + jiuyeTemp.kaoyan + jiuyeTemp.baoyan + jiuyeTemp.upschoolNumber + jiuyeTemp.abroadNumber + jiuyeTemp.zizhuNumber + jiuyeTemp.ruwu + jiuyeTemp.guojia + jiuyeTemp.keyanzhuli + jiuyeTemp.difang + jiuyeTemp.linghuo;
+                        //jiuyeTemp.jiuyehejiP = (double)jiuyeTemp.jiuyeheji / (double)jiuyeTemp.totalNumber;
+
+                        //jiuyeList.Add(jiuyeTemp);
+
+                        #endregion
+                        #region 专业统计
+                        var stud_major = db.UploadTb.Where(m => m.Major == majorTemp.Name).ToList();//总的该系学生集合
+                        var stud_sign = db.SingInfoTb.ToList();//签约人列表
+                        var jiuyeTemp = new jieyeListViewModel();
+                        jiuyeTemp.aca = acaTemp.Name;
+                        jiuyeTemp.dep = depTemp.Name;
+                        jiuyeTemp.major = majorTemp.Name;
+                        var acaNumber = stud_major.Count();//该专业人数
+                        jiuyeTemp.totalNumber = acaNumber;
+
+                        List<string> stud_major_number = new List<string>();
+                        stud_major.ForEach(item => stud_major_number.Add(item.StudentNumber));
+                        List<string> stud_sign_number = new List<string>();
+                        stud_sign.ForEach(item => stud_sign_number.Add(item.StudentNumber));
+                        jiuyeTemp.signNumber = stud_sign_number.Intersect(stud_major_number).Count();//签约人数
+                        jiuyeTemp.signP = (double)jiuyeTemp.signNumber / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.signP = Math.Round(jiuyeTemp.signP, 4)*100;
+
+                        var hetong = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "10" || m.EmploymentCode == "11").ToList();//签学校和合同就业
+                        jiuyeTemp.hetongNumber = hetong.Count();
+                        jiuyeTemp.hetongP = (double)jiuyeTemp.hetongNumber / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.hetongP = Math.Round(jiuyeTemp.hetongP, 4) * 100;
+
+                        var kaoyan = db.ESchoolInfoTb.Where(m => m.UpType == "考研").ToList();
+                        jiuyeTemp.kaoyan = kaoyan.Count();//考研人数
+                        jiuyeTemp.kanyanP = (double)jiuyeTemp.kaoyan / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.kanyanP = Math.Round(jiuyeTemp.kanyanP, 4) * 100;
+
+                        var baoyan = db.ESchoolInfoTb.Where(m => m.UpType == "保研").ToList();
+                        jiuyeTemp.baoyan = baoyan.Count();//保研人数
+                        jiuyeTemp.baoyanP = (double)jiuyeTemp.baoyan / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.baoyanP = Math.Round(jiuyeTemp.baoyanP, 4) * 100;
+
+                        var chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "85").ToList();
+                        jiuyeTemp.abroadNumber = chuguo.Count();//出国人数
+                        jiuyeTemp.abroadP = (double)jiuyeTemp.abroadNumber / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.abroadP = Math.Round(jiuyeTemp.abroadP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "75").ToList();
+                        jiuyeTemp.zizhuNumber = chuguo.Count();//自主创业人数
+                        jiuyeTemp.zizhuP = (double)jiuyeTemp.zizhuNumber / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.zizhuP = Math.Round(jiuyeTemp.zizhuP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "46").ToList();
+                        jiuyeTemp.ruwu = chuguo.Count();//应征入伍人数
+                        jiuyeTemp.ruwuP = (double)jiuyeTemp.ruwu / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.ruwuP = Math.Round(jiuyeTemp.ruwuP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "50").ToList();
+                        jiuyeTemp.guojia = chuguo.Count();//国家基层项目人数
+                        jiuyeTemp.guojiaP = (double)jiuyeTemp.guojia / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.guojiaP = Math.Round(jiuyeTemp.guojiaP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "27").ToList();
+                        jiuyeTemp.keyanzhuli = chuguo.Count();
+                        jiuyeTemp.keyanzhuliP = (double)jiuyeTemp.kaoyan / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.keyanzhuliP = Math.Round(jiuyeTemp.keyanzhuliP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "51").ToList();
+                        jiuyeTemp.difang = chuguo.Count();
+                        jiuyeTemp.difangP = (double)jiuyeTemp.difang / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.difangP = Math.Round(jiuyeTemp.difangP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "76").ToList();
+                        jiuyeTemp.linghuo = chuguo.Count();
+                        jiuyeTemp.linghuoP = (double)jiuyeTemp.linghuo / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.linghuoP = Math.Round(jiuyeTemp.linghuoP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "2").ToList();
+                        jiuyeTemp.gongwuyuan = chuguo.Count();//继续考公务员数
+                        jiuyeTemp.gongwuyuanP = (double)jiuyeTemp.gongwuyuan / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.gongwuyuanP = Math.Round(jiuyeTemp.gongwuyuanP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "1").ToList();
+                        jiuyeTemp.jiuyekunnan = chuguo.Count();//继续考公务员数
+                        jiuyeTemp.jiuyekunnanP = (double)jiuyeTemp.jiuyekunnan / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.jiuyekunnanP = Math.Round(jiuyeTemp.jiuyekunnanP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "4").ToList();
+                        jiuyeTemp.other = chuguo.Count();//继续考公务员数
+                        jiuyeTemp.otherP = (double)jiuyeTemp.other / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.otherP = Math.Round(jiuyeTemp.otherP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "4" || m.JobDiffCode == "3" || m.JobDiffCode == "2" || m.JobDiffCode == "1").ToList();
+                        jiuyeTemp.weijiuye = chuguo.Count();//继续考公务员数
+                        jiuyeTemp.weijiuyyeP = (double)jiuyeTemp.weijiuye / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.weijiuyyeP = Math.Round(jiuyeTemp.weijiuyyeP, 4) * 100;
+
+                        jiuyeTemp.jiuyeheji = jiuyeTemp.signNumber + jiuyeTemp.hetongNumber + jiuyeTemp.kaoyan + jiuyeTemp.baoyan + jiuyeTemp.upschoolNumber + jiuyeTemp.abroadNumber + jiuyeTemp.zizhuNumber + jiuyeTemp.ruwu + jiuyeTemp.guojia + jiuyeTemp.keyanzhuli + jiuyeTemp.difang + jiuyeTemp.linghuo;
+                        jiuyeTemp.jiuyehejiP = (double)jiuyeTemp.jiuyeheji / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.jiuyehejiP = Math.Round(jiuyeTemp.jiuyehejiP, 4) * 100;
+
+                        jiuyeList.Add(jiuyeTemp);
+                        #endregion
+                    }
+                    #region 院系统计
+                    var jiuye = new jieyeListViewModel();
+                    foreach (var temp in jiuyeList.Where(m=>m.dep==depTemp.Name))
+                    {
+                        jiuye.totalNumber=jiuye.totalNumber+temp.totalNumber;
+                        jiuye.signNumber = jiuye.signNumber + temp.signNumber;
+                        jiuye.hetongNumber = jiuye.hetongNumber + temp.hetongNumber;
+                        jiuye.kaoyan = jiuye.kaoyan + temp.kaoyan;
+                        jiuye.baoyan = jiuye.baoyan + temp.baoyan;
+                        jiuye.abroadNumber = jiuye.abroadNumber + temp.abroadNumber;
+                        jiuye.zizhuNumber = jiuye.zizhuNumber + temp.zizhuNumber;
+                        jiuye.ruwu = jiuye.ruwu + temp.ruwu;
+                        jiuye.guojia = jiuye.guojia + temp.guojia;
+                        jiuye.keyanzhuli = jiuye.keyanzhuli + temp.keyanzhuli;
+                        jiuye.difang = jiuye.difang + temp.difang;
+                        jiuye.linghuo = jiuye.linghuo + temp.linghuo;
+                        jiuye.gongwuyuan = jiuye.gongwuyuan + temp.gongwuyuan;
+                        jiuye.jiuyekunnan = jiuye.jiuyekunnan + temp.jiuyekunnan;
+                        jiuye.other = jiuye.other + temp.other;
+                        jiuye.jiuyeheji = jiuye.jiuyeheji + temp.jiuyeheji;
+                        jiuye.weijiuye = jiuye.weijiuye + temp.weijiuye;
+                    }
+                    jiuye.aca = "合计";
+                    jiuye.signP = Math.Round((double)jiuye.signNumber / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.hetongP = Math.Round((double)jiuye.hetongNumber / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.kanyanP = Math.Round((double)jiuye.kaoyan / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.baoyanP = Math.Round((double)jiuye.baoyan / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.abroadP = Math.Round((double)jiuye.abroadNumber / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.zizhuP = Math.Round((double)jiuye.zizhuNumber / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.ruwuP = Math.Round((double)jiuye.ruwu / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.guojiaP = Math.Round((double)jiuye.guojia / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.keyanzhuliP = Math.Round((double)jiuye.keyanzhuli / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.difangP = Math.Round((double)jiuye.difang / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.linghuoP = Math.Round((double)jiuye.linghuo / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.gongwuyuanP = Math.Round((double)jiuye.gongwuyuan / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.jiuyekunnanP = Math.Round((double)jiuye.jiuyekunnan / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.otherP = Math.Round((double)jiuye.other / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.jiuyehejiP = Math.Round((double)jiuye.jiuyeheji / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.weijiuyyeP = Math.Round((double)jiuye.weijiuye / (double)jiuye.totalNumber, 4) * 100;
+                    jiuyeList.Add(jiuye);
+                    #endregion
+                }
+            }
+
+            return View(jiuyeList);
+        }
+
+        public ActionResult jiuyeY()
+        {
+            List<jieyeListViewModel> jiuyeList = new List<jieyeListViewModel>();
+            var aca = db.AcademyTb.ToList();
+            foreach (var acaTemp in aca)
+            {
+                var dep = db.DepartmentTb.Where(m => m.BelongId == acaTemp.Id).ToList();
+                foreach (var depTemp in dep)
+                {
+                    string depId = depTemp.Id.ToString();
+                    var major = db.MajorTb.Where(m => m.DepartId == depId && m.Edu == "研究生").ToList();
+                    foreach (var majorTemp in major)
+                    {
+                        #region 专业统计
+                        var stud_major = db.UploadTb.Where(m => m.Major == majorTemp.Name).ToList();//总的该系学生集合
+                        var stud_sign = db.SingInfoTb.ToList();//签约人列表
+                        var jiuyeTemp = new jieyeListViewModel();
+                        jiuyeTemp.aca = acaTemp.Name;
+                        jiuyeTemp.dep = depTemp.Name;
+                        jiuyeTemp.major = majorTemp.Name;
+                        var acaNumber = stud_major.Count();//该专业人数
+                        jiuyeTemp.totalNumber = acaNumber;
+
+                        List<string> stud_major_number = new List<string>();
+                        stud_major.ForEach(item => stud_major_number.Add(item.StudentNumber));
+                        List<string> stud_sign_number = new List<string>();
+                        stud_sign.ForEach(item => stud_sign_number.Add(item.StudentNumber));
+                        jiuyeTemp.signNumber = stud_sign_number.Intersect(stud_major_number).Count();//签约人数
+                        jiuyeTemp.signP = (double)jiuyeTemp.signNumber / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.signP = Math.Round(jiuyeTemp.signP, 4) * 100;
+
+                        var hetong = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "10" || m.EmploymentCode == "11").ToList();//签学校和合同就业
+                        jiuyeTemp.hetongNumber = hetong.Count();
+                        jiuyeTemp.hetongP = (double)jiuyeTemp.hetongNumber / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.hetongP = Math.Round(jiuyeTemp.hetongP, 4) * 100;
+
+                        var chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "85").ToList();
+                        jiuyeTemp.abroadNumber = chuguo.Count();//出国人数
+                        jiuyeTemp.abroadP = (double)jiuyeTemp.abroadNumber / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.abroadP = Math.Round(jiuyeTemp.abroadP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "75").ToList();
+                        jiuyeTemp.zizhuNumber = chuguo.Count();//自主创业人数
+                        jiuyeTemp.zizhuP = (double)jiuyeTemp.zizhuNumber / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.zizhuP = Math.Round(jiuyeTemp.zizhuP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "46").ToList();
+                        jiuyeTemp.ruwu = chuguo.Count();//应征入伍人数
+                        jiuyeTemp.ruwuP = (double)jiuyeTemp.ruwu / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.ruwuP = Math.Round(jiuyeTemp.ruwuP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "50").ToList();
+                        jiuyeTemp.guojia = chuguo.Count();//国家基层项目人数
+                        jiuyeTemp.guojiaP = (double)jiuyeTemp.guojia / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.guojiaP = Math.Round(jiuyeTemp.guojiaP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "27").ToList();
+                        jiuyeTemp.keyanzhuli = chuguo.Count();
+                        jiuyeTemp.keyanzhuliP = (double)jiuyeTemp.kaoyan / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.keyanzhuliP = Math.Round(jiuyeTemp.keyanzhuliP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "51").ToList();
+                        jiuyeTemp.difang = chuguo.Count();
+                        jiuyeTemp.difangP = (double)jiuyeTemp.difang / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.difangP = Math.Round(jiuyeTemp.difangP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "76").ToList();
+                        jiuyeTemp.linghuo = chuguo.Count();
+                        jiuyeTemp.linghuoP = (double)jiuyeTemp.linghuo / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.linghuoP = Math.Round(jiuyeTemp.linghuoP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "2").ToList();
+                        jiuyeTemp.gongwuyuan = chuguo.Count();//继续考公务员数
+                        jiuyeTemp.gongwuyuanP = (double)jiuyeTemp.gongwuyuan / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.gongwuyuanP = Math.Round(jiuyeTemp.gongwuyuanP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "1").ToList();
+                        jiuyeTemp.jiuyekunnan = chuguo.Count();//继续考公务员数
+                        jiuyeTemp.jiuyekunnanP = (double)jiuyeTemp.jiuyekunnan / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.jiuyekunnanP = Math.Round(jiuyeTemp.jiuyekunnanP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "4").ToList();
+                        jiuyeTemp.other = chuguo.Count();//继续考公务员数
+                        jiuyeTemp.otherP = (double)jiuyeTemp.other / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.otherP = Math.Round(jiuyeTemp.otherP, 4) * 100;
+
+                        chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "4" || m.JobDiffCode == "3" || m.JobDiffCode == "2" || m.JobDiffCode == "1").ToList();
+                        jiuyeTemp.weijiuye = chuguo.Count();//继续考公务员数
+                        jiuyeTemp.weijiuyyeP = (double)jiuyeTemp.weijiuye / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.weijiuyyeP = Math.Round(jiuyeTemp.weijiuyyeP, 4) * 100;
+
+                        jiuyeTemp.jiuyeheji = jiuyeTemp.signNumber + jiuyeTemp.hetongNumber + jiuyeTemp.kaoyan + jiuyeTemp.baoyan + jiuyeTemp.upschoolNumber + jiuyeTemp.abroadNumber + jiuyeTemp.zizhuNumber + jiuyeTemp.ruwu + jiuyeTemp.guojia + jiuyeTemp.keyanzhuli + jiuyeTemp.difang + jiuyeTemp.linghuo;
+                        jiuyeTemp.jiuyehejiP = (double)jiuyeTemp.jiuyeheji / (double)jiuyeTemp.totalNumber;
+                        jiuyeTemp.jiuyehejiP = Math.Round(jiuyeTemp.jiuyehejiP, 4) * 100;
+
+                        jiuyeList.Add(jiuyeTemp);
+                        #endregion
+                    }
+                    #region 院系统计
+                    var jiuye = new jieyeListViewModel();
+                    foreach (var temp in jiuyeList.Where(m => m.dep == depTemp.Name))
+                    {
+                        jiuye.totalNumber = jiuye.totalNumber + temp.totalNumber;
+                        jiuye.signNumber = jiuye.signNumber + temp.signNumber;
+                        jiuye.hetongNumber = jiuye.hetongNumber + temp.hetongNumber;
+                        //jiuye.kaoyan = jiuye.kaoyan + temp.kaoyan;
+                        //jiuye.baoyan = jiuye.baoyan + temp.baoyan;
+                        jiuye.abroadNumber = jiuye.abroadNumber + temp.abroadNumber;
+                        jiuye.zizhuNumber = jiuye.zizhuNumber + temp.zizhuNumber;
+                        jiuye.ruwu = jiuye.ruwu + temp.ruwu;
+                        jiuye.guojia = jiuye.guojia + temp.guojia;
+                        jiuye.keyanzhuli = jiuye.keyanzhuli + temp.keyanzhuli;
+                        jiuye.difang = jiuye.difang + temp.difang;
+                        jiuye.linghuo = jiuye.linghuo + temp.linghuo;
+                        jiuye.gongwuyuan = jiuye.gongwuyuan + temp.gongwuyuan;
+                        jiuye.jiuyekunnan = jiuye.jiuyekunnan + temp.jiuyekunnan;
+                        jiuye.other = jiuye.other + temp.other;
+                        jiuye.jiuyeheji = jiuye.jiuyeheji + temp.jiuyeheji;
+                        jiuye.weijiuye = jiuye.weijiuye + temp.weijiuye;
+                    }
+                    jiuye.aca = "合计";
+                    jiuye.signP = Math.Round((double)jiuye.signNumber / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.hetongP = Math.Round((double)jiuye.hetongNumber / (double)jiuye.totalNumber, 4) * 100;
+                    //jiuye.kanyanP = Math.Round((double)jiuye.kaoyan / (double)jiuye.totalNumber, 4) * 100;
+                    //jiuye.baoyanP = Math.Round((double)jiuye.baoyan / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.abroadP = Math.Round((double)jiuye.abroadNumber / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.zizhuP = Math.Round((double)jiuye.zizhuNumber / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.ruwuP = Math.Round((double)jiuye.ruwu / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.guojiaP = Math.Round((double)jiuye.guojia / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.keyanzhuliP = Math.Round((double)jiuye.keyanzhuli / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.difangP = Math.Round((double)jiuye.difang / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.linghuoP = Math.Round((double)jiuye.linghuo / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.gongwuyuanP = Math.Round((double)jiuye.gongwuyuan / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.jiuyekunnanP = Math.Round((double)jiuye.jiuyekunnan / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.otherP = Math.Round((double)jiuye.other / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.jiuyehejiP = Math.Round((double)jiuye.jiuyeheji / (double)jiuye.totalNumber, 4) * 100;
+                    jiuye.weijiuyyeP = Math.Round((double)jiuye.weijiuye / (double)jiuye.totalNumber, 4) * 100;
+                    jiuyeList.Add(jiuye);
+                    #endregion
+                }
+            }
+
+            return View(jiuyeList);
         }
         #endregion
 
