@@ -233,6 +233,11 @@ namespace Graduation.Models
         public DateTime? CheckTime { get; set; }
 
         /// <summary>
+        /// 审核时间传参
+        /// </summary>
+        public DateTime? CheckTime2 { get; set; }
+
+        /// <summary>
         /// 是否就业
         /// </summary>
         public string IsJiuYe { get; set; }
