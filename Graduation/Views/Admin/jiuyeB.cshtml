@@ -1,0 +1,111 @@
+﻿@model List<Graduation.Models.jieyeListViewModel>
+@{
+    Layout = "~/Views/Shared/Guide.cshtml";
+}
+@if (ViewBag.type == "1")
+{
+    ViewBag.type = "display:none";
+}
+<div class="templatemo-content col-1 light-gray-bg">
+    <div class="templatemo-top-nav-container">
+        <h2>求职与就业信息管理系统</h2>
+        <div class="right">
+            <span>欢迎&nbsp;&nbsp;</span><span class="admin">就业中心管理员：</span><span class="admin">Admin</span><span>&nbsp;&nbsp;登录本系统</span>
+        </div>
+    </div>
+    <div class="templatemo-content-container now-position ly-tab">
+        <span>当前位置：</span><span>本科专生/研究生>></span><span>就业信息管理>></span><span>就业统计</span>
+        <br />
+        <h1 class="ly-title tab-h1 tab-active"><a href="/Admin/jiuyeB">本专科生</a></h1>
+        <h1 class="ly-title tab-h1 tab-notactive"><a href="/Admin/jiuyeY">研究生</a></h1>
+        <div><button class="btn btn-warning">生成excel</button></div>
+        <div class="panel panel-default table-responsive clear" style="overflow:scroll; height:400px">
+            <table class="table table-striped table-bordered templatemo-user-table table-hover .houtai-table" style="width:2800px;">
+                <thead>
+                    <tr>
+                        <th>学院</th>
+                        <th>系</th>
+                        <th>专业名称</th>
+                        <th>总人数</th>
+                        <th>签约人数</th>
+                        <th>签约率</th>
+                        <th>合同就业人数</th>
+                        <th>合同就业率</th>
+                        <th>考研人数</th>
+                        <th>考研率</th>
+                        <th>保研人数</th>
+                        <th>保研率</th>
+                        <th>出国人数</th>
+                        <th>出国率</th>
+                        <th>自主创业</th>
+                        <th>自主创业率</th>
+                        <th>应征入伍</th>
+                        <th>应征入伍率</th>
+                        <th>国家科研项目</th>
+                        <th>国家科研项目率</th>
+                        <th>科研助理</th>
+                        <th>科研助理率</th>
+                        <th>地方基层项目</th>
+                        <th>地方基层项目率</th>
+                        <th>灵活就业人数</th>
+                        <th>灵活就业率</th>
+                        <th>继续考公务员人数</th>
+                        <th>继续考公务员率</th>
+                        <th>就业困难</th>
+                        <th>就业困难率</th>
+                        <th>其他暂未就业人数</th>
+                        <th>其他暂未就业比率</th>
+                        <th>就业合计人数</th>
+                        <th>就业合计率</th>
+                        <th>未就业人数</th>
+                        <th>未就业合计率</th>
+                    </tr>
+                </thead>
+               @{
+                   foreach (var temp in Model)
+                   { 
+                       <tr>
+                        <th>@temp.aca</th>
+                        <th>@temp.dep </th>
+                        <th>@temp.major</th>
+                        <th>@temp.totalNumber %</th>
+                        <th>@temp.signNumber %</th>
+                        <th>@temp.signP %</th>
+                        <th>@temp.hetongNumber %</th>
+                        <th>@temp.hetongP %</th>
+                        <th>@temp.kaoyan %</th>
+                        <th>@temp.kanyanP %</th>
+                        <th>@temp.baoyan %</th>
+                        <th>@temp.baoyanP %</th>
+                        <th>@temp.abroadNumber %</th>
+                        <th>@temp.abroadP %</th>
+                        <th>@temp.zizhuNumber %</th>
+                        <th>@temp.zizhuP %</th>
+                        <th>@temp.ruwu %</th>
+                        <th>@temp.ruwuP %</th>
+                        <th>@temp.guojia %</th>
+                        <th>@temp.guojiaP %</th>
+                        <th>@temp.keyanzhuli %</th>
+                        <th>@temp.keyanzhuliP %</th>
+                        <th>@temp.difang %</th>
+                        <th>@temp.difangP %</th>
+                        <th>@temp.linghuo %</th>
+                        <th>@temp.linghuoP %</th>
+                        <th>@temp.gongwuyuan %</th>
+                        <th>@temp.gongwuyuanP %</th>
+                        <th>@temp.jiuyekunnan %</th>
+                        <th>@temp.jiuyekunnanP %</th>
+                           <th>@temp.other %</th>
+                           <th>@temp.otherP %</th>
+                           <th>@temp.jiuyeheji %</th>
+                           <th>@temp.jiuyehejiP %</th>
+                           <th>@temp.weijiuye %</th>
+                           <th>@temp.weijiuyyeP %</th>
+                    </tr>
+                   }
+               }
+            </table>
+        </div>
+        <footer class="text-right"></footer>
+    </div>
+</div>

@@ -145,6 +145,9 @@
         else if ($(".xianshi").val() == "70暂未就业") {
             $(".notjob").attr("checked", true)
         }
+        else if ($(".xianshi").val() == null || $(".xianshi").val() == "") {
+            //都不选中
+        }
         else { $(".other").attr("checked", true) }
         $(".other").click(function () {
             if ($(".xianshi").val() == "46应征入伍") {

@@ -31,13 +31,13 @@ namespace Graduation.Controllers
 
         #region 地区下拉栏
         public JsonResult GetCity(string content)
-        {
+       {
             List<LocationModel> CityList = new List<LocationModel>();
-            var list = CityList;
-            if (content == "")
-            {
-                 list = db.LocationTb.Where(m => m.name.Contains(content)).ToList(); 
-            }          
+             var list=CityList;
+            if (content != "")
+            { 
+               list = db.LocationTb.Where(m=>m.name.Contains(content)).ToList();
+            }
             foreach (var item in list)
             {
                 CityList.Add(new LocationModel() { code = item.code, name = item.name });
@@ -128,12 +128,12 @@ namespace Graduation.Controllers
             var fcl = db.BaseInfoTb.Find(Session["number"]);
             if (st.ResLocationCode != null)
                 familyCityList.Add(new SelectListItem { Text = st.ResLocation, Value = st.ResLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
+            //else
+            //{
+            //    var list = db.LocationTb.ToList();
+            //    foreach (var item in list)
+            //        familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            //}
             ViewBag.familyCityList = familyCityList;
             #endregion
 
