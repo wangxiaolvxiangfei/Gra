@@ -1462,6 +1462,43 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="乡镇村",Value="4",Selected=false}
             };
                 ViewBag.ftype = type;
+
+
+                //生源所在地
+                List<SelectListItem> cityList = new List<SelectListItem>();
+                var st = db.BaseInfoTb.Find(studentNumber);
+                if (st.OriginCode != null)
+                    cityList.Add(new SelectListItem { Text = st.OriginCity, Value = st.OriginCode });
+                else
+                {
+                    var list = db.LocationTb.Where(m => m.name.Contains(st.OriginProvince)).ToList();
+                    foreach (var item in list)
+                        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+                }
+                ViewBag.city = cityList;
+
+                //家庭户口所在地
+                List<SelectListItem> familyCityList = new List<SelectListItem>();
+                var fcl = db.BaseInfoTb.Find(studentNumber);
+                if (st.ResLocationCode != null)
+                    familyCityList.Add(new SelectListItem { Text = st.ResLocation, Value = st.ResLocationCode });
+                //else
+                //{
+                //    var list = db.LocationTb.ToList();
+                //    foreach (var item in list)
+                //        familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+                //}
+                ViewBag.familyCityList = familyCityList;
+
+                //民族
+                List<SelectListItem> nation = new List<SelectListItem>();
+                var nationlist = db.nationTb.ToList();
+                foreach (var item in nationlist)
+                {
+                    nation.Add(new SelectListItem { Text = item.NationName, Value = item.NationCode });
+                }
+                ViewBag.nation = nation;
+
                 #endregion
                 FillBaseInfoViewModel fillBaseInfoViewModel = new FillBaseInfoViewModel()
                 {
@@ -2650,6 +2687,22 @@ namespace Graduation.Controllers
                 new SelectListItem{Text="军队",Value="80军队"}                                   
             };
             ViewBag.hangyefenlei = hangyefenlei;
+
+
+            //单位所在地
+            List<SelectListItem> cityList = new List<SelectListItem>();
+            var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
+            if (st.ComLocation != null)
+                cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
+            //else
+            //{
+            //    var list = db.LocationTb.ToList();
+            //    foreach (var item in list)
+            //        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            //}
+            ViewBag.city = cityList;
+
+
 
             #endregion
 
