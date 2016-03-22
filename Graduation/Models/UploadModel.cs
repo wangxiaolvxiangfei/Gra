@@ -180,6 +180,8 @@ namespace Graduation.Models
         /// </summary>
         public string EntranceTime { get; set; }
 
+        public string test { get; set; }
+
         /// <summary>
         /// 毕业时间
         /// </summary>
