@@ -1,0 +1,158 @@
+﻿@model Graduation.Models.AddNumberModel
+@{
+    Layout = "~/Views/Shared/Guide.cshtml";
+}
+@if (ViewBag.type == "1")
+{
+    ViewBag.type = "display:none";
+}
+
+<div class="templatemo-content col-1 light-gray-bg">
+    <div class="templatemo-top-nav-container">
+        <h2>求职与就业信息管理系统</h2>
+        <div class="right">
+            <span>欢迎&nbsp;&nbsp;</span><span class="admin">就业中心管理员：</span><span class="admin">Admin</span><span>&nbsp;&nbsp;登录本系统</span>
+        </div>
+    </div>
+    <div class="templatemo-content-container now-position">
+        <span>当前位置：</span><span>就业统计</span>
+        <h1 class="ly-title">就业统计</h1>
+        <p style="text-align:center">本科生</p>
+        @using (@Html.BeginForm())
+        { 
+        <div class="panel panel-default table-responsive clear" style="overflow:scroll; min-height:200px">
+            <table class="table table-striped col" style="width:2800px">
+                <tr>
+                    <td>学院</td>
+                    <td>系</td>
+                    <td>专业名称</td>
+                    <td>总人数</td>
+                    <td>签约人数</td>
+                    <td>签约率</td>
+                    <td>保研人数</td>
+                    <td>保研率</td>
+                    <td>签约+保研</td>
+                    <td>比例</td>
+                    <td>考研上线人数</td>
+                    <td>比例</td>
+                    <td>意向人数</td>
+                    <td>比例</td>
+                    <td>其他就业/出国+公务员+选调生等</td>
+                    <td>比例</td>
+                    <td>签约+保研+升学+其他+意向</td>
+                    <td>比例</td>
+                    <td>剩余人数</td>
+                    <td>剩余比例</td>
+                </tr>
+                @{
+            int i = 0;
+            foreach (var aca in @Model.acaList)
+            {
+                foreach (var dep in @Model.depList.Where(m => m.BelongId == aca.Id))
+                {
+                    string depId = dep.Id.ToString();
+                    foreach (var major in @Model.BmajorList.Where(m => m.DepartId == depId))
+                    {
+                        @Html.HiddenFor(m=>m.BnumberList[i].id)
+                        @Html.HiddenFor(m => m.BnumberList[i].belongId)
+                        @Html.HiddenFor(m => m.BnumberList[i].name)
+                        @Html.HiddenFor(m=>m.BnumberList[i].number)
+                        <tr>
+                            <td>@aca.Name</td>
+                            <td>@dep.Name</td>
+                            <td>@major.Name</td>
+                            <td>@Model.BnumberList[i].number</td>
+                            <td>@Html.TextBoxFor(m=>m.BnumberList[i].signNumber)</td>
+                            <td>@Model.BnumberList[i].signP</td>
+                            <td>@Html.TextBoxFor(m => m.BnumberList[i].baoyan)</td>
+                            <td>@Model.BnumberList[i].baoyanP</td>
+                            <td>@Model.BnumberList[i].signAbaoyan</td>
+                            <td>@Model.BnumberList[i].signAbaoyanP</td>
+                            <td>@Html.TextBoxFor(m => m.BnumberList[i].kaoyan)</td>
+                            <td>@Model.BnumberList[i].kanyanP</td>
+                            <td>@Html.TextBoxFor(m => m.BnumberList[i].yixiang)</td>
+                            <td>@Model.BnumberList[i].yixiangP</td>
+                            <td>@Html.TextBoxFor(m => m.BnumberList[i].qita)</td>
+                            <td>@Model.BnumberList[i].qitaP</td>
+                            <td>@Html.TextBoxFor(m => m.BnumberList[i].zonghe)</td>
+                            <td>@Model.BnumberList[i].zongheP</td>
+                            <td>@Html.TextBoxFor(m => m.BnumberList[i].shengyu)</td>
+                            <td>@Model.BnumberList[i].shengyuP</td>
+                        </tr>
+                        i++;
+                    }
+                }
+            }
+                }
+            </table>
+        </div>
+    <button class="btn btn-warning" type="submit" name="tijiao" value="benke">提交</button>
+        }
+
+        <p style="text-align:center">研究生</p>
+        <div class="panel panel-default table-responsive clear col" style="overflow:scroll; min-height:200px">
+            <table class="table table-striped" style="width:2800px">
+
+                <tr>
+                    <td>学院</td>
+                    <td>系</td>
+                    <td>专业名称</td>
+                    <td>总人数</td>
+                    <td>签约人数</td>
+                    <td>签约率</td>
+                    <td>考博、攻博人数</td>
+                    <td>比例</td>
+                    <td>意向人数</td>
+                    <td>比例</td>
+                    <td>其他就业/出国+公务员+选调生等</td>
+                    <td>比例</td>
+                    <td>签约+升博+意向+其他</td>
+                    <td>比例</td>
+                    <td>剩余人数</td>
+                    <td>剩余比例</td>
+                </tr>
+                @{
+                    int a = 0;
+                    foreach (var aca in @Model.acaList)
+                    {
+                        foreach (var dep in @Model.depList.Where(m => m.BelongId == aca.Id))
+                        {
+                            string depId = dep.Id.ToString();
+                            foreach (var major in @Model.YmajorList.Where(m => m.DepartId == depId))
+                            {
+                                @Html.HiddenFor(m => m.YnumberList[a].id)
+                                @Html.HiddenFor(m => m.YnumberList[a].belongId)
+                                @Html.HiddenFor(m => m.YnumberList[a].name)
+                                @Html.HiddenFor(m => m.YnumberList[a].number)
+                                <tr>
+                                    <td>@aca.Name</td>
+                                    <td>@dep.Name</td>
+                                    <td>@major.Name</td>
+                                    <td>@Model.YnumberList[a].number</td>
+                                    <td>@Html.TextBoxFor(m => m.YnumberList[a].signNumber)</td>
+                                    <td>@Model.YnumberList[a].signP</td>
+                                    <td>@Html.TextBoxFor(m => m.YnumberList[a].kaoyan)</td>
+                                    <td>@Model.YnumberList[a].kanyanP</td>
+                                    <td>@Html.TextBoxFor(m => m.YnumberList[a].yixiang)</td>
+                                    <td>@Model.YnumberList[a].yixiangP</td>
+                                    <td>@Html.TextBoxFor(m => m.YnumberList[a].qita)</td>
+                                    <td>@Model.YnumberList[a].qitaP</td>
+                                    <td>@Html.TextBoxFor(m => m.YnumberList[a].zonghe)</td>
+                                    <td>@Model.YnumberList[a].zongheP</td>
+                                    <td>@Html.TextBoxFor(m => m.YnumberList[a].shengyu)</td>
+                                    <td>@Model.YnumberList[a].shengyuP</td>
+                                </tr>
+                                a++;
+                            }
+                        }
+                    }
+                }
+
+            </table>
+        </div>
+        <button class="btn btn-warning">编辑</button>
+        <button class="btn btn-success marginLeft">生成本科生excel</button>
+        <button class="btn btn-info marginLeft">生成研究生excel</button>
+        <footer class="text-right"></footer>
+    </div>
+</div>

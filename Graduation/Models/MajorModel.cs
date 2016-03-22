@@ -56,5 +56,7 @@ namespace Graduation.Models
         /// 学历
         /// </summary>
         public string Edu { get; set; }
+
+        public int Number { get; set; }
     }
 }
