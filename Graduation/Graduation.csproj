@@ -272,7 +272,6 @@
     <Content Include="Images\sunset-big.jpg" />
     <Content Include="Images\sunset.jpg" />
     <Content Include="Scripts\bootstrap-filestyle.js" />
-    <Content Include="Scripts\City.js" />
     <Content Include="Scripts\jquery-1.11.2.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
@@ -352,12 +351,13 @@
     <Content Include="Views\Admin\EmplScience.cshtml" />
     <Content Include="Views\Admin\EmplPlace.cshtml" />
     <Content Include="Views\Admin\Upload.cshtml" />
-    <Content Include="Views\Admin\jiyeYX.cshtml" />
     <Content Include="Views\Shared\Guide.cshtml" />
     <Content Include="Views\Admin\AddGradInfo.cshtml" />
     <Content Include="Views\FillBaseInfo\FillESchoolContractInfo.cshtml" />
     <Content Include="Views\Admin\jiuyeYX.cshtml" />
     <Content Include="Views\Admin\EmplESchoolContractExam.cshtml" />
+    <Content Include="Views\Admin\jiuyeB.cshtml" />
+    <Content Include="Views\Admin\jiuyeY.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
