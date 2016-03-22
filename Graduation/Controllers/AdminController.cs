@@ -1494,12 +1494,12 @@ namespace Graduation.Controllers
                 var fcl = db.BaseInfoTb.Find(studentNumber);
                 if (st.ResLocationCode != null)
                     familyCityList.Add(new SelectListItem { Text = st.ResLocation, Value = st.ResLocationCode });
-                else
-                {
-                    var list = db.LocationTb.ToList();
-                    foreach (var item in list)
-                        familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-                }
+                //else
+                //{
+                //    var list = db.LocationTb.ToList();
+                //    foreach (var item in list)
+                //        familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+                //}
                 ViewBag.familyCityList = familyCityList;
 
                 //民族
@@ -2752,12 +2752,12 @@ namespace Graduation.Controllers
             var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
             if (st.ComLocation != null)
                 cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
+            //else
+            //{
+            //    var list = db.LocationTb.ToList();
+            //    foreach (var item in list)
+            //        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            //}
             ViewBag.city = cityList;
 
 
