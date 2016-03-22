@@ -33,7 +33,11 @@ namespace Graduation.Controllers
         public JsonResult GetCity(string content)
         {
             List<LocationModel> CityList = new List<LocationModel>();
-            var list = db.LocationTb.Where(m=>m.name.Contains(content)).ToList();
+            var list = CityList;
+            if (content == "")
+            {
+                 list = db.LocationTb.Where(m => m.name.Contains(content)).ToList(); 
+            }          
             foreach (var item in list)
             {
                 CityList.Add(new LocationModel() { code = item.code, name = item.name });
