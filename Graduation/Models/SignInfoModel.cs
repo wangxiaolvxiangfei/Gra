@@ -96,5 +96,20 @@ namespace Graduation.Models
         /// 是否锁定
         /// </summary>
         public string IsClocked { get; set; }
+
+        /// <summary>
+        /// 学生编辑时间
+        /// </summary>
+        public DateTime? StuEditTime { get; set; }
+
+        /// <summary>
+        /// 审核时间
+        /// </summary>
+        public DateTime? CheckTime { get; set; }
+
+        /// <summary>
+        /// 审核时间传参
+        /// </summary>
+        public DateTime? CheckTime2 { get; set; }
     }
 }

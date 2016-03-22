@@ -7,6 +7,60 @@
     ViewBag.type = "display:none";
 }
 <script src="~/Scripts/City.js"></script>
+<script type="text/javascript">
+    $(function () {
+        GetAca();
+        $("#Dep").empty();
+        $("#Maj").empty();
+        $("#Aca").change(function () {
+            GetDepart();
+        });
+        $("#Dep").change(function () {
+            GetMajor();
+        });
+    });
+    //获取院
+    function GetAca() {
+        $("#Aca").empty();
+        $.getJSON(
+        "/Admin/GetAcalist",
+        function (data) {
+            $.each(data, function (i, item) {
+                $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Aca"));
+
+            })
+        });
+    }
+
+    //获取系
+    function GetDepart() {
+        $("#Dep").empty();
+        $.getJSON(
+        "/Admin/GetDepartList",
+        { pid: $("#Aca").val() },
+        function (data) {
+            $.each(data, function (i, item) {
+                $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Dep"));
+
+            })
+        });
+    }
+    //获取专业
+    function GetMajor() {
+        $("#Maj").empty();
+        $.getJSON(
+        "/Admin/GetMajorList",
+        { pid: $("#Dep").val() },
+        function (data) {
+            $.each(data, function (i, item) {
+                $("<option></option>").val(item["Id"]).text(item["Name"]).appendTo($("#Maj"));
+
+            })
+        });
+    }
+</script>
+
+
 
 @using (@Html.BeginForm())
 {
@@ -36,9 +90,9 @@
                     <tr>
                         <td colspan="3">
                             <p>院、系、专业</p>
-                            <select></select>
-                            <select></select>
-                            <select></select>
+                           @Html.DropDownListFor(model => model.Academy, ViewBag.Aca as List<SelectListItem>, new { id = "Aca", @class = "form-control ly-select" })
+                            @Html.DropDownListFor(model => model.Department, ViewBag.Dep as List<SelectListItem>, new { id = "Dep", @class = "form-control ly-select" })
+                            @Html.DropDownListFor(model => model.Major, ViewBag.Maj as List<SelectListItem>, new { id = "Maj", @class = "form-control ly-select" })
                         </td>
                         <td>
                            <p>学生类型</p>

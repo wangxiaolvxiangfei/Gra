@@ -44,6 +44,17 @@
                     @Html.TextBoxFor(model => model.Upload.StudentNumber)
                 </div>
             </div>
+            
+             <div class="form-group">
+                <div>
+                    <label>审核时间范围：</label>
+                    @Html.TextBoxFor(m => m.Upload.signInfoModel.CheckTime, new { placeholder = "开始审核时间例：2015-1-1", @class = "form-control" })
+                    -
+                    @Html.TextBoxFor(m => m.Upload.signInfoModel.CheckTime2, new { placeholder = "结束审核时间例：2017-1-1", @class = "form-control" })
+                </div>
+            </div>
+            
+            
             <button class="btn btn-info" style="width:190px">查询</button>
         }
         @if (Model != null)

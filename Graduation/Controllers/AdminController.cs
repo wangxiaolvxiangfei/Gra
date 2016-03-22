@@ -620,13 +620,10 @@ namespace Graduation.Controllers
         }
         #endregion
 
-        #region 签约登记表
-        /// <summary>
-        /// 签约等级管理
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public ActionResult Sign(int type = 0, int id = 0)
+        #region 毕业生信息导出
+
+
+        public ActionResult AdminGradExpot(string Idd = null, int type = 0, int id = 0)
         {
             if (Session["Id"] != null)
             {
@@ -634,281 +631,7 @@ namespace Graduation.Controllers
                 var user = db.UserTb.Find(Session["Id"]);
                 var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
                 ViewBag.type = user.TypeCode;
-
-                if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
-                {
-                    ViewBag.style = "1";
-                    var userDep = db.DepartmentTb.Find(user.DepartId);
-                    upload = db.UploadTb.Where(m => m.Department == user.DepartName);
-
-                }
-                else if (Session["Type"].ToString() == "2")//管理员登陆
-                {
-                    upload = db.UploadTb;
-                    ViewBag.style = "2";
-                }
-
-                #region 下载excel表格
-                if (type == 1)
-                {
-                    SignListViewModel sl = (SignListViewModel)Session["table"];
-                    //string[] excelHead = { "学号", "姓名", "学历", "院", "系", "班级", "单位名称", "隶属部门", "隶属部门代码", "单位性质", "单位性质代码", "单位地址", "单位联系人", "单位电话", "个人联系方式", "签约方式", "协议书编号", "所属集团或系统", "所属集团代码", "登记日期" };
-                    string[] excelHead = { "xh", "xm", "xl", "szxy", "szyx", "bj", "dwmc", "dwlsbm", "dwlsbmdm", "dwxz", "dwxzdm", "dwdz", "dwlxr", "lxrdh", "mobilephon", "签约方式", "xysbh", "dwzzjgdm", "所属集团代码", "登记日期" };
-                    var workbook = new HSSFWorkbook();
-                    //表格显示的名字
-                    var sheet = workbook.CreateSheet("签约登记");
-                    var col = sheet.CreateRow(0);
-                    //遍历表头在exal表格中
-                    for (int i = 0; i < excelHead.Length; i++)
-                    {
-                        //报表的头部
-                        col.CreateCell(i).SetCellValue(excelHead[i]);
-                    }
-                    int a = 1;
-                    //遍历表数据
-                    foreach (var item in sl.uploadPagedList)
-                    {
-                        var row = sheet.CreateRow(a);
-                        row.CreateCell(0).SetCellValue(item.StudentNumber);
-                        row.CreateCell(1).SetCellValue(item.Name);
-                        row.CreateCell(2).SetCellValue(item.Education);
-                        row.CreateCell(3).SetCellValue(item.Academy);
-                        row.CreateCell(4).SetCellValue(item.Department);
-                        row.CreateCell(5).SetCellValue(item.Class);
-                        if (item.signInfoModel != null)
-                        {
-                            row.CreateCell(6).SetCellValue(item.signInfoModel.CompanyName);
-                            row.CreateCell(7).SetCellValue(item.signInfoModel.ComBelongDep);
-                            row.CreateCell(8).SetCellValue(item.signInfoModel.ComBelongDepCode);
-                            row.CreateCell(9).SetCellValue(item.signInfoModel.ComType);
-                            row.CreateCell(10).SetCellValue(item.signInfoModel.ComTypeCode);
-                            row.CreateCell(11).SetCellValue(item.signInfoModel.CompanyAddress);
-                            row.CreateCell(12).SetCellValue(item.signInfoModel.CompanyConn);
-                            row.CreateCell(13).SetCellValue(item.signInfoModel.CompanyTel);
-                            row.CreateCell(14).SetCellValue(item.signInfoModel.PerTelType);
-                            row.CreateCell(15).SetCellValue(item.signInfoModel.SignType);
-                            row.CreateCell(16).SetCellValue(item.signInfoModel.AgreementID);
-                            row.CreateCell(17).SetCellValue(item.signInfoModel.ComBelongDep);
-                            row.CreateCell(18).SetCellValue(item.signInfoModel.ComBelongDepCode);
-                            row.CreateCell(19).SetCellValue(item.signInfoModel.SignTime);
-                        }
-                        a++;
-                    }
-                    MemoryStream ms = new MemoryStream();
-                    workbook.Write(ms);
-                    ms.Seek(0, SeekOrigin.Begin);
-                    return File(ms, "application/vnd.ms-excel", "签约登记表.xls");
-                }
-                #endregion
-
-                var list = new SignListViewModel();
-                list.Upload = new UploadModel();
-                //list.uploadList = new List<FillBaseInfoViewModel>();
-
-                foreach (var item in upload.ToList())
-                {
-                    SignInfoViewModel temp = new SignInfoViewModel();
-                    temp.upload = new UploadModel();
-                    temp.upload = item;
-                    if (db.SingInfoTb.Find(item.StudentNumber) != null)
-                        temp.signInfo = db.SingInfoTb.Find(item.StudentNumber);
-                    //list.uploadList.Add(temp);
-                }
-                list.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
-                Session["table"] = list;
-                return View(list);
-            }
-            else
-            {
-                return RedirectToAction("Login");
-            }
-
-        }
-
-        /// <summary>
-        /// 签约登记表格
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Sign(SignListViewModel sl, int id = 0)
-        {
-            var UserId = Session["Id"];//用户Id
-            var user = db.UserTb.Find(UserId);//查询出该用户
-            ViewBag.type = user.TypeCode;
-            if (Session["Type"].ToString() == "1")
-            {
-                ViewBag.type = "1";
-            }
-            else
-            {
-                ViewBag.type = "2";
-            }
-
-            #region 显示查询结果
-            SignListViewModel display = new SignListViewModel();
-            display.SignList = new List<SignInfoViewModel>();
-            display.Upload = new UploadModel();
-            display.Upload = sl.Upload;
-            var upload = db.UploadTb.Include("signInfoModel").Where(m => m.Department == user.DepartName);
-            if (Session["Type"].ToString() == "1")
-            { upload = db.UploadTb.Include("signInfoModel").Where(m => m.Department == user.DepartName); }
-            else
-            { upload = db.UploadTb.Include("signInfoModel"); }
-            if (sl.Upload.Name != null)//姓名
-                upload = upload.Where(m => m.Name.Contains(sl.Upload.Name));
-            if (sl.Upload.StudentNumber != null)//学号
-                upload = upload.Where(m => m.StudentNumber.Contains(sl.Upload.StudentNumber));
-            if (sl.Upload.StudentType != null)//学生类型
-                upload = upload.Where(m => m.StudentType == sl.Upload.StudentType);
-            foreach (var item in upload.ToList())
-            {
-                SignInfoViewModel temp = new SignInfoViewModel();
-                temp.upload = new UploadModel();
-                temp.upload = item;
-                if (db.SingInfoTb.Find(item.StudentNumber) != null)
-                    temp.signInfo = db.SingInfoTb.Find(item.StudentNumber);
-                //disPlay.uploadList.Add(temp);
-            }
-            display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
-            Session["table"] = display;
-            return View(display);
-            #endregion
-
-        }
-        #endregion
-
-        #region 编辑签约登记表
-        public ActionResult EditSign(string studentNumber)
-        {
-
-            if (Session["Id"] != null)
-            {
-                ViewBag.type = Session["Type"];
-                #region 下拉栏初始化
-                //签约方式
-                List<SelectListItem> signType = new List<SelectListItem> {
-                new SelectListItem{Text="校内",Value="校内",Selected=false},
-                new SelectListItem{Text="校外",Value="校外",Selected=true}
-            };
-                ViewBag.signType = signType;
-
-                //所属集团或系统
-                List<SelectListItem> Group = new List<SelectListItem> {
-                new SelectListItem{Text="国网",Value="国网",Selected=true},
-                new SelectListItem{Text="南网",Value="南网",Selected=true},
-                new SelectListItem{Text="大唐集团",Value="大唐集团",Selected=false},
-                new SelectListItem{Text="华能集团",Value="华能集团",Selected=false},
-                new SelectListItem{Text="国电集团",Value="国电集团",Selected=false},
-                new SelectListItem{Text="华电集团",Value="华电集团",Selected=false},
-                new SelectListItem{Text="中电投",Value="中电投",Selected=false},
-                new SelectListItem{Text="中能建",Value="中能建",Selected=false},
-                new SelectListItem{Text="中电建",Value="中电建",Selected=false},
-                new SelectListItem{Text="国核集团",Value="国核集团",Selected=false},
-                new SelectListItem{Text="中核集团",Value="中核集团",Selected=false},
-                new SelectListItem{Text="中广核",Value="中广核",Selected=false},
-                new SelectListItem{Text="华润集团",Value="华润集团",Selected=false},
-                new SelectListItem{Text="神华集团",Value="神华集团",Selected=false},
-                new SelectListItem{Text="京能集团",Value="京能集团",Selected=false},
-                new SelectListItem{Text="浙能集团",Value="浙能集团",Selected=false},
-                new SelectListItem{Text="深能集团",Value="深能集团",Selected=false},
-                new SelectListItem{Text="粤电集团",Value="粤电集团",Selected=false},
-                new SelectListItem{Text="国投电力",Value="国投电力",Selected=false},
-                new SelectListItem{Text="其他地方能源集团",Value="其他地方能源集团",Selected=false},
-                new SelectListItem{Text="金融类",Value="金融类",Selected=false},
-                new SelectListItem{Text="IT类",Value="IT类",Selected=false},
-                new SelectListItem{Text="设计类",Value="设计类",Selected=false},
-                new SelectListItem{Text="地方企业",Value="地方企业",Selected=false},
-                new SelectListItem{Text="教育行业",Value="教育行业",Selected=false},
-                new SelectListItem{Text="银行",Value="银行",Selected=false},
-                new SelectListItem{Text="通信行业",Value="通信行业",Selected=false},
-                new SelectListItem{Text="交通运输业",Value="交通运输业",Selected=false},
-                new SelectListItem{Text="机械机电",Value="机械机电",Selected=false},
-                new SelectListItem{Text="其他",Value="其他",Selected=false},
-            };
-                ViewBag.Group = Group;
-
-                var belong = db.belongDepTb.ToList();
-                List<SelectListItem> belongDep = new List<SelectListItem> { };
-                foreach (var item in belong)
-                {
-                    var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode };
-                    belongDep.Add(belongDepList);
-                }
-                ViewBag.belong = belongDep;
-
-                #endregion
-
-                SignInfoViewModel student = new SignInfoViewModel()
-                {
-                    signInfo = db.SingInfoTb.Find(studentNumber),
-                    upload = db.UploadTb.Find(studentNumber)
-                };
-                student.signInfo.ComType = student.signInfo.ComTypeCode + student.signInfo.ComType;
-                if (student.signInfo == null)
-                {
-                    student.signInfo = new SignInfoModel();
-                    student.signInfo.StudentNumber = studentNumber.ToString();
-                }
-
-                return View(student);
-            }
-            else
-            { return RedirectToAction("Login"); }
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditSign(SignInfoViewModel students)
-        {
-            if (ModelState.IsValid)
-            {
-                string comType = students.signInfo.ComType;
-                students.signInfo.ComType = comType.Substring(2);
-                students.signInfo.ComTypeCode = comType.Substring(0, 2);
-
-                var belongDep = db.belongDepTb.Where(m => m.ComBelongDepCode == students.signInfo.ComBelongDepCode).FirstOrDefault();
-                students.signInfo.ComBelongDep = belongDep.ComBelongDep;
-                //如果基本信息表中已经有基本，则为更新
-                if (db.SingInfoTb.Find(students.signInfo.StudentNumber) != null)
-                {
-                    SignInfoModel temp = db.SingInfoTb.Find(students.signInfo.StudentNumber);
-                    db.Entry(temp).CurrentValues.SetValues(students.signInfo);
-                    db.SaveChanges();
-                }
-                else
-                {
-                    db.SingInfoTb.Add(students.signInfo);
-                    db.SaveChanges();
-                }
-                return RedirectToAction("EditSign", new { studentNumber = students.signInfo.StudentNumber });
-            }
-            return View();
-        }
-        #endregion
-
-        #region 毕业生列表
-
-        public ActionResult AdminGradList(string Idd = null, int type = 0, int id = 0)
-        {
-            if (Session["Id"] != null)
-            {
-                ViewBag.type = Session["Type"];
-                var user = db.UserTb.Find(Session["Id"]);
-                var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
-                ViewBag.type = user.TypeCode;
-                #region 删除
-                if (type == 2)
-                {
-                    var item = db.UploadTb.Find(Idd);
-                    if (item == null)
-                        RedirectToAction("AdminGradList");
-                    db.UploadTb.Remove(item);
-                    db.SaveChanges();
-                }
-                #endregion
-
+             
                 if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
                 {
                     ViewBag.style = "1";
@@ -1139,8 +862,572 @@ namespace Graduation.Controllers
 
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AdminGradExpot(AdminGradViewModel av, string action, int id = 0)
+        {
+            var user = db.UserTb.Find(Session["Id"]);
+            ViewBag.type = user.TypeCode;
+            if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
+            {
+                ViewBag.style = "1";
+                #region 院系列表
+                var userDep = db.DepartmentTb.Find(user.DepartId);
+                //院列表
+                var aca = db.AcademyTb.ToList();
+                SelectList acaList = new SelectList(aca, "Id", "Name", userDep.BelongId);
+                ViewBag.aca = acaList;
+
+                //系列表
+                var dep = db.DepartmentTb.ToList();
+                SelectList depList = new SelectList(dep, "Id", "Name", userDep.Id);
+                ViewBag.dep = depList;
+
+                //专业列表
+                List<SelectListItem> majorList = new List<SelectListItem>();
+                var major = db.MajorTb.ToList();
+                if (major != null)
+                {
+                    foreach (var item in major)
+                    {
+                        majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    }
+                }
+
+                ViewBag.major = majorList;
+                #endregion
+            }
+            else
+            {
+                ViewBag.style = "2";
+                #region 院系列表
+                //院列表
+                var aca = db.AcademyTb.ToList();
+                List<SelectListItem> acaList = new List<SelectListItem>();
+                if (aca != null)
+                {
+                    foreach (var item in aca)
+                    { acaList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() }); }
+                }
+                ViewBag.aca = acaList;
+
+                //系列表
+                var dep = db.DepartmentTb.ToList();
+                List<SelectListItem> depList = new List<SelectListItem>();
+                if (dep != null)
+                {
+                    foreach (var item in dep)
+                    {
+                        depList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    }
+                }
+                ViewBag.dep = depList;
+
+                //专业列表
+                List<SelectListItem> majorList = new List<SelectListItem>();
+                var major = db.MajorTb.ToList();
+                if (major != null)
+                {
+                    foreach (var item in major)
+                    {
+                        majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    }
+                }
+
+                ViewBag.major = majorList;
+                #endregion
+            }
+
+            #region 查询
+            if (action == "查询")
+            {
+                AdminGradViewModel disPlay = new AdminGradViewModel();
+
+                disPlay.upload = new UploadModel();
+                var upload = db.UploadTb.Include("fillBaseInfoModel").Include("eSchoolInfoModel").Include("applInfoModel").Include("signInfoModel").Where(m => m.Department == user.DepartName);
+                if (Session["Type"].ToString() == "1")
+                { upload = db.UploadTb.Include("fillBaseInfoModel").Include("eSchoolInfoModel").Include("applInfoModel").Include("signInfoModel").Where(m => m.Department == user.DepartName); }
+                else
+                { upload = db.UploadTb.Include("fillBaseInfoModel").Include("eSchoolInfoModel").Include("applInfoModel").Include("signInfoModel"); }
+                if (av.upload.Name != null)//姓名
+                    upload = upload.Where(m => m.Name.Contains(av.upload.Name));
+                if (av.upload.StudentNumber != null)//学号
+                    upload = upload.Where(m => m.StudentNumber.Contains(av.upload.StudentNumber));
+                if (av.upload.EntranceYear != null)//入学时间
+                    upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear);
+                if (av.upload.GraduationTime != null)//毕业时间
+                    upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime);
+
+                //有开始审核时间，有结束审核时间            
+                if (av.upload.fillBaseInfoModel.CheckTime != null && av.upload.fillBaseInfoModel.CheckTime2 != null)
+                {
+                    upload = upload.Where(m => m.fillBaseInfoModel.CheckTime > av.upload.fillBaseInfoModel.CheckTime && m.fillBaseInfoModel.CheckTime < av.upload.fillBaseInfoModel.CheckTime2);
+                }
+                //有开始时间无结束时间
+                if (av.upload.fillBaseInfoModel.CheckTime != null && av.upload.fillBaseInfoModel.CheckTime2 == null)
+                {
+                    upload = upload.Where(m => m.fillBaseInfoModel.CheckTime > av.upload.fillBaseInfoModel.CheckTime);
+                }
+                //无开始时间有结束时间
+                if (av.upload.fillBaseInfoModel.CheckTime == null && av.upload.fillBaseInfoModel.CheckTime2 != null)
+                {
+                    upload = upload.Where(m => m.fillBaseInfoModel.CheckTime < av.upload.fillBaseInfoModel.CheckTime2);
+                }
 
 
+                if (av.upload.Academy != null && av.upload.Academy != "0")
+                {
+                    int Id = Convert.ToInt32(av.upload.Academy);
+                    var acaTemp = db.AcademyTb.Find(Id);
+                    upload = upload.Where(m => m.Academy == acaTemp.Name);
+                    disPlay.upload.Academy = acaTemp.Id.ToString();
+                }
+                if (av.upload.Department != null && av.upload.Department != "0")
+                {
+                    int Id = Convert.ToInt32(av.upload.Department);
+                    var depTemp = db.DepartmentTb.Find(Id);
+                    upload = upload.Where(m => m.Department == depTemp.Name);
+                    disPlay.upload.Department = depTemp.Id.ToString();
+                }
+                if (av.upload.Major != null && av.upload.Major != "0")//专业
+                {
+                    int Id = Convert.ToInt16(av.upload.Major);
+                    var majorTemp = db.MajorTb.Find(Id);
+                    upload = upload.Where(m => m.Major == majorTemp.Name);
+                    disPlay.upload.Academy = majorTemp.AcademyId;
+                    disPlay.upload.Department = majorTemp.DepartId;
+                }
+                if (av.upload.StudentType != null)
+                    upload = upload.Where(m => m.StudentType == av.upload.StudentType);
+                foreach (var item in upload.ToList())
+                {
+                    FillBaseInfoViewModel temp = new FillBaseInfoViewModel();
+                    temp.upload = new UploadModel();
+                    temp.upload = item;
+                    if (db.BaseInfoTb.Find(item.StudentNumber) != null)
+                        temp.baseInfo = db.BaseInfoTb.Find(item.StudentNumber);
+                    //disPlay.uploadList.Add(temp);
+                }
+                disPlay.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
+                Session["table"] = disPlay;
+                return View(disPlay);
+            }
+            #endregion         
+            return View();
+        }
+       
+        #endregion
+
+        #region 签约登记表
+        /// <summary>
+        /// 签约等级管理
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public ActionResult Sign(int type = 0, int id = 0)
+        {
+            if (Session["Id"] != null)
+            {
+                ViewBag.type = Session["Type"];
+                var user = db.UserTb.Find(Session["Id"]);
+                var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
+                ViewBag.type = user.TypeCode;
+
+                if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
+                {
+                    ViewBag.style = "1";
+                    var userDep = db.DepartmentTb.Find(user.DepartId);
+                    upload = db.UploadTb.Where(m => m.Department == user.DepartName);
+
+                }
+                else if (Session["Type"].ToString() == "2")//管理员登陆
+                {
+                    upload = db.UploadTb;
+                    ViewBag.style = "2";
+                }
+
+                #region 下载excel表格
+                if (type == 1)
+                {
+                    SignListViewModel sl = (SignListViewModel)Session["table"];
+                    //string[] excelHead = { "学号", "姓名", "学历", "院", "系", "班级", "单位名称", "隶属部门", "隶属部门代码", "单位性质", "单位性质代码", "单位地址", "单位联系人", "单位电话", "个人联系方式", "签约方式", "协议书编号", "所属集团或系统", "所属集团代码", "登记日期" };
+                    string[] excelHead = { "xh", "xm", "xl", "szxy", "szyx", "bj", "dwmc", "dwlsbm", "dwlsbmdm", "dwxz", "dwxzdm", "dwdz", "dwlxr", "lxrdh", "mobilephon", "签约方式", "xysbh", "dwzzjgdm", "所属集团代码", "登记日期" };
+                    var workbook = new HSSFWorkbook();
+                    //表格显示的名字
+                    var sheet = workbook.CreateSheet("签约登记");
+                    var col = sheet.CreateRow(0);
+                    //遍历表头在exal表格中
+                    for (int i = 0; i < excelHead.Length; i++)
+                    {
+                        //报表的头部
+                        col.CreateCell(i).SetCellValue(excelHead[i]);
+                    }
+                    int a = 1;
+                    //遍历表数据
+                    foreach (var item in sl.uploadPagedList)
+                    {
+                        var row = sheet.CreateRow(a);
+                        row.CreateCell(0).SetCellValue(item.StudentNumber);
+                        row.CreateCell(1).SetCellValue(item.Name);
+                        row.CreateCell(2).SetCellValue(item.Education);
+                        row.CreateCell(3).SetCellValue(item.Academy);
+                        row.CreateCell(4).SetCellValue(item.Department);
+                        row.CreateCell(5).SetCellValue(item.Class);
+                        if (item.signInfoModel != null)
+                        {
+                            row.CreateCell(6).SetCellValue(item.signInfoModel.CompanyName);
+                            row.CreateCell(7).SetCellValue(item.signInfoModel.ComBelongDep);
+                            row.CreateCell(8).SetCellValue(item.signInfoModel.ComBelongDepCode);
+                            row.CreateCell(9).SetCellValue(item.signInfoModel.ComType);
+                            row.CreateCell(10).SetCellValue(item.signInfoModel.ComTypeCode);
+                            row.CreateCell(11).SetCellValue(item.signInfoModel.CompanyAddress);
+                            row.CreateCell(12).SetCellValue(item.signInfoModel.CompanyConn);
+                            row.CreateCell(13).SetCellValue(item.signInfoModel.CompanyTel);
+                            row.CreateCell(14).SetCellValue(item.signInfoModel.PerTelType);
+                            row.CreateCell(15).SetCellValue(item.signInfoModel.SignType);
+                            row.CreateCell(16).SetCellValue(item.signInfoModel.AgreementID);
+                            row.CreateCell(17).SetCellValue(item.signInfoModel.ComBelongDep);
+                            row.CreateCell(18).SetCellValue(item.signInfoModel.ComBelongDepCode);
+                            row.CreateCell(19).SetCellValue(item.signInfoModel.SignTime);
+                        }
+                        a++;
+                    }
+                    MemoryStream ms = new MemoryStream();
+                    workbook.Write(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    return File(ms, "application/vnd.ms-excel", "签约登记表.xls");
+                }
+                #endregion
+
+                var list = new SignListViewModel();
+                list.Upload = new UploadModel();
+                //list.uploadList = new List<FillBaseInfoViewModel>();
+
+                foreach (var item in upload.ToList())
+                {
+                    SignInfoViewModel temp = new SignInfoViewModel();
+                    temp.upload = new UploadModel();
+                    temp.upload = item;
+                    if (db.SingInfoTb.Find(item.StudentNumber) != null)
+                        temp.signInfo = db.SingInfoTb.Find(item.StudentNumber);
+                    //list.uploadList.Add(temp);
+                }
+                list.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
+                Session["table"] = list;
+                return View(list);
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+
+        }
+
+        /// <summary>
+        /// 签约登记表格
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Sign(SignListViewModel sl, int id = 0)
+        {
+            var UserId = Session["Id"];//用户Id
+            var user = db.UserTb.Find(UserId);//查询出该用户
+            ViewBag.type = user.TypeCode;
+            if (Session["Type"].ToString() == "1")
+            {
+                ViewBag.type = "1";
+            }
+            else
+            {
+                ViewBag.type = "2";
+            }
+
+            #region 显示查询结果
+            SignListViewModel display = new SignListViewModel();
+            display.SignList = new List<SignInfoViewModel>();
+            display.Upload = new UploadModel();
+            display.Upload = sl.Upload;
+            var upload = db.UploadTb.Include("signInfoModel").Where(m => m.Department == user.DepartName);
+            if (Session["Type"].ToString() == "1")
+            { upload = db.UploadTb.Include("signInfoModel").Where(m => m.Department == user.DepartName); }
+            else
+            { upload = db.UploadTb.Include("signInfoModel"); }
+            if (sl.Upload.Name != null)//姓名
+                upload = upload.Where(m => m.Name.Contains(sl.Upload.Name));
+            if (sl.Upload.StudentNumber != null)//学号
+                upload = upload.Where(m => m.StudentNumber.Contains(sl.Upload.StudentNumber));
+            if (sl.Upload.StudentType != null)//学生类型
+                upload = upload.Where(m => m.StudentType == sl.Upload.StudentType);
+
+            //有开始审核时间，有结束审核时间            
+            if (sl.Upload.signInfoModel.CheckTime != null && sl.Upload.signInfoModel.CheckTime2 != null)
+            {
+                upload = upload.Where(m => m.signInfoModel.CheckTime > sl.Upload.signInfoModel.CheckTime && m.signInfoModel.CheckTime < sl.Upload.signInfoModel.CheckTime2);
+            }
+            //有开始时间无结束时间
+            if (sl.Upload.signInfoModel.CheckTime != null && sl.Upload.signInfoModel.CheckTime2 == null)
+            {
+                upload = upload.Where(m => m.signInfoModel.CheckTime > sl.Upload.signInfoModel.CheckTime);
+            }
+            //无开始时间有结束时间
+            if (sl.Upload.signInfoModel.CheckTime == null && sl.Upload.signInfoModel.CheckTime2 != null)
+            {
+                upload = upload.Where(m => m.signInfoModel.CheckTime < sl.Upload.signInfoModel.CheckTime2);
+            }
+
+            foreach (var item in upload.ToList())
+            {
+                SignInfoViewModel temp = new SignInfoViewModel();
+                temp.upload = new UploadModel();
+                temp.upload = item;
+                if (db.SingInfoTb.Find(item.StudentNumber) != null)
+                    temp.signInfo = db.SingInfoTb.Find(item.StudentNumber);
+                //disPlay.uploadList.Add(temp);
+            }
+            display.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);
+            Session["table"] = display;
+            return View(display);
+            #endregion
+
+        }
+        #endregion
+
+        #region 编辑签约登记表
+        public ActionResult EditSign(string studentNumber)
+        {
+
+            if (Session["Id"] != null)
+            {
+                ViewBag.type = Session["Type"];
+                #region 下拉栏初始化
+                //签约方式
+                List<SelectListItem> signType = new List<SelectListItem> {
+                new SelectListItem{Text="校内",Value="校内",Selected=false},
+                new SelectListItem{Text="校外",Value="校外",Selected=true}
+            };
+                ViewBag.signType = signType;
+
+                //所属集团或系统
+                List<SelectListItem> Group = new List<SelectListItem> {
+                new SelectListItem{Text="国网",Value="国网",Selected=true},
+                new SelectListItem{Text="南网",Value="南网",Selected=true},
+                new SelectListItem{Text="大唐集团",Value="大唐集团",Selected=false},
+                new SelectListItem{Text="华能集团",Value="华能集团",Selected=false},
+                new SelectListItem{Text="国电集团",Value="国电集团",Selected=false},
+                new SelectListItem{Text="华电集团",Value="华电集团",Selected=false},
+                new SelectListItem{Text="中电投",Value="中电投",Selected=false},
+                new SelectListItem{Text="中能建",Value="中能建",Selected=false},
+                new SelectListItem{Text="中电建",Value="中电建",Selected=false},
+                new SelectListItem{Text="国核集团",Value="国核集团",Selected=false},
+                new SelectListItem{Text="中核集团",Value="中核集团",Selected=false},
+                new SelectListItem{Text="中广核",Value="中广核",Selected=false},
+                new SelectListItem{Text="华润集团",Value="华润集团",Selected=false},
+                new SelectListItem{Text="神华集团",Value="神华集团",Selected=false},
+                new SelectListItem{Text="京能集团",Value="京能集团",Selected=false},
+                new SelectListItem{Text="浙能集团",Value="浙能集团",Selected=false},
+                new SelectListItem{Text="深能集团",Value="深能集团",Selected=false},
+                new SelectListItem{Text="粤电集团",Value="粤电集团",Selected=false},
+                new SelectListItem{Text="国投电力",Value="国投电力",Selected=false},
+                new SelectListItem{Text="其他地方能源集团",Value="其他地方能源集团",Selected=false},
+                new SelectListItem{Text="金融类",Value="金融类",Selected=false},
+                new SelectListItem{Text="IT类",Value="IT类",Selected=false},
+                new SelectListItem{Text="设计类",Value="设计类",Selected=false},
+                new SelectListItem{Text="地方企业",Value="地方企业",Selected=false},
+                new SelectListItem{Text="教育行业",Value="教育行业",Selected=false},
+                new SelectListItem{Text="银行",Value="银行",Selected=false},
+                new SelectListItem{Text="通信行业",Value="通信行业",Selected=false},
+                new SelectListItem{Text="交通运输业",Value="交通运输业",Selected=false},
+                new SelectListItem{Text="机械机电",Value="机械机电",Selected=false},
+                new SelectListItem{Text="其他",Value="其他",Selected=false},
+            };
+                ViewBag.Group = Group;
+
+                var belong = db.belongDepTb.ToList();
+                List<SelectListItem> belongDep = new List<SelectListItem> { };
+                foreach (var item in belong)
+                {
+                    var belongDepList = new SelectListItem { Text = item.ComBelongDep, Value = item.ComBelongDepCode };
+                    belongDep.Add(belongDepList);
+                }
+                ViewBag.belong = belongDep;
+
+                #endregion
+
+                SignInfoViewModel student = new SignInfoViewModel()
+                {
+                    signInfo = db.SingInfoTb.Find(studentNumber),
+                    upload = db.UploadTb.Find(studentNumber)
+                };
+              
+                if (student.signInfo == null)
+                {
+                    student.signInfo = new SignInfoModel();
+                    student.signInfo.StudentNumber = studentNumber.ToString();
+                }
+                else
+                {
+                    student.signInfo.ComType = student.signInfo.ComTypeCode + student.signInfo.ComType;
+                }
+
+                return View(student);
+            }
+            else
+            { return RedirectToAction("Login"); }
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditSign(SignInfoViewModel students)
+        {
+            if (ModelState.IsValid)
+            {
+                string comType = students.signInfo.ComType;
+                students.signInfo.ComType = comType.Substring(2);
+                students.signInfo.ComTypeCode = comType.Substring(0, 2);
+
+                var belongDep = db.belongDepTb.Where(m => m.ComBelongDepCode == students.signInfo.ComBelongDepCode).FirstOrDefault();
+                students.signInfo.ComBelongDep = belongDep.ComBelongDep;
+
+                if (students.signInfo.IsChecked == "是")
+                {
+                    students.signInfo.CheckTime = DateTime.Now;
+                }
+
+
+                //如果基本信息表中已经有基本，则为更新
+                if (db.SingInfoTb.Find(students.signInfo.StudentNumber) != null)
+                {
+                    SignInfoModel temp = db.SingInfoTb.Find(students.signInfo.StudentNumber);
+                    db.Entry(temp).CurrentValues.SetValues(students.signInfo);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    db.SingInfoTb.Add(students.signInfo);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("EditSign", new { studentNumber = students.signInfo.StudentNumber });
+            }
+            return View();
+        }
+        #endregion
+
+        #region 毕业生列表
+
+        public ActionResult AdminGradList(string Idd = null, int type = 0, int id = 0)
+        {
+            if (Session["Id"] != null)
+            {
+                ViewBag.type = Session["Type"];
+                var user = db.UserTb.Find(Session["Id"]);
+                var upload = db.UploadTb.Where(m => m.Department == user.DepartName);
+                ViewBag.type = user.TypeCode;
+                #region 删除
+                if (type == 2)
+                {
+                    var item = db.UploadTb.Find(Idd);
+                    if (item == null)
+                        RedirectToAction("AdminGradList");
+                    db.UploadTb.Remove(item);
+                    db.SaveChanges();
+                }
+                #endregion
+
+                if (Session["Type"].ToString() == "1")//如果为院系管理员登陆，则绑定好
+                {
+                    ViewBag.style = "1";
+                    var userDep = db.DepartmentTb.Find(user.DepartId);
+                    upload = db.UploadTb.Where(m => m.Department == user.DepartName);
+                    #region 院系列表
+                    //院列表
+                    var aca = db.AcademyTb.ToList();
+                    SelectList acaList = new SelectList(aca, "Id", "Name", userDep.BelongId);
+                    ViewBag.aca = acaList;
+
+                    //系列表
+                    var dep = db.DepartmentTb.ToList();
+                    SelectList depList = new SelectList(dep, "Id", "Name", userDep.Id);
+                    ViewBag.dep = depList;
+
+                    //专业列表
+                    List<SelectListItem> majorList = new List<SelectListItem>();
+                    var major = db.MajorTb.ToList();
+                    if (major != null)
+                    {
+                        foreach (var item in major)
+                        {
+                            majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                        }
+                    }
+                    ViewBag.major = majorList;
+                    #endregion
+                }
+                else if (Session["Type"].ToString() == "2")//管理员登陆
+                {
+                    upload = db.UploadTb;
+                    ViewBag.style = "2";
+                    #region 院系列表
+                    //院列表
+                    var aca = db.AcademyTb.ToList();
+                    List<SelectListItem> acaList = new List<SelectListItem>();
+                    if (aca != null)
+                    {
+                        foreach (var item in aca)
+                        { acaList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() }); }
+                    }
+                    ViewBag.aca = acaList;
+
+                    //系列表
+                    var dep = db.DepartmentTb.ToList();
+                    List<SelectListItem> depList = new List<SelectListItem>();
+                    if (dep != null)
+                    {
+                        foreach (var item in dep)
+                        {
+                            depList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                        }
+                    }
+                    ViewBag.dep = depList;
+
+                    //专业列表
+                    List<SelectListItem> majorList = new List<SelectListItem>();
+                    var major = db.MajorTb.ToList();
+                    if (major != null)
+                    {
+                        foreach (var item in major)
+                        {
+                            majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                        }
+                    }
+
+                    ViewBag.major = majorList;
+                    #endregion
+                }
+
+                //table表格中显示的内容
+                var list = new AdminGradViewModel();
+                list.upload = new UploadModel();
+
+                foreach (var item in upload.ToList())
+                {
+                    FillBaseInfoViewModel temp = new FillBaseInfoViewModel();
+                    temp.upload = new UploadModel();
+                    temp.upload = item;
+                    if (db.BaseInfoTb.Find(item.StudentNumber) != null)
+                        temp.baseInfo = db.BaseInfoTb.Find(item.StudentNumber);
+                    //list.uploadList.Add(temp);
+                }
+                list.uploadPagedList = upload.OrderBy(a => a.StudentNumber).ToPagedList(id, 10);             
+                return View(list);
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -1237,6 +1524,24 @@ namespace Graduation.Controllers
                     upload = upload.Where(m => m.EntranceYear == av.upload.EntranceYear);
                 if (av.upload.GraduationTime != null)//毕业时间
                     upload = upload.Where(m => m.GraduationTime == av.upload.GraduationTime);
+
+                //有开始审核时间，有结束审核时间            
+                if (av.upload.fillBaseInfoModel.CheckTime != null && av.upload.fillBaseInfoModel.CheckTime2 != null)
+                {
+                    upload = upload.Where(m => m.fillBaseInfoModel.CheckTime > av.upload.fillBaseInfoModel.CheckTime && m.fillBaseInfoModel.CheckTime < av.upload.fillBaseInfoModel.CheckTime2);
+                }
+                //有开始时间无结束时间
+                if (av.upload.fillBaseInfoModel.CheckTime != null && av.upload.fillBaseInfoModel.CheckTime2 == null)
+                {
+                    upload = upload.Where(m => m.fillBaseInfoModel.CheckTime > av.upload.fillBaseInfoModel.CheckTime);
+                }
+                //无开始时间有结束时间
+                if (av.upload.fillBaseInfoModel.CheckTime == null && av.upload.fillBaseInfoModel.CheckTime2 != null)
+                {
+                    upload = upload.Where(m => m.fillBaseInfoModel.CheckTime < av.upload.fillBaseInfoModel.CheckTime2);
+                }
+
+
                 if (av.upload.Academy != null && av.upload.Academy != "0")
                 {
                     int Id = Convert.ToInt32(av.upload.Academy);
@@ -1353,17 +1658,11 @@ namespace Graduation.Controllers
 
             //生源所在地
             List<SelectListItem> cityList = new List<SelectListItem>();
-            var list = db.LocationTb.ToList();
-            foreach (var item in list)
-                cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-
+           
             ViewBag.city = cityList;
 
             //家庭户口所在地
             List<SelectListItem> familyCityList = new List<SelectListItem>();
-
-            foreach (var item in list)
-                familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
 
             ViewBag.familyCityList = familyCityList;
 
@@ -1372,6 +1671,42 @@ namespace Graduation.Controllers
             if (Session["Id"] != null)
             {
                 ViewBag.type = Session["Type"];
+                #region
+                //院列表
+                var aca = db.AcademyTb.ToList();
+                List<SelectListItem> acaList = new List<SelectListItem>();
+                if (aca != null)
+                {
+                    foreach (var item in aca)
+                    { acaList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() }); }
+                }
+                ViewBag.Aca = acaList;
+
+                //系列表
+                var dep = db.DepartmentTb.ToList();
+                List<SelectListItem> depList = new List<SelectListItem>();
+                if (dep != null)
+                {
+                    foreach (var item in dep)
+                    {
+                        depList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    }
+                }
+                ViewBag.Dep = depList;
+
+                //专业列表
+                List<SelectListItem> majorList = new List<SelectListItem>();
+                var major = db.MajorTb.ToList();
+                if (major != null)
+                {
+                    foreach (var item in major)
+                    {
+                        majorList.Add(new SelectListItem { Text = item.Name, Value = item.Id.ToString() });
+                    }
+                }
+                ViewBag.Maj = majorList;
+                #endregion
+
                 return View();
             }
             else
@@ -1496,12 +1831,12 @@ namespace Graduation.Controllers
                 var fcl = db.BaseInfoTb.Find(studentNumber);
                 if (st.ResLocationCode != null)
                     familyCityList.Add(new SelectListItem { Text = st.ResLocation, Value = st.ResLocationCode });
-                else
-                {
-                    var list = db.LocationTb.ToList();
-                    foreach (var item in list)
-                        familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-                }
+                //else
+                //{
+                //    var list = db.LocationTb.ToList();
+                //    foreach (var item in list)
+                //        familyCityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+                //}
                 ViewBag.familyCityList = familyCityList;
 
                 //民族
@@ -1546,15 +1881,22 @@ namespace Graduation.Controllers
                 fillBaseInfoViewModel.baseInfo.PoliticalStatusCode = PoliticalStatus.Substring(0, 2);
                 fillBaseInfoViewModel.baseInfo.PoliticalStatusCode = PoliticalStatus.Substring(2);
 
-                //存入民族代码
-                var nation = db.nationTb.Where(m => m.NationCode == fillBaseInfoViewModel.upload.NationCode).FirstOrDefault();
-                fillBaseInfoViewModel.upload.Nation = nation.NationName;
+                ////存入民族代码
+                //var nation = db.nationTb.Where(m => m.NationCode == fillBaseInfoViewModel.upload.NationCode).FirstOrDefault();
+                //fillBaseInfoViewModel.upload.Nation = nation.NationName;
 
                 var orig = db.LocationTb.Find(fillBaseInfoViewModel.baseInfo.OriginCode);//保存生源地
                 fillBaseInfoViewModel.baseInfo.OriginCity = orig.name;
                 fillBaseInfoViewModel.baseInfo.OriginProvince = db.BaseInfoTb.Find(fillBaseInfoViewModel.baseInfo.StudentNumber).OriginProvince;
                 var familyLocation = db.LocationTb.Find(fillBaseInfoViewModel.baseInfo.ResLocationCode);
                 fillBaseInfoViewModel.baseInfo.ResLocation = familyLocation.name;
+
+                //审核时间
+                if (fillBaseInfoViewModel.baseInfo.IsBaseChecked == "是")
+                {
+                    fillBaseInfoViewModel.baseInfo.CheckTime = DateTime.Now;
+                }
+
                 //如果有基本信息表中已经有基本，则为更新
                 if (db.BaseInfoTb.Find(fillBaseInfoViewModel.baseInfo.StudentNumber) != null)
                 {
@@ -1891,6 +2233,11 @@ namespace Graduation.Controllers
         {
             if (ModelState.IsValid)
             {
+                //添加审核时间
+                if (students.applInfo.IsQiuChecked == "是")
+                {
+                    students.applInfo.CheckTime = DateTime.Now;
+                }
                 //如果基本信息表中已经有基本，则为更新
                 if (db.ApplInfoTb.Find(students.applInfo.StudentNumber) != null)
                 {
@@ -2333,12 +2680,12 @@ namespace Graduation.Controllers
             var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
             if (st.ComLocation != null)
                 cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
+            //else
+            //{
+            //    var list = db.LocationTb.ToList();
+            //    foreach (var item in list)
+            //        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            //}
             ViewBag.city = cityList;
 
 
@@ -2422,6 +2769,12 @@ namespace Graduation.Controllers
                 //单位所在地
                 var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
                 students.eSchoolInfo.ComLocation = location.name;
+
+                //学生编辑时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
 
 
                 //如果基本信息表中已经有基本，则为更新
@@ -2547,12 +2900,12 @@ namespace Graduation.Controllers
             var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
             if (st.ComLocation != null)
                 cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
+            //else
+            //{
+            //    var list = db.LocationTb.ToList();
+            //    foreach (var item in list)
+            //        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            //}
             ViewBag.city = cityList;
 
             #endregion
@@ -2625,6 +2978,11 @@ namespace Graduation.Controllers
                 var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
                 students.eSchoolInfo.ComLocation = location.name;
 
+                //学生编辑时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
 
                 //如果基本信息表中已经有基本，则为更新
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -2690,12 +3048,19 @@ namespace Graduation.Controllers
         public ActionResult EmplArmyExam(ESchoolInfoViewModel students)
         {
 
+           
             if (ModelState.IsValid)
             {
                 //就业形式
                 string employment = students.eSchoolInfo.Employment;
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
+
+                //审核时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -2754,12 +3119,12 @@ namespace Graduation.Controllers
             var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
             if (st.ComLocation != null)
                 cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
+            //else
+            //{
+            //    var list = db.LocationTb.ToList();
+            //    foreach (var item in list)
+            //        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            //}
             ViewBag.city = cityList;
 
 
@@ -2811,6 +3176,12 @@ namespace Graduation.Controllers
                 var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
                 students.eSchoolInfo.ComLocation = location.name;
 
+                //学生编辑时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
+
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
                     ESchoolInfoModel temp = db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber);
@@ -2837,12 +3208,12 @@ namespace Graduation.Controllers
             var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
             if (st.ComLocation != null)
                 cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
+            //else
+            //{
+            //    var list = db.LocationTb.ToList();
+            //    foreach (var item in list)
+            //        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            //}
             ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
@@ -2886,6 +3257,12 @@ namespace Graduation.Controllers
                 //单位所在地
                 var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
                 students.eSchoolInfo.ComLocation = location.name;
+
+                //审核时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -2947,6 +3324,12 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
+                //审核时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
+
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
                     ESchoolInfoModel temp = db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber);
@@ -3005,6 +3388,12 @@ namespace Graduation.Controllers
                 students.eSchoolInfo.EmploymentCode = employment.Substring(0, 2);
                 students.eSchoolInfo.Employment = employment.Substring(2);
 
+                //审核时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
+
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
                     ESchoolInfoModel temp = db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber);
@@ -3030,12 +3419,12 @@ namespace Graduation.Controllers
             var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
             if (st.ComLocation != null)
                 cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
+            //else
+            //{
+            //    var list = db.LocationTb.ToList();
+            //    foreach (var item in list)
+            //        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            //}
             ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
@@ -3080,6 +3469,12 @@ namespace Graduation.Controllers
                 var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
                 students.eSchoolInfo.ComLocation = location.name;
 
+                //学生编辑时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
+
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
                     ESchoolInfoModel temp = db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber);
@@ -3107,12 +3502,12 @@ namespace Graduation.Controllers
             var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
             if (st.ComLocation != null)
                 cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
+            //else
+            //{
+            //    var list = db.LocationTb.ToList();
+            //    foreach (var item in list)
+            //        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            //}
             ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
@@ -3157,6 +3552,11 @@ namespace Graduation.Controllers
                 var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
                 students.eSchoolInfo.ComLocation = location.name;
 
+                //学生编辑时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
@@ -3184,12 +3584,12 @@ namespace Graduation.Controllers
             var st = db.ESchoolInfoTb.Find(Session["adminStuNum"]);
             if (st.ComLocation != null)
                 cityList.Add(new SelectListItem { Text = st.ComLocation, Value = st.ComLocationCode });
-            else
-            {
-                var list = db.LocationTb.ToList();
-                foreach (var item in list)
-                    cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
-            }
+            //else
+            //{
+            //    var list = db.LocationTb.ToList();
+            //    foreach (var item in list)
+            //        cityList.Add(new SelectListItem { Text = item.name, Value = item.code });
+            //}
             ViewBag.city = cityList;
 
             var students = new ESchoolInfoViewModel()
@@ -3233,6 +3633,12 @@ namespace Graduation.Controllers
                 //单位所在地
                 var location = db.LocationTb.Find(students.eSchoolInfo.ComLocationCode);
                 students.eSchoolInfo.ComLocation = location.name;
+
+                //审核时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
 
 
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
@@ -3297,6 +3703,13 @@ namespace Graduation.Controllers
                 //就业形式
                 students.eSchoolInfo.Employment = "暂未就业";
                 students.eSchoolInfo.EmploymentCode = "70";
+
+                //审核时间
+                if (students.eSchoolInfo.IsChecked == "是")
+                {
+                    students.eSchoolInfo.CheckTime = DateTime.Now;
+                }
+
                 if (db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber) != null)
                 {
                     ESchoolInfoModel temp = db.ESchoolInfoTb.Find(students.eSchoolInfo.StudentNumber);
@@ -3574,8 +3987,23 @@ namespace Graduation.Controllers
                 upload = upload.Where(m => m.StudentNumber.Contains(students.upload.StudentNumber));
             if (students.upload.GraduationTime != null)//毕业时间
                 upload = upload.Where(m => m.GraduationTime == students.upload.GraduationTime);
-            if (students.upload.eSchoolInfoModel.CheckTime != null)//审核时间
-                upload = upload.Where(m => m.eSchoolInfoModel.CheckTime == students.upload.eSchoolInfoModel.CheckTime);
+           
+            //有开始审核时间，有结束审核时间            
+            if (students.upload.eSchoolInfoModel.CheckTime != null && students.upload.eSchoolInfoModel.CheckTime2 != null)
+            {
+                upload = upload.Where(m => m.eSchoolInfoModel.CheckTime > students.upload.eSchoolInfoModel.CheckTime && m.eSchoolInfoModel.CheckTime < students.upload.eSchoolInfoModel.CheckTime2);
+            }
+            //有开始时间无结束时间
+            if (students.upload.eSchoolInfoModel.CheckTime != null && students.upload.eSchoolInfoModel.CheckTime2 == null)
+            {
+                upload = upload.Where(m => m.eSchoolInfoModel.CheckTime > students.upload.eSchoolInfoModel.CheckTime);
+            }
+            //无开始时间有结束时间
+            if (students.upload.eSchoolInfoModel.CheckTime == null && students.upload.eSchoolInfoModel.CheckTime2 != null)
+            {
+                upload = upload.Where(m => m.eSchoolInfoModel.CheckTime < students.upload.eSchoolInfoModel.CheckTime2);
+            }
+
 
             if (students.upload.Academy != "0" && students.upload.Academy != null)
             {
