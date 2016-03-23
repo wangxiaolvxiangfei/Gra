@@ -111,8 +111,8 @@
                                 <td><span>班级：</span><span>@Html.ValueFor(model => model.upload.Class)</span></td>
                             </tr>
                             <tr>
-                                <td><span>登记日期：</span>@Html.TextBoxFor(model => model.signInfo.SignTime)</td>
-                                <td colspan="2"><span>单位名称：</span>@Html.TextBoxFor(model => model.signInfo.CompanyName)</td>
+                                <td><span>登记日期：</span>@Html.TextBoxFor(model => model.signInfo.SignTime, new { required = "required" })</td>
+                                <td colspan="2"><span>单位名称：</span>@Html.TextBoxFor(model => model.signInfo.CompanyName, new { required = "required" })</td>
                             </tr>
                             <tr>
                                 <td>
@@ -127,7 +127,7 @@
                             <tr>
                                 <td colspan="3">
                                     <p>单位性质：</p>
-                                    @Html.RadioButtonFor(model => model.signInfo.ComType, "10机关")机关
+                                    @Html.RadioButtonFor(model => model.signInfo.ComType, "10机关", new { @checked = true })机关
                                     @Html.RadioButtonFor(model => model.signInfo.ComType, "20科研设计单位")科研设计单位
                                     @Html.RadioButtonFor(model => model.signInfo.ComType, "21高等教育单位")高等教育单位
                                     @Html.RadioButtonFor(model => model.signInfo.ComType, "22中初教育单位")中初教育单位
@@ -145,21 +145,21 @@
                             <tr>
                                 <td>
                                     <p>单位地址：</p>
-                                    @Html.TextBoxFor(model => model.signInfo.CompanyAddress)
+                                    @Html.TextBoxFor(model => model.signInfo.CompanyAddress, new { required = "required" })
                                 </td>
                                 <td>
                                     <p>单位联系人：</p>
-                                    @Html.TextBoxFor(model => model.signInfo.CompanyConn)
+                                    @Html.TextBoxFor(model => model.signInfo.CompanyConn, new { required = "required" })
                                 </td>
                                 <td>
                                     <p>单位电话：</p>
-                                    @Html.TextBoxFor(model => model.signInfo.CompanyTel)
+                                    @Html.TextBoxFor(model => model.signInfo.CompanyTel, new { required = "required" })
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <p>个人联系方式：</p>
-                                    @Html.TextBoxFor(model => model.signInfo.PerTelType)
+                                    @Html.TextBoxFor(model => model.signInfo.PerTelType, new { required = "required" })
                                 </td>
                                 <td>
                                     <p>签约方式：</p>
@@ -167,7 +167,7 @@
                                 </td>
                                 <td>
                                     <p>协议书编号：</p>
-                                    @Html.TextBoxFor(model => model.signInfo.AgreementID)
+                                    @Html.TextBoxFor(model => model.signInfo.AgreementID, new { required = "required" })
                                 </td>
                             </tr>
                             <tr>

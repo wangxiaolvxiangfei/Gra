@@ -133,7 +133,7 @@
                             </tr>
                             <tr>
                                 <td><p>身份证号：</p><span>@Html.ValueFor(model => model.upload.IDNumber)</span></td>
-                                <td><p>健康状况：</p><span>@Html.TextBoxFor(model => model.baseInfo.Health)</span></td>
+                                <td><p>健康状况：</p><span>@Html.TextBoxFor(model => model.baseInfo.Health, new { required = "required" })</span></td>
                                 <td>
                                     <p>政治面貌：</p>
                                     <span>
@@ -142,16 +142,16 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><p>班主任：</p>@Html.TextBoxFor(model => model.baseInfo.ClassTeacher)</td>
-                                <td><p>手机号：</p>@Html.TextBoxFor(model => model.baseInfo.TelNumber)</td>
-                                <td><p>email：</p>@Html.TextBoxFor(model => model.baseInfo.Email)</td>
-                                <td><p>qq号：</p>@Html.TextBoxFor(model => model.baseInfo.QQ)</td>
+                                <td><p>班主任：</p>@Html.TextBoxFor(model => model.baseInfo.ClassTeacher, new { required = "required" })</td>
+                                <td><p>手机号：</p>@Html.TextBoxFor(model => model.baseInfo.TelNumber, new { required = "required" })</td>
+                                <td><p>email：</p>@Html.TextBoxFor(model => model.baseInfo.Email, new { required = "required" })</td>
+                                <td><p>qq号：</p>@Html.TextBoxFor(model => model.baseInfo.QQ, new { required = "required" })</td>
                             </tr>
                             <tr>
                                 <td colspan="2">
                                     <p>宿舍#宿舍号：</p>
                                     @Html.DropDownListFor(model => model.baseInfo.Dormitory, ViewBag.dor as List<SelectListItem>)
-                                    @Html.TextBoxFor(model => model.baseInfo.RoomNumber)
+                                    @Html.TextBoxFor(model => model.baseInfo.RoomNumber, new { required = "required" })
                                 </td>
                                 <td>
                                     <p>户口是否转入学校</p>
@@ -164,7 +164,7 @@
 
                             <tr>
 
-                                <td><p>研究生导师：</p>@Html.TextBoxFor(model => model.baseInfo.Tutor)</td>
+                                <td><p>研究生导师：</p>@Html.TextBoxFor(model => model.baseInfo.Tutor, new { required = "required" })</td>
                                 <td>
                                     <p>是否专业学位：</p>@Html.RadioButtonFor(model => model.baseInfo.IsMajorDegrees, "是")是
                                     @Html.RadioButtonFor(model => model.baseInfo.IsMajorDegrees, "否")否
@@ -248,42 +248,42 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><p>现任职务：</p>@Html.TextBoxFor(model => model.baseInfo.Post)</td>
-                                <td><p>家庭电话：</p>@Html.TextBoxFor(model => model.baseInfo.FamilyTel)</td>
-                                <td colspan="2"><p>其他联系方式：</p>@Html.TextBoxFor(model => model.baseInfo.OtherTel)</td>
+                                <td><p>现任职务：</p>@Html.TextBoxFor(model => model.baseInfo.Post, new { required = "required" })</td>
+                                <td><p>家庭电话：</p>@Html.TextBoxFor(model => model.baseInfo.FamilyTel, new { required = "required" })</td>
+                                <td colspan="2"><p>其他联系方式：</p>@Html.TextBoxFor(model => model.baseInfo.OtherTel, new { required = "required" })</td>
                             </tr>
                             <tr>
-                                <td><p>通讯编码：</p>@Html.TextBoxFor(model => model.baseInfo.CommCode)</td>
+                                <td><p>通讯编码：</p>@Html.TextBoxFor(model => model.baseInfo.CommCode, new { required = "required" })</td>
                                 <td colspan="3" class="input-width">
                                     <p>通讯地址：</p>
-                                    @Html.TextBoxFor(model => model.baseInfo.CommAddress)
+                                    @Html.TextBoxFor(model => model.baseInfo.CommAddress, new { required = "required" })
                                 </td>
                             </tr>
                             <tr>
-                                <td><p>家庭邮编：</p>@Html.TextBoxFor(model => model.baseInfo.FamilyZipCode)</td>
+                                <td><p>家庭邮编：</p>@Html.TextBoxFor(model => model.baseInfo.FamilyZipCode, new { required = "required" })</td>
                                 <td colspan="3" class="input-width">
                                     <p>家庭详细地址(具体到门牌号农村的行政村级)：</p>
-                                    @Html.TextBoxFor(model => model.baseInfo.FamilyLocation)
+                                    @Html.TextBoxFor(model => model.baseInfo.FamilyLocation, new { required = "required" })
                                 </td>
                             </tr>
                             <tr>
-                                <td><p>父亲姓名：</p>@Html.TextBoxFor(model => model.baseInfo.FatherName)</td>
+                                <td><p>父亲姓名：</p>@Html.TextBoxFor(model => model.baseInfo.FatherName, new { required = "required" })</td>
                                 <td colspan="3" class="input-width">
                                     <p>父亲工作地址：</p>
-                                    @Html.TextBoxFor(model => model.baseInfo.FatherWorkUnit)
+                                    @Html.TextBoxFor(model => model.baseInfo.FatherWorkUnit, new { required = "required" })
                                 </td>
                             </tr>
                             <tr>
-                                <td><p>母亲姓名：</p>@Html.TextBoxFor(model => model.baseInfo.MotherName)</td>
+                                <td><p>母亲姓名：</p>@Html.TextBoxFor(model => model.baseInfo.MotherName, new { required = "required" })</td>
                                 <td colspan="3" class="input-width">
                                     <p>母亲工作地址：</p>
-                                    @Html.TextBoxFor(model => model.baseInfo.MotherWorkUnit)
+                                    @Html.TextBoxFor(model => model.baseInfo.MotherWorkUnit, new { required = "required" })
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="4">
                                     <p>备注：</p>
-                                    @Html.TextAreaFor(model => model.baseInfo.BaseNote)
+                                    @Html.TextAreaFor(model => model.baseInfo.BaseNote, new { required = "required" })
                                 </td>
                             </tr>
                             <tr>

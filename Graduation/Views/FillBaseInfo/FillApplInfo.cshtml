@@ -148,9 +148,9 @@ else
                         <tr>
                             <td colspan="3">
                                 <p>综合排名：</p>
-                                @Html.TextBoxFor(model => model.applInfo.NumberN)
+                                @Html.TextBoxFor(model => model.applInfo.NumberN, new { required = "required" })
                                 <span>/</span>
-                                @Html.TextBoxFor(model => model.applInfo.NumberM)
+                                @Html.TextBoxFor(model => model.applInfo.NumberM, new { required = "required" })
                                 <span><b>(请写成n/m格式)</b></span>
                                 @Html.RadioButtonFor(model => model.applInfo.RankType, "1") 班级排名
                                 @Html.RadioButtonFor(model => model.applInfo.RankType, "2") 专业排名
@@ -168,19 +168,19 @@ else
                         <tr>
                             <td colspan="4">
                                 <p>第一年度获奖（评优，荣誉，奖学金）</p>
-                                @Html.TextAreaFor(model => model.applInfo.FristYearPrize)
+                                @Html.TextAreaFor(model => model.applInfo.FristYearPrize, new { required = "required" })
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4">
                                 <p>第二年度获奖（评优，荣誉，奖学金）</p>
-                                @Html.TextAreaFor(model => model.applInfo.SecondYearPrize)
+                                @Html.TextAreaFor(model => model.applInfo.SecondYearPrize, new { required = "required" })
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4">
                                 <p>第三年度获奖（评优，荣誉，奖学金）</p>
-                                @Html.TextAreaFor(model => model.applInfo.ThirdYearPrize)
+                                @Html.TextAreaFor(model => model.applInfo.ThirdYearPrize, new { required = "required" })
                             </td>
                         </tr>
                         <tr>

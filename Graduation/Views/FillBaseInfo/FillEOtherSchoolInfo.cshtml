@@ -170,12 +170,12 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2"><p>升学院校名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.UPSchool)</td>
-                                <td colspan="2"><p>升学专业：</p>@Html.TextBoxFor(model => model.eSchoolInfo.UpMajor)</td>
+                                <td colspan="2"><p>升学院校名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.UPSchool, new { required = "required" })</td>
+                                <td colspan="2"><p>升学专业：</p>@Html.TextBoxFor(model => model.eSchoolInfo.UpMajor, new { required = "required" })</td>
                             </tr>
                             <tr>
-                                <td colspan="2"><p>档案转寄地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)</td>
-                                <td colspan="2"><p>档案转寄邮编：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)</td>
+                                <td colspan="2"><p>档案转寄地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd, new { required = "required" })</td>
+                                <td colspan="2"><p>档案转寄邮编：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode, new { required = "required" })</td>
                             </tr>
                             <tr>
                                 <td colspan="4" class="input-width">
