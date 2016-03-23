@@ -47,50 +47,50 @@ else
                         </thead>
                         <tr>
                             <td rowspan="2" style="width:10px; border-right:1px solid black">毕业生信息</td>
-                            <td><p>姓名：</p><span>@Html.ValueFor(model => model.upload.Name)</span></td>
-                            <td><p>学号：</p><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
-                            <td><p>出生年月日：</p><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
+                            <td><span>姓名：</span><span>@Html.ValueFor(model => model.upload.Name)</span></td>
+                            <td><span>学号：</span><span>@Html.ValueFor(model => model.upload.StudentNumber)</span></td>
+                            <td><sapn>出生年月日：</sapn><span>@Html.ValueFor(model => model.upload.BirthTime)</span></td>
                             <td>
-                                <p>政治面貌：</p>
+                                <sapn>政治面貌：</sapn>
                                 @ViewBag.P
                             </td>
                             <td>
-                                <p>健康状况：</p>@ViewBag.H
+                                <sapn>健康状况：</sapn>@ViewBag.H
                             </td>
                             <td>
-                                <p>邮政编码</p>@ViewBag.E
+                                <sapn>邮政编码</sapn>@ViewBag.E
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <p>通讯地址：</p>@ViewBag.CA
+                                <sapn>通讯地址：</sapn>@ViewBag.CA
                             </td>
                             <td colspan="2">
-                                <p>现家庭居住地：</p>@ViewBag.F
+                                <sapn>现家庭居住地：</sapn>@ViewBag.F
                             </td>
                             <td>
-                                <p>Email：</p>@ViewBag.E
+                                <sapn>Email：</sapn>@ViewBag.E
                             </td>
                             <td>
-                                <p>联系电话：</p>@ViewBag.T
+                                <sapn>联系电话：</sapn>@ViewBag.T
                             </td>
                         </tr>
                         <tr>
                             <td rowspan="9" style="width:10px; border-right:1px solid black">教育背景</td>
                             <td colspan="2">
-                                <p>专业：</p><span>@Html.ValueFor(model => model.upload.MajorDirection)</span>
+                                <sapn>专业：</sapn><span>@Html.ValueFor(model => model.upload.MajorDirection)</span>
                             </td>
                             <td>
-                                <p>学历：</p><span>@Html.ValueFor(model => model.upload.Education)</span>
+                                <sapn>学历：</sapn><span>@Html.ValueFor(model => model.upload.Education)</span>
                             </td>
                             <td>
-                                <p>培养方式：</p><span>@Html.ValueFor(model => model.upload.TrainType)</span>
+                                <sapn>培养方式：</sapn><span>@Html.ValueFor(model => model.upload.TrainType)</span>
                             </td>
                             <td>
-                                <p>毕业时间：</p><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
+                                <sapn>毕业时间：</sapn><span>@Html.ValueFor(model => model.upload.GraduationTime)</span>
                             </td>
                             <td>
-                                <p>成绩班级名次</p>
+                                <sapn>成绩班级名次</sapn>
                                 @Html.TextBoxFor(model => model.applInfo.Rank)
                             </td>
                         </tr>

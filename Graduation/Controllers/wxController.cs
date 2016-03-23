@@ -19,7 +19,7 @@ namespace Graduation.Controllers
             #region//初始化信息
             try
             {
-                string filePath = "F:\\我的项目\\Gra\\Graduation\\Uploads\\地区.xls";
+                string filePath = "C:\\Users\\ThinkPad_wx\\Desktop\\地区.xls";
                 using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 {
                     hssfworkbook = new HSSFWorkbook(file);

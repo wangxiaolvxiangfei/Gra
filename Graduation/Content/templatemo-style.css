@@ -14,9 +14,13 @@ TABLE OF CONTENT
 ----------------------------------------------*/
 /* 1. Universal Styles
 ----------------------------------------------*/
-* {	font-family: '微软雅黑', sans-serif; }
+@font-face {  
+ font-family: MyCustomFont;  
+ src: url("a.ttf");
+} 
+* {	font-family:'微软雅黑'; }
 body {	font-size: 13px; }
-body, .templatemo-left-nav { background: #1f2124; }
+body, .templatemo-left-nav { background: #598FBE; }
 h1, h2, h3 { margin: 0; }
 h2 { font-size: 1.6em; }
 h3 {
@@ -110,7 +114,7 @@ footer { padding: 15px; }
 }
 .profile-photo-container { position: relative; }
 .profile-photo-overlay {
-	background-color: rgba(4, 152, 114, 0.35);
+	background-color: rgba(163, 196, 188, 0.35);
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -176,7 +180,7 @@ footer { padding: 15px; }
 .templatemo-left-nav li { font-weight: 300; }
 .templatemo-left-nav a.active,
 .templatemo-left-nav a:hover {
-	background: #18191b;
+	background: #4868A9;
 	border-left: 8px solid #13895F;
 }
 .ly-ul-parent a {
@@ -191,8 +195,13 @@ footer { padding: 15px; }
 ------------------------------*/
 .templatemo-top-nav-container {
 	background-color: white;
-	padding: 28px 50px;
+	padding: 21px 50px;
  	box-shadow: 0px 0px 2px 2px rgba(161, 159, 159, 0.18);
+ 	font-family: MyCustomFont;
+}
+.templatemo-top-nav-container h2{
+	font-size: 30px;
+ 	font-weight: bold;
 }
 .templatemo-top-nav li {
     float: left;
@@ -213,7 +222,7 @@ footer { padding: 15px; }
 /* Main Content Area */
 .templatemo-content {
   margin-top: 0px;
-  min-height: 1200px;
+  min-height: 800px;
   padding: 0;  
   overflow-x: hidden;
 }
@@ -336,8 +345,9 @@ footer { padding: 15px; }
 ------------------------------*/
 .templatemo-login-widget {
 	max-width: 450px;
-	margin-left: auto;
-	margin-right: auto;
+	position: fixed;
+	top:170px;
+	right: 160px;
 	padding: 50px;
 }
 .templatemo-login-widget .square {
@@ -351,6 +361,20 @@ footer { padding: 15px; }
 	text-align: center;
 	text-transform: uppercase;
 	vertical-align: middle;
+}
+.templatemo-login-form{
+	height: 260px;
+	position:fixed;
+	top:50%;
+	margin-top: -130px;
+	right: 25%;
+	margin-right:-300px;
+	max-width: 400px;
+	padding:50px;
+	background:rgba(0,0,0,0.6);
+	/*background: white;*/
+	border:1px solid black;
+	border-radius: 10px;
 }
 
 .templatemo-login-form .form-group { margin-bottom: 20px; }
@@ -564,7 +588,7 @@ input[type="radio"]:checked + label span {
 .ly-ul a{
 	padding: 5px;
 	padding-left: 25px;
-	background: #333330;
+	background: #2A3E65;
 	font-size: 0.8em;
 }
 .ly-ul a:hover{
@@ -577,7 +601,7 @@ input[type="radio"]:checked + label span {
 }
 .ly-ul-child a{
 	padding: 10px;
-	background: #777772;
+	background: #2A3E65;
 }
 .right{
 	float: right;
@@ -776,19 +800,15 @@ table img{
 
 .radio input[type="radio"]{
 	display: inline-block;
-	margin-right: 0px;
+	margin-left: 0px;
 }
 .checkbox input[type="checkbox"]{
 	display: inline-block;
-	margin-right: 0px;
+	margin-left: 0px;
 }
-.radio span {
-    display:inline-block;
-    width:60px;
+.radio b,.checkbox b{
+	margin-left: 20px;
 }
-/*.radio b,.checkbox b{
-	margin-left: 30px;
-}*/
 input[type='checkbox']{
 	display: inline-block;
 }
@@ -991,8 +1011,8 @@ input[type=radio]{
 }
 .login{
 	width: 100%;
-	height:800px;
-	background: url('../Images/contentbg.jpg') no-repeat;
+	height:100%;
+	background: url('../images/contentbg.jpg') no-repeat;
 	background-size:100% 100%;
 }
 .login input{
@@ -1009,14 +1029,7 @@ input[type=radio]{
 	margin-left: -200px;
 	top:130px;
 }
-.dreamtech{
-	position: fixed;
-	width: 400px;
-	left: 50%;
-	margin-left: -200px;
-	text-align: center;
-	bottom: 0px;
-}
+
 .middle{
 	width: 700px;
 	padding: 40px;
@@ -1055,28 +1068,43 @@ input[type=radio]{
 .table1,.table2,.table3,.table4,.table5{
 	margin-top: 20px;
 }
-
-.field-validation-error {
-    color: #f00;
+.link a{
+	margin-right: 20px;
+}
+.link .warn{
+	text-decoration: underline;
+	font-weight: bold;
+}
+.link a:hover{
+	text-decoration: underline;
+	font-weight: bold;
+}
+.home{
+	background: url(../images/index.png) no-repeat;
+	width: 100%;
+	height: 600px;
+}
+.title-bg-pic{
+	background: url(../images/title.png) no-repeat;
+}
+.contentbg{
+	width:100%;
+	height:100%;
+	position:fixed; 
+	top:0;
+	right:0;
+	background: url(../images/contentbgspline.png) repeat-x;
 }
 
-.field-validation-valid {
-    display: none;
-}
-
-.input-validation-error {
-    border: 1px solid #f00;
-    background-color: #fee;
-}
-
-.validation-summary-errors {
-    font-weight: bold;
-    color: #f00;
-}
-
-.validation-summary-valid {
-    display: none;
+.dreamtech{
+	position: fixed;
+	width: 100%;
+	background: rgba(0,0,0,0.8);
+	text-align: center;
+	bottom: 0px;
+	color: white;
+	padding-top: 10px;
 }
 .input-width input{
-    width:90%;
+	width: 70%;
 }

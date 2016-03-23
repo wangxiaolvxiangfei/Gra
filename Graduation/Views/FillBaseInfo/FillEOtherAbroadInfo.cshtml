@@ -165,9 +165,9 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><p>留学院校名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.OutSchool)</td>
-                                <td><p>留学专业：</p>@Html.TextBoxFor(model => model.eSchoolInfo.OutMajor)</td>
-                                <td><p>出国国家：</p>@Html.TextBoxFor(model => model.eSchoolInfo.OutCountry)</td>
+                                <td><p>留学院校名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.OutSchool, new { required = "required" })</td>
+                                <td><p>留学专业：</p>@Html.TextBoxFor(model => model.eSchoolInfo.OutMajor, new { required = "required" })</td>
+                                <td><p>出国国家：</p>@Html.TextBoxFor(model => model.eSchoolInfo.OutCountry, new { required = "required" })</td>
                                 <td></td>
                             </tr>
                             <tr>
