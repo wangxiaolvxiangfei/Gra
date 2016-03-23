@@ -174,6 +174,11 @@ namespace Graduation.Models
         public string IsQiuChecked { get; set; }
 
         /// <summary>
+        /// 审核时间
+        /// </summary>
+        public DateTime? CheckTime { get; set; }
+
+        /// <summary>
         /// 是否锁定
         /// </summary>
         public string IsClocked { get; set; }
@@ -192,6 +197,8 @@ namespace Graduation.Models
         /// 老师编辑的时间
         /// </summary>
         public DateTime? TeacherEditTime { get; set; }
+
+
 
         public virtual UploadModel uploadModel { get; set; }
     }

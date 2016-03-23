@@ -303,7 +303,15 @@ namespace Graduation.Models
         /// </summary>
         public DateTime? CheckTime { get; set; }
 
+        /// <summary>
+        /// 审核时间传参
+        /// </summary>
+        public DateTime? CheckTime2 { get; set; }
 
+        /// <summary>
+        /// 学生编辑时间
+        /// </summary>
+        public DateTime? StuEditTime { get; set; }
 
         /// <summary>
         /// 连接上传信息

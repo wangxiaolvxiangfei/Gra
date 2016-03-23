@@ -147,9 +147,11 @@ else
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputPassword3" class="col-sm-1 control-label">审核时间</label>
+                <label for="inputPassword3" class="col-sm-1 control-label">审核开始时间</label>
                 <div class="col-sm-3">
-                    @Html.TextBoxFor(model => model.upload.eSchoolInfoModel.CheckTime, new { placeholder = "审核时间", @class = "form-control" })
+                    @Html.TextBoxFor(model => model.upload.eSchoolInfoModel.CheckTime, new { placeholder = "开始审核时间例：2015-1-1", @class = "form-control" })
+                    -
+                    @Html.TextBoxFor(model => model.upload.eSchoolInfoModel.CheckTime2, new { placeholder = "结束审核时间例：2017-1-1", @class = "form-control" })
                 </div>
             </div>
 

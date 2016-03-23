@@ -44,9 +44,9 @@
                         <td><p>健康状况：</p>@Html.TextBoxFor(model => model.baseInfo.Health)</td>
                         <td>
                             <p>院、系、专业</p>
-                            <select></select>
-                            <select></select>
-                            <select></select>
+                            @Html.ValueFor(model=>model.upload.Academy)
+                            @Html.ValueFor(model=>model.upload.Department)
+                            @Html.ValueFor(model=>model.upload.Major)
                         </td>
                         <td><p>校区：</p></td>
                     </tr>
