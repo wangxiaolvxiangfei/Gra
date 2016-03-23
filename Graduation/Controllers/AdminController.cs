@@ -10,7 +10,6 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Webdiyer.WebControls.Mvc;
-//添加文字
 
 namespace Graduation.Controllers
 {
@@ -4746,6 +4745,328 @@ namespace Graduation.Controllers
             }
             #endregion
             return RedirectToAction("jiuyeYX");
+        }
+        #endregion
+
+        #region  就业信息就业统计
+        /// <summary>
+        /// 就业统计，本科生，在就业信息列表中
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult jiuyeB()
+        {
+            if (Session["Id"] != null)
+            {
+                List<jieyeListViewModel> jiuyeList = new List<jieyeListViewModel>();
+                var aca = db.AcademyTb.ToList();
+                foreach (var acaTemp in aca)
+                {
+                    var dep = db.DepartmentTb.Where(m => m.BelongId == acaTemp.Id).ToList();
+                    foreach (var depTemp in dep)
+                    {
+                        string depId = depTemp.Id.ToString();
+                        var major = db.MajorTb.Where(m => m.DepartId == depId && m.Edu == "本科").ToList();
+                        foreach (var majorTemp in major)
+                        {
+                            #region 专业统计
+                            var stud_major = db.UploadTb.Where(m => m.Major == majorTemp.Name).ToList();//总的该系学生集合
+                            var stud_sign = db.SingInfoTb.ToList();//签约人列表
+                            var jiuyeTemp = new jieyeListViewModel();
+                            jiuyeTemp.aca = acaTemp.Name;
+                            jiuyeTemp.dep = depTemp.Name;
+                            jiuyeTemp.major = majorTemp.Name;
+                            var acaNumber = stud_major.Count();//该专业人数
+                            jiuyeTemp.totalNumber = acaNumber;
+
+                            List<string> stud_major_number = new List<string>();
+                            stud_major.ForEach(item => stud_major_number.Add(item.StudentNumber));
+                            List<string> stud_sign_number = new List<string>();
+                            stud_sign.ForEach(item => stud_sign_number.Add(item.StudentNumber));
+                            jiuyeTemp.signNumber = stud_sign_number.Intersect(stud_major_number).Count();//签约人数
+                            jiuyeTemp.signP = (double)jiuyeTemp.signNumber / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.signP = Math.Round(jiuyeTemp.signP, 4) * 100;
+
+                            var hetong = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "10" || m.EmploymentCode == "11").ToList();//签学校和合同就业
+                            jiuyeTemp.hetongNumber = hetong.Count();
+                            jiuyeTemp.hetongP = (double)jiuyeTemp.hetongNumber / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.hetongP = Math.Round(jiuyeTemp.hetongP, 4) * 100;
+
+                            var kaoyan = db.ESchoolInfoTb.Where(m => m.UpType == "考研").ToList();
+                            jiuyeTemp.kaoyan = kaoyan.Count();//考研人数
+                            jiuyeTemp.kanyanP = (double)jiuyeTemp.kaoyan / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.kanyanP = Math.Round(jiuyeTemp.kanyanP, 4) * 100;
+
+                            var baoyan = db.ESchoolInfoTb.Where(m => m.UpType == "保研").ToList();
+                            jiuyeTemp.baoyan = baoyan.Count();//保研人数
+                            jiuyeTemp.baoyanP = (double)jiuyeTemp.baoyan / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.baoyanP = Math.Round(jiuyeTemp.baoyanP, 4) * 100;
+
+                            var chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "85").ToList();
+                            jiuyeTemp.abroadNumber = chuguo.Count();//出国人数
+                            jiuyeTemp.abroadP = (double)jiuyeTemp.abroadNumber / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.abroadP = Math.Round(jiuyeTemp.abroadP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "75").ToList();
+                            jiuyeTemp.zizhuNumber = chuguo.Count();//自主创业人数
+                            jiuyeTemp.zizhuP = (double)jiuyeTemp.zizhuNumber / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.zizhuP = Math.Round(jiuyeTemp.zizhuP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "46").ToList();
+                            jiuyeTemp.ruwu = chuguo.Count();//应征入伍人数
+                            jiuyeTemp.ruwuP = (double)jiuyeTemp.ruwu / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.ruwuP = Math.Round(jiuyeTemp.ruwuP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "50").ToList();
+                            jiuyeTemp.guojia = chuguo.Count();//国家基层项目人数
+                            jiuyeTemp.guojiaP = (double)jiuyeTemp.guojia / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.guojiaP = Math.Round(jiuyeTemp.guojiaP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "27").ToList();
+                            jiuyeTemp.keyanzhuli = chuguo.Count();
+                            jiuyeTemp.keyanzhuliP = (double)jiuyeTemp.kaoyan / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.keyanzhuliP = Math.Round(jiuyeTemp.keyanzhuliP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "51").ToList();
+                            jiuyeTemp.difang = chuguo.Count();
+                            jiuyeTemp.difangP = (double)jiuyeTemp.difang / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.difangP = Math.Round(jiuyeTemp.difangP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "76").ToList();
+                            jiuyeTemp.linghuo = chuguo.Count();
+                            jiuyeTemp.linghuoP = (double)jiuyeTemp.linghuo / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.linghuoP = Math.Round(jiuyeTemp.linghuoP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "2").ToList();
+                            jiuyeTemp.gongwuyuan = chuguo.Count();//继续考公务员数
+                            jiuyeTemp.gongwuyuanP = (double)jiuyeTemp.gongwuyuan / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.gongwuyuanP = Math.Round(jiuyeTemp.gongwuyuanP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "1").ToList();
+                            jiuyeTemp.jiuyekunnan = chuguo.Count();//继续考公务员数
+                            jiuyeTemp.jiuyekunnanP = (double)jiuyeTemp.jiuyekunnan / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.jiuyekunnanP = Math.Round(jiuyeTemp.jiuyekunnanP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "4").ToList();
+                            jiuyeTemp.other = chuguo.Count();//继续考公务员数
+                            jiuyeTemp.otherP = (double)jiuyeTemp.other / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.otherP = Math.Round(jiuyeTemp.otherP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "4" || m.JobDiffCode == "3" || m.JobDiffCode == "2" || m.JobDiffCode == "1").ToList();
+                            jiuyeTemp.weijiuye = chuguo.Count();//继续考公务员数
+                            jiuyeTemp.weijiuyyeP = (double)jiuyeTemp.weijiuye / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.weijiuyyeP = Math.Round(jiuyeTemp.weijiuyyeP, 4) * 100;
+
+                            jiuyeTemp.jiuyeheji = jiuyeTemp.signNumber + jiuyeTemp.hetongNumber + jiuyeTemp.kaoyan + jiuyeTemp.baoyan + jiuyeTemp.upschoolNumber + jiuyeTemp.abroadNumber + jiuyeTemp.zizhuNumber + jiuyeTemp.ruwu + jiuyeTemp.guojia + jiuyeTemp.keyanzhuli + jiuyeTemp.difang + jiuyeTemp.linghuo;
+                            jiuyeTemp.jiuyehejiP = (double)jiuyeTemp.jiuyeheji / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.jiuyehejiP = Math.Round(jiuyeTemp.jiuyehejiP, 4) * 100;
+
+                            jiuyeList.Add(jiuyeTemp);
+                            #endregion
+                        }
+                        #region 院系统计
+                        var jiuye = new jieyeListViewModel();
+                        foreach (var temp in jiuyeList.Where(m => m.dep == depTemp.Name))
+                        {
+                            jiuye.totalNumber = jiuye.totalNumber + temp.totalNumber;
+                            jiuye.signNumber = jiuye.signNumber + temp.signNumber;
+                            jiuye.hetongNumber = jiuye.hetongNumber + temp.hetongNumber;
+                            jiuye.kaoyan = jiuye.kaoyan + temp.kaoyan;
+                            jiuye.baoyan = jiuye.baoyan + temp.baoyan;
+                            jiuye.abroadNumber = jiuye.abroadNumber + temp.abroadNumber;
+                            jiuye.zizhuNumber = jiuye.zizhuNumber + temp.zizhuNumber;
+                            jiuye.ruwu = jiuye.ruwu + temp.ruwu;
+                            jiuye.guojia = jiuye.guojia + temp.guojia;
+                            jiuye.keyanzhuli = jiuye.keyanzhuli + temp.keyanzhuli;
+                            jiuye.difang = jiuye.difang + temp.difang;
+                            jiuye.linghuo = jiuye.linghuo + temp.linghuo;
+                            jiuye.gongwuyuan = jiuye.gongwuyuan + temp.gongwuyuan;
+                            jiuye.jiuyekunnan = jiuye.jiuyekunnan + temp.jiuyekunnan;
+                            jiuye.other = jiuye.other + temp.other;
+                            jiuye.jiuyeheji = jiuye.jiuyeheji + temp.jiuyeheji;
+                            jiuye.weijiuye = jiuye.weijiuye + temp.weijiuye;
+                        }
+                        jiuye.aca = "合计";
+                        jiuye.signP = Math.Round((double)jiuye.signNumber / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.hetongP = Math.Round((double)jiuye.hetongNumber / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.kanyanP = Math.Round((double)jiuye.kaoyan / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.baoyanP = Math.Round((double)jiuye.baoyan / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.abroadP = Math.Round((double)jiuye.abroadNumber / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.zizhuP = Math.Round((double)jiuye.zizhuNumber / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.ruwuP = Math.Round((double)jiuye.ruwu / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.guojiaP = Math.Round((double)jiuye.guojia / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.keyanzhuliP = Math.Round((double)jiuye.keyanzhuli / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.difangP = Math.Round((double)jiuye.difang / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.linghuoP = Math.Round((double)jiuye.linghuo / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.gongwuyuanP = Math.Round((double)jiuye.gongwuyuan / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.jiuyekunnanP = Math.Round((double)jiuye.jiuyekunnan / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.otherP = Math.Round((double)jiuye.other / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.jiuyehejiP = Math.Round((double)jiuye.jiuyeheji / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.weijiuyyeP = Math.Round((double)jiuye.weijiuye / (double)jiuye.totalNumber, 4) * 100;
+                        jiuyeList.Add(jiuye);
+                        #endregion
+                    }
+                }
+
+                return View(jiuyeList);
+            }
+            else
+            { return RedirectToAction("Login"); }
+            
+        }
+
+        public ActionResult jiuyeY()
+        {
+            if (Session["Id"] != null)
+            {
+                List<jieyeListViewModel> jiuyeList = new List<jieyeListViewModel>();
+                var aca = db.AcademyTb.ToList();
+                foreach (var acaTemp in aca)
+                {
+                    var dep = db.DepartmentTb.Where(m => m.BelongId == acaTemp.Id).ToList();
+                    foreach (var depTemp in dep)
+                    {
+                        string depId = depTemp.Id.ToString();
+                        var major = db.MajorTb.Where(m => m.DepartId == depId && m.Edu == "研究生").ToList();
+                        foreach (var majorTemp in major)
+                        {
+                            #region 专业统计
+                            var stud_major = db.UploadTb.Where(m => m.Major == majorTemp.Name).ToList();//总的该系学生集合
+                            var stud_sign = db.SingInfoTb.ToList();//签约人列表
+                            var jiuyeTemp = new jieyeListViewModel();
+                            jiuyeTemp.aca = acaTemp.Name;
+                            jiuyeTemp.dep = depTemp.Name;
+                            jiuyeTemp.major = majorTemp.Name;
+                            var acaNumber = stud_major.Count();//该专业人数
+                            jiuyeTemp.totalNumber = acaNumber;
+
+                            List<string> stud_major_number = new List<string>();
+                            stud_major.ForEach(item => stud_major_number.Add(item.StudentNumber));
+                            List<string> stud_sign_number = new List<string>();
+                            stud_sign.ForEach(item => stud_sign_number.Add(item.StudentNumber));
+                            jiuyeTemp.signNumber = stud_sign_number.Intersect(stud_major_number).Count();//签约人数
+                            jiuyeTemp.signP = (double)jiuyeTemp.signNumber / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.signP = Math.Round(jiuyeTemp.signP, 4) * 100;
+
+                            var hetong = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "10" || m.EmploymentCode == "11").ToList();//签学校和合同就业
+                            jiuyeTemp.hetongNumber = hetong.Count();
+                            jiuyeTemp.hetongP = (double)jiuyeTemp.hetongNumber / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.hetongP = Math.Round(jiuyeTemp.hetongP, 4) * 100;
+
+                            var chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "85").ToList();
+                            jiuyeTemp.abroadNumber = chuguo.Count();//出国人数
+                            jiuyeTemp.abroadP = (double)jiuyeTemp.abroadNumber / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.abroadP = Math.Round(jiuyeTemp.abroadP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "80").ToList();
+                            jiuyeTemp.upschoolNumber = chuguo.Count();//升学人数
+                            jiuyeTemp.upschoolP = (double)jiuyeTemp.upschoolNumber / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.upschoolP = Math.Round(jiuyeTemp.upschoolP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "75").ToList();
+                            jiuyeTemp.zizhuNumber = chuguo.Count();//自主创业人数
+                            jiuyeTemp.zizhuP = (double)jiuyeTemp.zizhuNumber / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.zizhuP = Math.Round(jiuyeTemp.zizhuP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "46").ToList();
+                            jiuyeTemp.ruwu = chuguo.Count();//应征入伍人数
+                            jiuyeTemp.ruwuP = (double)jiuyeTemp.ruwu / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.ruwuP = Math.Round(jiuyeTemp.ruwuP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "50").ToList();
+                            jiuyeTemp.guojia = chuguo.Count();//国家基层项目人数
+                            jiuyeTemp.guojiaP = (double)jiuyeTemp.guojia / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.guojiaP = Math.Round(jiuyeTemp.guojiaP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "27").ToList();
+                            jiuyeTemp.keyanzhuli = chuguo.Count();
+                            jiuyeTemp.keyanzhuliP = (double)jiuyeTemp.kaoyan / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.keyanzhuliP = Math.Round(jiuyeTemp.keyanzhuliP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "51").ToList();
+                            jiuyeTemp.difang = chuguo.Count();
+                            jiuyeTemp.difangP = (double)jiuyeTemp.difang / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.difangP = Math.Round(jiuyeTemp.difangP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.EmploymentCode == "76").ToList();
+                            jiuyeTemp.linghuo = chuguo.Count();
+                            jiuyeTemp.linghuoP = (double)jiuyeTemp.linghuo / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.linghuoP = Math.Round(jiuyeTemp.linghuoP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "2").ToList();
+                            jiuyeTemp.gongwuyuan = chuguo.Count();//继续考公务员数
+                            jiuyeTemp.gongwuyuanP = (double)jiuyeTemp.gongwuyuan / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.gongwuyuanP = Math.Round(jiuyeTemp.gongwuyuanP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "1").ToList();
+                            jiuyeTemp.jiuyekunnan = chuguo.Count();//继续考公务员数
+                            jiuyeTemp.jiuyekunnanP = (double)jiuyeTemp.jiuyekunnan / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.jiuyekunnanP = Math.Round(jiuyeTemp.jiuyekunnanP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "4").ToList();
+                            jiuyeTemp.other = chuguo.Count();//继续考公务员数
+                            jiuyeTemp.otherP = (double)jiuyeTemp.other / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.otherP = Math.Round(jiuyeTemp.otherP, 4) * 100;
+
+                            chuguo = db.ESchoolInfoTb.Where(m => m.JobDiffCode == "4" || m.JobDiffCode == "3" || m.JobDiffCode == "2" || m.JobDiffCode == "1").ToList();
+                            jiuyeTemp.weijiuye = chuguo.Count();//继续考公务员数
+                            jiuyeTemp.weijiuyyeP = (double)jiuyeTemp.weijiuye / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.weijiuyyeP = Math.Round(jiuyeTemp.weijiuyyeP, 4) * 100;
+
+                            jiuyeTemp.jiuyeheji = jiuyeTemp.signNumber + jiuyeTemp.hetongNumber + jiuyeTemp.kaoyan + jiuyeTemp.baoyan + jiuyeTemp.upschoolNumber + jiuyeTemp.abroadNumber + jiuyeTemp.zizhuNumber + jiuyeTemp.ruwu + jiuyeTemp.guojia + jiuyeTemp.keyanzhuli + jiuyeTemp.difang + jiuyeTemp.linghuo;
+                            jiuyeTemp.jiuyehejiP = (double)jiuyeTemp.jiuyeheji / (double)jiuyeTemp.totalNumber;
+                            jiuyeTemp.jiuyehejiP = Math.Round(jiuyeTemp.jiuyehejiP, 4) * 100;
+
+                            jiuyeList.Add(jiuyeTemp);
+                            #endregion
+                        }
+                        #region 院系统计
+                        var jiuye = new jieyeListViewModel();
+                        foreach (var temp in jiuyeList.Where(m => m.dep == depTemp.Name))
+                        {
+                            jiuye.totalNumber = jiuye.totalNumber + temp.totalNumber;
+                            jiuye.signNumber = jiuye.signNumber + temp.signNumber;
+                            jiuye.hetongNumber = jiuye.hetongNumber + temp.hetongNumber;
+                            //jiuye.kaoyan = jiuye.kaoyan + temp.kaoyan;
+                            //jiuye.baoyan = jiuye.baoyan + temp.baoyan;
+                            jiuye.abroadNumber = jiuye.abroadNumber + temp.abroadNumber;
+                            jiuye.zizhuNumber = jiuye.zizhuNumber + temp.zizhuNumber;
+                            jiuye.ruwu = jiuye.ruwu + temp.ruwu;
+                            jiuye.guojia = jiuye.guojia + temp.guojia;
+                            jiuye.keyanzhuli = jiuye.keyanzhuli + temp.keyanzhuli;
+                            jiuye.difang = jiuye.difang + temp.difang;
+                            jiuye.linghuo = jiuye.linghuo + temp.linghuo;
+                            jiuye.gongwuyuan = jiuye.gongwuyuan + temp.gongwuyuan;
+                            jiuye.jiuyekunnan = jiuye.jiuyekunnan + temp.jiuyekunnan;
+                            jiuye.other = jiuye.other + temp.other;
+                            jiuye.jiuyeheji = jiuye.jiuyeheji + temp.jiuyeheji;
+                            jiuye.weijiuye = jiuye.weijiuye + temp.weijiuye;
+                        }
+                        jiuye.aca = "合计";
+                        jiuye.signP = Math.Round((double)jiuye.signNumber / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.hetongP = Math.Round((double)jiuye.hetongNumber / (double)jiuye.totalNumber, 4) * 100;
+                        //jiuye.kanyanP = Math.Round((double)jiuye.kaoyan / (double)jiuye.totalNumber, 4) * 100;
+                        //jiuye.baoyanP = Math.Round((double)jiuye.baoyan / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.abroadP = Math.Round((double)jiuye.abroadNumber / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.zizhuP = Math.Round((double)jiuye.zizhuNumber / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.ruwuP = Math.Round((double)jiuye.ruwu / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.guojiaP = Math.Round((double)jiuye.guojia / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.keyanzhuliP = Math.Round((double)jiuye.keyanzhuli / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.difangP = Math.Round((double)jiuye.difang / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.linghuoP = Math.Round((double)jiuye.linghuo / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.gongwuyuanP = Math.Round((double)jiuye.gongwuyuan / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.jiuyekunnanP = Math.Round((double)jiuye.jiuyekunnan / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.otherP = Math.Round((double)jiuye.other / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.jiuyehejiP = Math.Round((double)jiuye.jiuyeheji / (double)jiuye.totalNumber, 4) * 100;
+                        jiuye.weijiuyyeP = Math.Round((double)jiuye.weijiuye / (double)jiuye.totalNumber, 4) * 100;
+                        jiuyeList.Add(jiuye);
+                        #endregion
+                    }
+                }
+
+                return View(jiuyeList);
+            }
+            else
+            { return RedirectToAction("Login"); }
         }
         #endregion
 
