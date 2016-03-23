@@ -141,7 +141,7 @@
                             <tr>
                                 <td>
                                     <p>单位名称：</p>
-                                    @Html.TextBoxFor(model => model.eSchoolInfo.CompanyName)
+                                    @Html.TextBoxFor(model => model.eSchoolInfo.CompanyName, new { required = "required" })
                                 </td>
                                 <td>
                                     <p>单位所属集团或系统</p>
@@ -150,7 +150,7 @@
                                 <td>
                                     <p>单位组织机构代码</p>
                                     <p class="warn">(9位数字或字母不含‘-’)</p>
-                                    @Html.TextBoxFor(model => model.eSchoolInfo.CompanyCode)
+                                    @Html.TextBoxFor(model => model.eSchoolInfo.CompanyCode, new { required = "required" })
                                 </td>
                                 <td>
                                     <p>单位上级隶属部门</p>
@@ -168,7 +168,7 @@
                                 </td>
                                 <td colspan="2" class="input-width">
                                     <p>《就业报到证》开具单位名称</p>
-                                    @Html.TextBoxFor(model => model.eSchoolInfo.SCompanyName)
+                                    @Html.TextBoxFor(model => model.eSchoolInfo.SCompanyName, new { required = "required" })
                                 </td>
                             </tr>
                             <tr>
@@ -196,36 +196,36 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <p>联系人：</p>@Html.TextBoxFor(model => model.eSchoolInfo.Contacts)
+                                    <p>联系人：</p>@Html.TextBoxFor(model => model.eSchoolInfo.Contacts, new { required = "required" })
                                 </td>
                                 <td>
-                                    <p>联系人邮编(6位数字)：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ContactsCode)
+                                    <p>联系人邮编(6位数字)：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ContactsCode, new { required = "required" })
                                 </td>
                                 <td colspan="2" class="input-width">
-                                    <p>联系人通信地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConCommAddress)
+                                    <p>联系人通信地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConCommAddress, new { required = "required" })
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <p>联系人职务：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConPost)
+                                    <p>联系人职务：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConPost, new { required = "required" })
                                 </td>
                                 <td>
-                                    <p>联系人电话：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConTel)
+                                    <p>联系人电话：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ConTel, new { required = "required" })
                                 </td>
                                 <td colspan="2" class="input-width">
-                                    <p>户口迁移地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd)
+                                    <p>户口迁移地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd, new { required = "required" })
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" class="input-width">
-                                    <p>档案转寄详细地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd)
+                                    <p>档案转寄详细地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd, new { required = "required" })
                                 </td>
                                 <td>
-                                    <p>邮政编码(6位数字)：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode)
+                                    <p>邮政编码(6位数字)：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode, new { required = "required" })
                                 </td>
                                 <td>
                                     <p>是否专业对口：</p>
-                                    @Html.RadioButtonFor(model => model.eSchoolInfo.IsMajorFit, "1") 是
+                                    @Html.RadioButtonFor(model => model.eSchoolInfo.IsMajorFit, "1", new { @checked=true}) 是
                                     @Html.RadioButtonFor(mdoel => mdoel.eSchoolInfo.IsMajorFit, "0") 否
                                 </td>
                             </tr>

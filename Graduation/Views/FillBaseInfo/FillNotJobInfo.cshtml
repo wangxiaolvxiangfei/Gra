@@ -165,13 +165,13 @@
 
                 <tr>
                     <td>
-                        <p>档案转寄地址：</p>@Html.TextBoxFor(model=>model.eSchoolInfo.FileChangedAdd)
+                        <p>档案转寄地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileChangedAdd, new { required = "required" })
                     </td>
                     <td>
-                        <p>档案转寄邮编：</p>@Html.TextBoxFor(model=>model.eSchoolInfo.FileZipCode)
+                        <p>档案转寄邮编：</p>@Html.TextBoxFor(model => model.eSchoolInfo.FileZipCode, new { required = "required" })
                     </td>
                     <td>
-                        <p>户口迁移地址：</p>@Html.TextBoxFor(model=>model.eSchoolInfo.ResChangedAdd)
+                        <p>户口迁移地址：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ResChangedAdd, new { required = "required" })
                     </td>
                 </tr>
                 <tr>

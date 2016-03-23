@@ -166,7 +166,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="input-width"><p>单位名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.CompanyName)</td>
+                                <td colspan="2" class="input-width"><p>单位名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.CompanyName, new { required = "required" })</td>
                                 <td colspan="2" class="input-width">
                                     <p>单位所在地：</p>
                                     @Html.TextBoxFor(m => m.eSchoolInfo.ComLocation, new { id = "originPro", onkeyup = "GetCity()" })

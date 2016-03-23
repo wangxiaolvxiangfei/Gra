@@ -162,7 +162,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2"><p>项目名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ProjectName)</td>
+                                <td colspan="2"><p>项目名称：</p>@Html.TextBoxFor(model => model.eSchoolInfo.ProjectName, new { required = "required" })</td>
                                 <td colspan="2">
                                     <p>项目所在地：</p>
                                     @Html.TextBoxFor(m => m.eSchoolInfo.ComLocation, new { id = "originPro", onkeyup = "GetCity()" })
